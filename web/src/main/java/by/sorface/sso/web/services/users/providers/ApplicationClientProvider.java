@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
@@ -86,21 +87,21 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
     private RegisteredClient buildClient(final OAuth2Client oAuth2Client) {
         final var redirectUrls = this.getRedirectUrls(oAuth2Client.getRedirectUris());
 
-        final var scopes = Set.of("scope.read", "scope.write");
+        final var scopes = Set.of("scope.read", "scope.write", OidcScopes.OPENID, OidcScopes.PROFILE, OidcScopes.EMAIL);
 
         final ClientTokenOptions.TokenSetting accessTokenSettings = clientTokenOptions.getAccessToken();
         final ClientTokenOptions.TokenSetting refreshTokenSettings = clientTokenOptions.getRefreshToken();
         final ClientTokenOptions.TokenSetting authorizationCodeSettings = clientTokenOptions.getAuthorizationCode();
 
         final var tokenSettings = TokenSettings.builder()
-                .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                 .accessTokenTimeToLive(Duration.of(accessTokenSettings.getTimeToLiveValue(), accessTokenSettings.getTimeToLiveCron()))
                 .refreshTokenTimeToLive(Duration.of(refreshTokenSettings.getTimeToLiveValue(), refreshTokenSettings.getTimeToLiveCron()))
-                .reuseRefreshTokens(false)
+                .reuseRefreshTokens(true)
                 .authorizationCodeTimeToLive(Duration.of(authorizationCodeSettings.getTimeToLiveValue(), authorizationCodeSettings.getTimeToLiveCron()))
                 .build();
 
-        final var authorizationCodes = Set.of(
+        final var grantTypes = Set.of(
                 AuthorizationGrantType.AUTHORIZATION_CODE,
                 AuthorizationGrantType.CLIENT_CREDENTIALS,
                 AuthorizationGrantType.REFRESH_TOKEN
@@ -119,7 +120,7 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
                 .clientSecretExpiresAt(oAuth2Client.getClientSecretExpiresAt().toInstant(ZoneOffset.UTC))
                 .clientName(oAuth2Client.getClientName())
                 .clientAuthenticationMethods(clientAuthenticationMethods -> clientAuthenticationMethods.addAll(clientsAuthMethod))
-                .authorizationGrantTypes(authorizationGrantTypes -> authorizationGrantTypes.addAll(authorizationCodes))
+                .authorizationGrantTypes(authorizationGrantTypes -> authorizationGrantTypes.addAll(grantTypes))
                 .redirectUris(redirectUris -> redirectUris.addAll(redirectUrls))
                 .scopes(scopeFunc -> scopeFunc.addAll(scopes))
                 .tokenSettings(tokenSettings)

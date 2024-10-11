@@ -6,7 +6,6 @@ import org.springframework.session.Session;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,14 +29,6 @@ public class DefaultAccountSessionService implements AccountSessionService {
     @Override
     public void batchDelete(final List<String> sessionIds) {
         sessionIds.forEach(sessionRepository::deleteById);
-    }
-
-    public void changeLastAccessedTime(final String username) {
-        Map<String, ? extends Session> sessions = sessionRepository.findByPrincipalName(username);
-
-        for (Session session : sessions.values()) {
-            session.setLastAccessedTime(Instant.now().plus(session.getMaxInactiveInterval()));
-        }
     }
 
 }

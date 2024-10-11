@@ -88,7 +88,8 @@ public class DefaultPrincipal extends User implements OAuth2User, OidcUser {
     public OidcUserInfo getUserInfo() {
         return OidcUserInfo.builder()
                 .email(email)
-                .preferredUsername(getUsername())
+                .nickname(getUsername())
+                .picture(avatarUrl)
                 .build();
     }
 

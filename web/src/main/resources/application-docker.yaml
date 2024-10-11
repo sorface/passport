@@ -58,5 +58,5 @@ springdoc:
 
 logging:
   level:
-    root: info
-    org.springframework.security: debug
+    root: debug
+    org.springframework.security: trace

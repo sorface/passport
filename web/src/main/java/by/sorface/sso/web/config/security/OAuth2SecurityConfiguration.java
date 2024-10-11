@@ -6,18 +6,31 @@ import by.sorface.sso.web.config.security.handlers.TokenAuthenticationSuccessHan
 import by.sorface.sso.web.config.security.handlers.TokenRevocationSuccessHandler;
 import by.sorface.sso.web.services.redis.RedisOAuth2AuthorizationConsentService;
 import by.sorface.sso.web.services.redis.RedisOAuth2AuthorizationService;
+import by.sorface.sso.web.services.users.providers.socials.OidcUserDatabaseProvider;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
+import java.util.UUID;
 
 @Configuration
 @RequiredArgsConstructor
@@ -34,6 +47,8 @@ public class OAuth2SecurityConfiguration {
     private final EndpointOptions endpointOptions;
 
     private final TokenRevocationSuccessHandler tokenRevocationSuccessHandler;
+
+    private final OidcUserDatabaseProvider oidcUserDatabaseProvider;
 
     /**
      * Configuration OAuth2 Spring Security
@@ -57,6 +72,9 @@ public class OAuth2SecurityConfiguration {
                 .securityMatcher(endpointsMatcher)
                 .authorizeHttpRequests(configure -> configure.anyRequest().authenticated())
                 .exceptionHandling(configurer -> configurer.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint(endpointOptions.getUriPageSignIn())))
+                .oauth2ResourceServer(httpSecurityOAuth2ResourceServerConfigurer -> {
+                    httpSecurityOAuth2ResourceServerConfigurer.jwt(Customizer.withDefaults());
+                })
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .apply(authorizationServerConfigurer);
@@ -71,9 +89,7 @@ public class OAuth2SecurityConfiguration {
      */
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder()
-                .setting("settings.authorization-server.authorization-logout", "/oauth2/logout")
-                .build();
+        return AuthorizationServerSettings.builder().build();
     }
 
     /**
@@ -93,8 +109,64 @@ public class OAuth2SecurityConfiguration {
         authorizationServerConfigurer.authorizationService(redisOAuth2AuthorizationService);
         authorizationServerConfigurer.authorizationConsentService(redisOAuth2AuthorizationConsentService);
 
+        authorizationServerConfigurer.oidc(oidcConfigurer -> {
+            oidcConfigurer.userInfoEndpoint(oidcUserInfoEndpointConfigurer ->
+                    oidcUserInfoEndpointConfigurer.userInfoMapper(oidcUserInfoAuthenticationContext -> {
+                        final OAuth2Authorization authorization = oidcUserInfoAuthenticationContext.getAuthorization();
+                        return oidcUserDatabaseProvider.loadUser(authorization.getPrincipalName(), authorization.getAuthorizedScopes());
+                    }));
+
+            oidcConfigurer.providerConfigurationEndpoint(oidcProviderConfigurationEndpointConfigurer -> {
+                oidcProviderConfigurationEndpointConfigurer.providerConfigurationCustomizer(builder -> builder.claim("end_session_endpoint", "http://localhost:8080/logout"));
+            });
+        });
+
         return authorizationServerConfigurer;
     }
 
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() {
+        final var rsaKey = Jwks.generateRsa();
+        final var jwkSet = new JWKSet(rsaKey);
 
+        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    }
+
+    static class Jwks {
+
+        private Jwks() {
+        }
+
+        public static RSAKey generateRsa() {
+            final KeyPair keyPair = KeyGeneratorUtils.generateRsaKey();
+            final RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
+            final RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+            return new RSAKey.Builder(publicKey)
+                    .privateKey(privateKey)
+                    .keyID(UUID.randomUUID().toString())
+                    .build();
+        }
+    }
+
+    static class KeyGeneratorUtils {
+
+        private KeyGeneratorUtils() {
+        }
+
+        static KeyPair generateRsaKey() {
+            KeyPair keyPair;
+
+            try {
+                final var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+                keyPairGenerator.initialize(2048);
+
+                keyPair = keyPairGenerator.generateKeyPair();
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+
+            return keyPair;
+        }
+    }
 }

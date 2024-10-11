@@ -64,15 +64,14 @@ public final class RedisOAuth2AuthorizationService implements OAuth2Authorizatio
                 redisTemplate.delete(initKey);
             }
 
-            this.authorizations.set(key, authorization, oAuth2Options.getRedis().getComplete().getTtl(), oAuth2Options.getRedis().getComplete().getUnit());
+            log.info("saved user's complete authorization object with id {}", authorization.getId());
+            this.authorizations.set(key, authorization);
         } else {
             key = toInit(authorization.getId());
 
-            this.authorizations.set(key, authorization, oAuth2Options.getRedis().getInit().getTtl(), oAuth2Options.getRedis().getInit().getUnit());
+            log.info("saved user's init authorization object with id {}", authorization.getId());
+            this.authorizations.set(key, authorization);
         }
-
-        log.info("saved user's authorization object with id {}", authorization.getId());
-
     }
 
     @Override
