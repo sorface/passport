@@ -117,7 +117,7 @@ sorface:
         time-to-live-value: 1
       refresh-token:
         time-to-live-cron: minutes
-        time-to-live-value: 3
+        time-to-live-value: 2
       authorization-code:
         time-to-live-cron: minutes
         time-to-live-value: 30

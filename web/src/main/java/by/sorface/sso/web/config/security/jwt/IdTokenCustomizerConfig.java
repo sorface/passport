@@ -16,6 +16,10 @@ import java.util.stream.Collectors;
 @Configuration(proxyBeanMethods = false)
 public class IdTokenCustomizerConfig {
 
+    private final static String CLAIMS_USER_ID_NAME = "principal-id";
+
+    private final static String CLAIMS_ROLES_NAME = "roles";
+
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return (context) -> {
@@ -26,12 +30,12 @@ public class IdTokenCustomizerConfig {
     }
 
     private Map<String, Object> buildCustomClaims(final JwtEncodingContext context) {
-        final DefaultPrincipal principal = (DefaultPrincipal) context.getPrincipal().getPrincipal();
+        final var principal = (DefaultPrincipal) context.getPrincipal().getPrincipal();
 
         final Set<String> roles = principal.getAuthorities()
                 .stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return Map.of("roles", roles, "user_id", principal.getId());
+        return Map.of(CLAIMS_ROLES_NAME, roles, CLAIMS_USER_ID_NAME, principal.getId());
     }
 }

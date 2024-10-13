@@ -90,13 +90,13 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
         final var scopes = Set.of("scope.read", "scope.write", OidcScopes.OPENID, OidcScopes.PROFILE, OidcScopes.EMAIL);
 
         final ClientTokenOptions.TokenSetting accessTokenSettings = clientTokenOptions.getAccessToken();
-        final ClientTokenOptions.TokenSetting refreshTokenSettings = clientTokenOptions.getRefreshToken();
         final ClientTokenOptions.TokenSetting authorizationCodeSettings = clientTokenOptions.getAuthorizationCode();
 
+        Duration accessTokenTimeToLive = Duration.of(accessTokenSettings.getTimeToLiveValue(), accessTokenSettings.getTimeToLiveCron());
         final var tokenSettings = TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-                .accessTokenTimeToLive(Duration.of(accessTokenSettings.getTimeToLiveValue(), accessTokenSettings.getTimeToLiveCron()))
-                .refreshTokenTimeToLive(Duration.of(refreshTokenSettings.getTimeToLiveValue(), refreshTokenSettings.getTimeToLiveCron()))
+                .accessTokenTimeToLive(accessTokenTimeToLive)
+                .refreshTokenTimeToLive(Duration.ofSeconds(accessTokenTimeToLive.toSeconds() * 2))
                 .reuseRefreshTokens(true)
                 .authorizationCodeTimeToLive(Duration.of(authorizationCodeSettings.getTimeToLiveValue(), authorizationCodeSettings.getTimeToLiveCron()))
                 .build();
