@@ -47,14 +47,14 @@ class DefaultAccountFacadeTest {
         ProfileRecord profileRecord = accountFacade.getCurrent(userId);
 
         assertNotNull(profileRecord);
-        assertEquals(userId, profileRecord.id());
-        assertEquals(user.getUsername(), profileRecord.nickname());
-        assertEquals(user.getEmail(), profileRecord.email());
-        assertEquals(user.getFirstName(), profileRecord.firstName());
-        assertEquals(user.getLastName(), profileRecord.lastName());
-        assertEquals(user.getMiddleName(), profileRecord.middleName());
-        assertEquals(user.getAvatarUrl(), profileRecord.avatar());
-        assertEquals(user.getRoles().get(0).getValue(), profileRecord.roles().get(0));
+        assertEquals(userId, profileRecord.id);
+        assertEquals(user.getUsername(), profileRecord.nickname);
+        assertEquals(user.getEmail(), profileRecord.email);
+        assertEquals(user.getFirstName(), profileRecord.firstName);
+        assertEquals(user.getLastName(), profileRecord.lastName);
+        assertEquals(user.getMiddleName(), profileRecord.middleName);
+        assertEquals(user.getAvatarUrl(), profileRecord.avatar);
+        assertEquals(user.getRoles().get(0).getValue(), profileRecord.roles.get(0));
 
         verify(userService, times(1)).findById(userId);
     }

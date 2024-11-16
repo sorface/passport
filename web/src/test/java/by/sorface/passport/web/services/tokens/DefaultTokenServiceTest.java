@@ -55,13 +55,13 @@ class DefaultTokenServiceTest {
     void testFindByEmail() {
         String email = "testEmail";
         TokenEntity tokenEntity = new TokenEntity();
-        when(registryTokenRepository.findByUser_Email(email)).thenReturn(tokenEntity);
+        when(registryTokenRepository.findByUserEmail(email)).thenReturn(tokenEntity);
 
         TokenEntity result = defaultTokenService.findByEmail(email);
 
         assertNotNull(result);
         assertEquals(tokenEntity, result);
-        verify(registryTokenRepository, times(1)).findByUser_Email(email);
+        verify(registryTokenRepository, times(1)).findByUserEmail(email);
     }
 
     @Test
