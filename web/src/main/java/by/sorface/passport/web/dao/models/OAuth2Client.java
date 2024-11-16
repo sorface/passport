@@ -23,6 +23,9 @@ public class OAuth2Client extends BaseEntity {
     @Column(name = "C_CLIENTNAME", nullable = false)
     private String clientName;
 
+    @Column(name = "C_POST_LOGOUT_REDIRECT_URI")
+    private String postLogoutRedirectUri;
+
     @Column(name = "C_REDIRECTURIS")
     private String redirectUris;
 

@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 @Configuration
 @RequiredArgsConstructor
 @EnableConfigurationProperties
-@EnableRedisRepositories(basePackages = "by.sorface.passport.web.dao.nosql.redis")
+
 public class SorfaceConfiguration {
 
     public static final String I18_BUNDLE_LOCATION = "language/messages";

@@ -22,6 +22,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -148,7 +152,7 @@
 
     <profiles>
         <profile>
-            <id>run.context.development</id>
+            <id>passport.development</id>
 
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -200,7 +204,7 @@
             </build>
         </profile>
         <profile>
-            <id>run.context.docker</id>
+            <id>passport.docker</id>
 
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -231,7 +235,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>run.context.production</id>
+            <id>passport.production</id>
 
             <activation>
                 <activeByDefault>false</activeByDefault>
@@ -251,7 +255,7 @@
             </dependencies>
         </profile>
         <profile>
-            <id>coverage</id>
+            <id>passport.coverage</id>
             <build>
                 <plugins>
                     <plugin>

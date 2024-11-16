@@ -1,7 +1,9 @@
 package by.sorface.passport.web.controllers;
 
 import by.sorface.passport.web.config.security.handlers.SavedRequestRedisSuccessHandler;
-import by.sorface.passport.web.dao.nosql.redis.RedisOAuth2AuthorizationRepository;
+import by.sorface.passport.web.dao.models.UserEntity;
+import by.sorface.passport.web.dao.nosql.redis.RedisOAuth2AuthorizationCompleteRepository;
+import by.sorface.passport.web.dao.sql.UserRepository;
 import by.sorface.passport.web.exceptions.UserRequestException;
 import by.sorface.passport.web.facade.accounts.AccountFacade;
 import by.sorface.passport.web.facade.signup.SignupEmailFacade;
@@ -28,11 +30,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -48,9 +52,13 @@ public class AccountController {
 
     private final SavedRequestRedisSuccessHandler savedRequestRedisSuccessHandler;
 
-    private final RedisOAuth2AuthorizationRepository repository;
+    private final RedisOAuth2AuthorizationCompleteRepository repository;
 
     private final ApplicationClientProvider applicationClientProvider;
+
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/current")
     public ProfileRecord getSelf() {

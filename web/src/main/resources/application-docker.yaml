@@ -9,7 +9,7 @@ sorface:
   cors:
     options:
       - pattern: /**
-        allowed-origins: ${CLIENT_SERVER_DOMAIN}, http://localhost:3000, http://127.0.0.1:3000, http://localhost:3001, http://127.0.0.1:3001
+        allowed-origins: ${CLIENT_SERVER_DOMAIN}, http://localhost:3000, http://127.0.0.1:3000, http://localhost:3001, http://127.0.0.1:3001, http://localhost:9000, http://127.0.0.1:9000
         allowed-headers: "*"
         allowed-methods: "*"
         exposed-headers: "*"

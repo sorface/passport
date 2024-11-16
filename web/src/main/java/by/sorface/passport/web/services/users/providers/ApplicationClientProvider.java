@@ -90,14 +90,18 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
         final var scopes = Set.of("scope.read", "scope.write", OidcScopes.OPENID, OidcScopes.PROFILE, OidcScopes.EMAIL);
 
         final ClientTokenOptions.TokenSetting accessTokenSettings = clientTokenOptions.getAccessToken();
+        final ClientTokenOptions.TokenSetting refreshTokenSettings = clientTokenOptions.getRefreshToken();
         final ClientTokenOptions.TokenSetting authorizationCodeSettings = clientTokenOptions.getAuthorizationCode();
 
-        Duration accessTokenTimeToLive = Duration.of(accessTokenSettings.getTimeToLiveValue(), accessTokenSettings.getTimeToLiveCron());
+        final Duration accessTokenTimeToLive = Duration.of(accessTokenSettings.getTimeToLiveValue(), accessTokenSettings.getTimeToLiveCron());
+        final Duration refreshTokenTimeToLive = Duration.of(refreshTokenSettings.getTimeToLiveValue(), refreshTokenSettings.getTimeToLiveCron());
+
         final var tokenSettings = TokenSettings.builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                 .accessTokenTimeToLive(accessTokenTimeToLive)
-                .refreshTokenTimeToLive(Duration.ofSeconds(accessTokenTimeToLive.toSeconds() * 2))
+                .refreshTokenTimeToLive(refreshTokenTimeToLive)
                 .reuseRefreshTokens(true)
+                .deviceCodeTimeToLive(accessTokenTimeToLive)
                 .authorizationCodeTimeToLive(Duration.of(authorizationCodeSettings.getTimeToLiveValue(), authorizationCodeSettings.getTimeToLiveCron()))
                 .build();
 
@@ -112,7 +116,7 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
                 ClientAuthenticationMethod.CLIENT_SECRET_POST
         );
 
-        return RegisteredClient
+        var registeredClientBuilder = RegisteredClient
                 .withId(oAuth2Client.getId().toString())
                 .clientId(oAuth2Client.getClientId())
                 .clientSecret(oAuth2Client.getClientSecret())
@@ -123,8 +127,13 @@ public class ApplicationClientProvider implements RegisteredClientRepository {
                 .authorizationGrantTypes(authorizationGrantTypes -> authorizationGrantTypes.addAll(grantTypes))
                 .redirectUris(redirectUris -> redirectUris.addAll(redirectUrls))
                 .scopes(scopeFunc -> scopeFunc.addAll(scopes))
-                .tokenSettings(tokenSettings)
-                .build();
+                .tokenSettings(tokenSettings);
+
+        if (oAuth2Client.getPostLogoutRedirectUri() != null) {
+            registeredClientBuilder.postLogoutRedirectUri(oAuth2Client.getPostLogoutRedirectUri());
+        }
+
+        return registeredClientBuilder.build();
     }
 
     private List<String> getRedirectUrls(final String value) {

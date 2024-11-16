@@ -114,10 +114,10 @@ sorface:
     token:
       access-token:
         time-to-live-cron: minutes
-        time-to-live-value: 1
+        time-to-live-value: 5
       refresh-token:
-        time-to-live-cron: minutes
-        time-to-live-value: 2
+        time-to-live-cron: days
+        time-to-live-value: 5
       authorization-code:
         time-to-live-cron: minutes
         time-to-live-value: 30
@@ -149,11 +149,11 @@ sorface:
       init:
         prefix: 'oauth2_auth_init:'
         unit: minutes
-        ttl: 5
+        ttl: 3
       consent:
         prefix: 'oauth2_authorization_consent:'
-        ttl: 120
-        unit: minutes
+        ttl: 5
+        unit: days
       complete:
         prefix: 'oauth2_auth_complete:'
         ttl: 5

@@ -36,6 +36,6 @@ public class IdTokenCustomizerConfig {
                 .stream().map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toSet());
 
-        return Map.of(CLAIMS_ROLES_NAME, roles, CLAIMS_USER_ID_NAME, principal.getId(), "sid", context.getAuthorization().getId());
+        return Map.of(CLAIMS_ROLES_NAME, roles, CLAIMS_USER_ID_NAME, principal.getId());
     }
 }
