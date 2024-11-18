@@ -1,7 +1,7 @@
 package by.sorface.passport.web.services.clients
 
-import by.sorface.passport.web.dao.models.OAuth2Client
-import by.sorface.passport.web.dao.sql.OAuth2ClientRepository
+import by.sorface.passport.web.dao.sql.models.OAuth2Client
+import by.sorface.passport.web.dao.sql.repository.OAuth2ClientRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*

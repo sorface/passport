@@ -1,11 +1,11 @@
 package by.sorface.passport.web.services.clients
 
-import by.sorface.passport.web.dao.models.OAuth2Client
+import by.sorface.passport.web.dao.sql.models.OAuth2Client
 import java.util.*
 
 interface OAuth2ClientService {
 
-    fun save(oAuth2Client: OAuth2Client): OAuth2Client?
+    fun save(oAuth2Client: OAuth2Client): OAuth2Client
 
     fun findByClientId(clientId: String): OAuth2Client?
 

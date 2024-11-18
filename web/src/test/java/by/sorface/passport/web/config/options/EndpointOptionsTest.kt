@@ -1,67 +1,65 @@
-package by.sorface.passport.web.config.options;
+package by.sorface.passport.web.config.options
+
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 // Import necessary libraries
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-@EnableConfigurationProperties(EndpointOptions.class)
-class EndpointOptionsTest {
-
+@ExtendWith(MockitoExtension::class)
+@EnableConfigurationProperties(EndpointOptions::class)
+internal class EndpointOptionsTest {
     @Mock
-    private EndpointOptions endpointOptions;
+    private val endpointOptions: EndpointOptions? = null
 
     @InjectMocks
-    private EndpointOptionsTest endpointOptionsTest;
+    private val endpointOptionsTest: EndpointOptionsTest? = null
 
     @Test
-    void testGetUriPageSignIn() {
-        when(endpointOptions.getUriPageSignIn()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriPageSignIn());
+    fun testGetUriPageSignIn() {
+        Mockito.`when`(endpointOptions!!.uriPageSignIn).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriPageSignIn)
     }
 
     @Test
-    void testGetUriPageSignUp() {
-        when(endpointOptions.getUriPageSignUp()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriPageSignUp());
+    fun testGetUriPageSignUp() {
+        Mockito.`when`(endpointOptions!!.uriPageSignUp).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriPageSignUp)
     }
 
     @Test
-    void testGetUriPageProfile() {
-        when(endpointOptions.getUriPageProfile()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriPageProfile());
+    fun testGetUriPageProfile() {
+        Mockito.`when`(endpointOptions!!.uriPageProfile).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriPageProfile)
     }
 
     @Test
-    void testGetUriPageFailure() {
-        when(endpointOptions.getUriPageFailure()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriPageFailure());
+    fun testGetUriPageFailure() {
+        Mockito.`when`(endpointOptions!!.uriPageFailure).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriPageFailure)
     }
 
     @Test
-    void testGetUriPageNotFound() {
-        when(endpointOptions.getUriPageNotFound()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriPageNotFound());
+    fun testGetUriPageNotFound() {
+        Mockito.`when`(endpointOptions!!.uriPageNotFound).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriPageNotFound)
     }
 
     @Test
-    void testGetUriApiLogin() {
-        when(endpointOptions.getUriApiLogin()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriApiLogin());
+    fun testGetUriApiLogin() {
+        Mockito.`when`(endpointOptions!!.uriApiLogin).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriApiLogin)
     }
 
     @Test
-    void testGetUriApiLogout() {
-        when(endpointOptions.getUriApiLogout()).thenReturn("testUri");
-        assertEquals("testUri", endpointOptionsTest.endpointOptions.getUriApiLogout());
+    fun testGetUriApiLogout() {
+        Mockito.`when`(endpointOptions!!.uriApiLogout).thenReturn("testUri")
+        Assertions.assertEquals("testUri", endpointOptionsTest!!.endpointOptions!!.uriApiLogout)
     }
 }
 

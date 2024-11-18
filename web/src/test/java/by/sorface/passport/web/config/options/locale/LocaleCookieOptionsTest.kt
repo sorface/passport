@@ -1,47 +1,46 @@
-package by.sorface.passport.web.config.options.locale;
+package by.sorface.passport.web.config.options.locale
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-@EnableConfigurationProperties(LocaleCookieOptions.class)
-class LocaleCookieOptionsTest {
+@ExtendWith(MockitoExtension::class)
+@EnableConfigurationProperties(LocaleCookieOptions::class)
+internal class LocaleCookieOptionsTest {
 
     @Mock
-    private LocaleCookieOptions localeCookieOptions;
+    private lateinit var localeCookieOptions: LocaleCookieOptions
 
     @InjectMocks
-    private LocaleCookieOptionsTest localeCookieOptionsTest;
+    private lateinit var localeCookieOptionsTest: LocaleCookieOptionsTest
 
     @Test
-    void testGetName() {
-        when(localeCookieOptions.getName()).thenReturn("testName");
-        assertEquals("testName", localeCookieOptionsTest.localeCookieOptions.getName());
+    fun testGetName() {
+        Mockito.`when`(localeCookieOptions.name).thenReturn("testName")
+        Assertions.assertEquals("testName", localeCookieOptionsTest.localeCookieOptions.name)
     }
 
     @Test
-    void testGetDomain() {
-        when(localeCookieOptions.getDomain()).thenReturn("testDomain");
-        assertEquals("testDomain", localeCookieOptionsTest.localeCookieOptions.getDomain());
+    fun testGetDomain() {
+        Mockito.`when`(localeCookieOptions.domain).thenReturn("testDomain")
+        Assertions.assertEquals("testDomain", localeCookieOptionsTest.localeCookieOptions.domain)
     }
 
     @Test
-    void testGetPath() {
-        when(localeCookieOptions.getPath()).thenReturn("testPath");
-        assertEquals("testPath", localeCookieOptionsTest.localeCookieOptions.getPath());
+    fun testGetPath() {
+        Mockito.`when`(localeCookieOptions.path).thenReturn("testPath")
+        Assertions.assertEquals("testPath", localeCookieOptionsTest.localeCookieOptions.path)
     }
 
     @Test
-    void testIsHttpOnly() {
-        when(localeCookieOptions.isHttpOnly()).thenReturn(true);
-        assertTrue(localeCookieOptionsTest.localeCookieOptions.isHttpOnly());
+    fun testIsHttpOnly() {
+        Mockito.`when`(localeCookieOptions.httpOnly).thenReturn(true)
+        Assertions.assertTrue(localeCookieOptionsTest.localeCookieOptions.httpOnly)
     }
+
 }

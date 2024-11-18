@@ -12,6 +12,10 @@ import by.sorface.passport.web.services.emails.EmailService
 import by.sorface.passport.web.services.locale.LocaleI18Service
 import by.sorface.passport.web.utils.json.Json.lazyStringifyWithMasking
 import by.sorface.passport.web.utils.json.Json.stringify
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
@@ -35,9 +39,9 @@ class DefaultSignupEmailFacade(
 
         LOGGER.info("User registration completed. [account id - {}]", registry.id)
 
-        this.sendRegistryEmail(registry)
+        sendRegistryEmailAsync(registry)
 
-        return UserRegistered(registry.id, registry.email)
+        return UserRegistered(registry.id, registry.username, registry.email)
     }
 
     /**
@@ -47,9 +51,9 @@ class DefaultSignupEmailFacade(
     override fun resendConfirmEmail(email: ResendConfirmEmail): UserRegistered {
         val registry = userRegistryFacade.findTokenByEmail(email.email)
 
-        this.sendRegistryEmail(registry)
+        sendRegistryEmailAsync(registry)
 
-        return UserRegistered(registry.id, registry.email)
+        return UserRegistered(registry.id, registry.username, registry.email)
     }
 
     /**
@@ -57,7 +61,8 @@ class DefaultSignupEmailFacade(
      *
      * @param registeredUser user information
      */
-    private fun sendRegistryEmail(registeredUser: UserRegisteredHash?) {
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun sendRegistryEmailAsync(registeredUser: UserRegisteredHash?) = GlobalScope.async(CoroutineName("registry-email-coroutine")) {
         val context = Context()
         run {
             context.setVariable("token", registeredUser!!.hash)
@@ -69,7 +74,7 @@ class DefaultSignupEmailFacade(
 
         val images = listOf(MailImage("isorface.png"))
 
-        val mailTemplate = MailTemplate(registeredUser!!.email, subject, emailTemplate, context, images)
+        val mailTemplate = MailTemplate(registeredUser!!.email, subject!!, emailTemplate!!, context, images)
 
         LOGGER.info("Preparing an email to confirm the account")
         LOGGER.debug("{}{}", System.lineSeparator(), stringify(mailTemplate))

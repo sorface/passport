@@ -1,6 +1,7 @@
 package by.sorface.passport.web.config.security.csrf;
 
 import by.sorface.passport.web.config.options.CookieOptions;
+import by.sorface.passport.web.security.csrf.CsrfConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

@@ -4,7 +4,6 @@ import by.sorface.passport.web.config.options.EndpointOptions
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import lombok.RequiredArgsConstructor
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.authentication.AuthenticationFailureHandler
@@ -15,7 +14,6 @@ import java.nio.charset.StandardCharsets
 import java.util.function.BiFunction
 
 @Component
-@RequiredArgsConstructor
 class LoginFailureHandler(
     private val endpointOptions: EndpointOptions
 ) : AuthenticationFailureHandler {
@@ -30,6 +28,6 @@ class LoginFailureHandler(
     }
 
     companion object {
-        private val BUILDER_URL = BiFunction { error: String?, url: String? -> url + "?error=" + UriUtils.encode(error, StandardCharsets.US_ASCII) }
+        private val BUILDER_URL = BiFunction { error: String?, url: String? -> url + "?error=" + UriUtils.encode(error!!, StandardCharsets.US_ASCII) }
     }
 }

@@ -1,15 +1,13 @@
 package by.sorface.passport.web.services.users
 
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.ProviderType
-import by.sorface.passport.web.dao.sql.UserRepository
-import lombok.RequiredArgsConstructor
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.ProviderType
+import by.sorface.passport.web.dao.sql.repository.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-@RequiredArgsConstructor
 open class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
     @Transactional(readOnly = true)

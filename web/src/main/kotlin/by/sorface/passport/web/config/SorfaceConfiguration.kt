@@ -1,8 +1,6 @@
 package by.sorface.passport.web.config
 
 import brave.sampler.Sampler
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -10,9 +8,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ResourceBundleMessageSource
 import java.nio.charset.StandardCharsets
 
-@Slf4j
 @Configuration
-@RequiredArgsConstructor
 @EnableConfigurationProperties
 open class SorfaceConfiguration {
 

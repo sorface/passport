@@ -5,7 +5,9 @@ import by.sorface.passport.web.records.responses.ProfileRecord
 import java.util.*
 
 interface AccountFacade {
-    fun getCurrent(id: UUID): ProfileRecord
+
+    fun getCurrentAuthorizedUser(): ProfileRecord
 
     fun update(id: UUID, request: UserPatchUpdate)
+
 }

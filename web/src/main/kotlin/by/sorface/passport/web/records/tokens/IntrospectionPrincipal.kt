@@ -31,11 +31,11 @@ class IntrospectionPrincipal {
             introspectionPrincipal.id = authorizedUser.id
             introspectionPrincipal.firstName = authorizedUser.firstName
             introspectionPrincipal.lastName = authorizedUser.lastName
-            introspectionPrincipal.middleName = authorizedUser.middleName
+            introspectionPrincipal.middleName = authorizedUser._middleName
             introspectionPrincipal.birthday = authorizedUser.birthday
             introspectionPrincipal.avatarUrl = authorizedUser.avatarUrl
             introspectionPrincipal.username = authorizedUser.username
-            introspectionPrincipal.email = authorizedUser.email
+            introspectionPrincipal.email = authorizedUser._email
             introspectionPrincipal.authorities = authorities
 
             return introspectionPrincipal

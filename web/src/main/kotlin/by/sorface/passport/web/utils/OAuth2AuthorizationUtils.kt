@@ -1,7 +1,6 @@
 package by.sorface.passport.web.utils
 
 import by.sorface.passport.web.records.principals.DefaultPrincipal
-import lombok.experimental.UtilityClass
 import org.springframework.lang.Nullable
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.core.OAuth2AccessToken
@@ -15,32 +14,23 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType
 import java.security.Principal
-import java.util.*
 
-@UtilityClass
 class OAuth2AuthorizationUtils {
-    fun hasPrincipal(authentication: OAuth2Authorization): Boolean {
+    private fun hasPrincipal(authentication: OAuth2Authorization): Boolean {
         return authentication.attributes.containsKey(PRINCIPAL_ATTRIBUTE_KEY)
     }
 
     fun getPrincipal(authentication: OAuth2Authorization): DefaultPrincipal? {
-        val containsPrincipalAuthentication = hasPrincipal(authentication)
-
-        if (LogicUtils.not(containsPrincipalAuthentication)) {
+        if (hasPrincipal(authentication).not())
             return null
-        }
 
         val authenticationPrincipal = authentication.getAttribute<Authentication>(PRINCIPAL_ATTRIBUTE_KEY)
-
-        if (Objects.isNull(authenticationPrincipal)) {
-            return null
-        }
+            ?: return null
 
         val principalObject = authenticationPrincipal.principal
 
-        if (LogicUtils.not(principalObject is DefaultPrincipal)) {
+        if ((principalObject is DefaultPrincipal).not())
             return null
-        }
 
         return principalObject as DefaultPrincipal
     }

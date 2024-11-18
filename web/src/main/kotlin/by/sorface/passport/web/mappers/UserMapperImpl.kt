@@ -1,13 +1,11 @@
 package by.sorface.passport.web.mappers
 
-import by.sorface.passport.web.dao.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.UserEntity
 import by.sorface.passport.web.records.requests.AccountSignup
-import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
 @Component
-@RequiredArgsConstructor
 class UserMapperImpl(private val passwordEncoder: PasswordEncoder) : UserMapper {
 
     override fun map(accountSignup: AccountSignup): UserEntity {

@@ -1,51 +1,48 @@
-package by.sorface.passport.web.config.options.locale;
+package by.sorface.passport.web.config.options.locale
 
-import by.sorface.passport.web.constants.SupportedLocales;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.http.HttpMethod;
+import by.sorface.passport.web.constants.SupportedLocales
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.http.HttpMethod
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-@EnableConfigurationProperties(LocaleOptions.class)
-class LocaleOptionsTest {
-
+@ExtendWith(MockitoExtension::class)
+@EnableConfigurationProperties(LocaleOptions::class)
+internal class LocaleOptionsTest {
     @Mock
-    private LocaleOptions localeOptions;
+    private val localeOptions: LocaleOptions? = null
 
     @InjectMocks
-    private LocaleOptionsTest localeOptionsTest;
+    private val localeOptionsTest: LocaleOptionsTest? = null
 
     @Test
-    void testGetDefaultLocale() {
-        when(localeOptions.getDefaultLocale()).thenReturn(SupportedLocales.EN);
-        assertEquals(SupportedLocales.EN, localeOptionsTest.localeOptions.getDefaultLocale());
+    fun testGetDefaultLocale() {
+        Mockito.`when`(localeOptions!!.defaultLocale).thenReturn(SupportedLocales.EN.locale)
+        Assertions.assertEquals(SupportedLocales.EN, localeOptionsTest!!.localeOptions!!.defaultLocale)
     }
 
     @Test
-    void testGetChangeLocaleParameterName() {
-        when(localeOptions.getChangeLocaleParameterName()).thenReturn("newLang");
-        assertEquals("newLang", localeOptionsTest.localeOptions.getChangeLocaleParameterName());
+    fun testGetChangeLocaleParameterName() {
+        Mockito.`when`(localeOptions!!.changeLocaleParameterName).thenReturn("newLang")
+        Assertions.assertEquals("newLang", localeOptionsTest!!.localeOptions!!.changeLocaleParameterName)
     }
 
     @Test
-    void testGetChangeLocaleMethods() {
-        HttpMethod[] methods = new HttpMethod[]{HttpMethod.GET, HttpMethod.POST};
-        when(localeOptions.getChangeLocaleMethods()).thenReturn(methods);
-        assertArrayEquals(methods, localeOptionsTest.localeOptions.getChangeLocaleMethods());
+    fun testGetChangeLocaleMethods() {
+        val methods = arrayOf(HttpMethod.GET, HttpMethod.POST)
+        Mockito.`when`(localeOptions!!.changeLocaleMethods).thenReturn(methods)
+        Assertions.assertArrayEquals(methods, localeOptionsTest!!.localeOptions!!.changeLocaleMethods)
     }
 
     @Test
-    void testGetCookie() {
-        when(localeOptions.getCookie()).thenReturn(new LocaleCookieOptions());
-        assertEquals(new LocaleCookieOptions(), localeOptionsTest.localeOptions.getCookie());
+    fun testGetCookie() {
+        Mockito.`when`(localeOptions!!.cookie).thenReturn(LocaleCookieOptions())
+        Assertions.assertEquals(LocaleCookieOptions(), localeOptionsTest!!.localeOptions!!.cookie)
     }
 }
 

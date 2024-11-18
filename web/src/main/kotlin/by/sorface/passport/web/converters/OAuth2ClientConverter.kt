@@ -1,6 +1,6 @@
 package by.sorface.passport.web.converters
 
-import by.sorface.passport.web.dao.models.OAuth2Client
+import by.sorface.passport.web.dao.sql.models.OAuth2Client
 import by.sorface.passport.web.records.responses.ApplicationClient
 import org.springframework.stereotype.Component
 

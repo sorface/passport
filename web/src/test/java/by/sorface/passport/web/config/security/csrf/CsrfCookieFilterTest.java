@@ -1,5 +1,6 @@
 package by.sorface.passport.web.config.security.csrf;
 
+import by.sorface.passport.web.security.csrf.CsrfCookieFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,13 +1,12 @@
 package by.sorface.passport.web.facade.signup
 
-import by.sorface.passport.web.dao.models.TokenEntity
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.TokenOperationType
+import by.sorface.passport.web.dao.sql.models.TokenEntity
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.TokenOperationType
 import by.sorface.passport.web.exceptions.NotFoundException
 import by.sorface.passport.web.exceptions.ObjectExpiredException
 import by.sorface.passport.web.exceptions.UserRequestException
 import by.sorface.passport.web.extensions.hasNotOperation
-import by.sorface.passport.web.extensions.hasOperation
 import by.sorface.passport.web.extensions.isExpired
 import by.sorface.passport.web.mappers.UserMapper
 import by.sorface.passport.web.records.I18Codes
@@ -18,22 +17,13 @@ import by.sorface.passport.web.records.responses.UserRegisteredHash
 import by.sorface.passport.web.services.tokens.TokenService
 import by.sorface.passport.web.services.users.UserService
 import by.sorface.passport.web.utils.json.mask.MaskerFields
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
-open class DefaultSignupFacade(
-    private val userService: UserService,
-    private val tokenService: TokenService,
-    private val userMapper: UserMapper,
-    private val defaultTokenValidator: DefaultTokenValidator
-) : SignupFacade {
+open class DefaultSignupFacade(private val userService: UserService, private val tokenService: TokenService, private val userMapper: UserMapper) : SignupFacade {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(DefaultSignupEmailFacade::class.java)
@@ -75,8 +65,9 @@ open class DefaultSignupFacade(
         LOGGER.info("The hash token {} created for account", registryToken.hash?.substring(0, 5) + "...")
 
         return UserRegisteredHash(
-            savedUser.id,
-            savedUser.email,
+            savedUser.id!!,
+            savedUser.username!!,
+            savedUser.email!!,
             registryToken.hash,
             savedUser.firstName,
             savedUser.lastName
@@ -129,8 +120,9 @@ open class DefaultSignupFacade(
         val user: UserEntity = loadedToken.user ?: throw NotFoundException(I18Codes.I18TokenCodes.NOT_FOUND)
 
         return UserRegisteredHash(
-            user.id,
-            user.email,
+            user.id!!,
+            user.username!!,
+            user.email!!,
             loadedToken.hash,
             user.firstName,
             user.lastName

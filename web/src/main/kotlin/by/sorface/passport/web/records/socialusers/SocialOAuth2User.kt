@@ -1,17 +1,17 @@
 package by.sorface.passport.web.records.socialusers
 
 interface SocialOAuth2User {
-    val id: String?
+    var id: String?
 
-    val username: String?
+    var username: String?
 
-    val email: String?
+    var email: String?
 
-    val firstName: String?
+    var firstName: String?
 
-    val lastName: String?
+    var lastName: String?
 
-    val middleName: String?
+    var middleName: String?
 
-    val avatarUrl: String?
+    var avatarUrl: String?
 }

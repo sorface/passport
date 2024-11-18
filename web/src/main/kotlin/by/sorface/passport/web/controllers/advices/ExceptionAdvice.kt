@@ -11,7 +11,6 @@ import by.sorface.passport.web.records.responses.ValidateOperationError
 import by.sorface.passport.web.records.responses.ValidateOperationError.ValidateError
 import by.sorface.passport.web.services.locale.LocaleI18Service
 import by.sorface.passport.web.services.sleuth.SleuthService
-import lombok.RequiredArgsConstructor
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
@@ -29,7 +28,6 @@ import java.util.*
     basePackageClasses = [AccountController::class, AccountSessionController::class, ApplicationClientController::class, CsrfController::class
     ]
 )
-@RequiredArgsConstructor
 class ExceptionAdvice(private val sleuthService: SleuthService, private val localeI18Service: LocaleI18Service) {
 
     @ExceptionHandler(

@@ -1,10 +1,5 @@
 package by.sorface.passport.web.records.socialusers
 
-import lombok.Builder
-import lombok.Getter
-
-@Getter
-@Builder
 class GitHubOAuth2User : SocialOAuth2User {
     override var id: String? = null
 

@@ -1,74 +1,77 @@
-package by.sorface.passport.web.services.tokens;
+package by.sorface.passport.web.services.tokens
 
-import by.sorface.passport.web.dao.models.TokenEntity;
-import by.sorface.passport.web.dao.models.UserEntity;
-import by.sorface.passport.web.dao.models.enums.TokenOperationType;
-import by.sorface.passport.web.dao.sql.RegistryTokenRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import by.sorface.passport.web.dao.sql.models.TokenEntity
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.TokenOperationType
+import by.sorface.passport.web.dao.sql.repository.RegistryTokenRepository
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.invocation.InvocationOnMock
+import org.mockito.junit.jupiter.MockitoExtension
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
-class DefaultTokenServiceTest {
+@DisplayName(value = "Service for work with token")
+@ExtendWith(MockitoExtension::class)
+internal class DefaultTokenServiceTest {
 
     @Mock
-    private RegistryTokenRepository registryTokenRepository;
+    private lateinit var registryTokenRepository: RegistryTokenRepository
 
     @InjectMocks
-    private DefaultTokenService defaultTokenService;
+    private lateinit var defaultTokenService: DefaultTokenService
 
     @Test
-    void testFindByHash() {
-        String hash = "testHash";
-        TokenEntity tokenEntity = new TokenEntity();
-        when(registryTokenRepository.findByHashIgnoreCase(hash)).thenReturn(tokenEntity);
+    fun `find token by hash`() {
+        val hash = "testHash"
+        val tokenEntity = TokenEntity()
+        Mockito.`when`(registryTokenRepository.findByHashIgnoreCase(hash)).thenReturn(tokenEntity)
 
-        TokenEntity result = defaultTokenService.findByHash(hash);
+        val result = defaultTokenService.findByHash(hash)
 
-        assertNotNull(result);
-        assertEquals(tokenEntity, result);
-        verify(registryTokenRepository, times(1)).findByHashIgnoreCase(hash);
+        Assertions.assertNotNull(result)
+        Assertions.assertEquals(tokenEntity, result)
+        Mockito.verify(registryTokenRepository, Mockito.times(1)).findByHashIgnoreCase(hash)
     }
 
     @Test
-    void testSaveForUser() {
-        UserEntity userEntity = new UserEntity();
-        TokenOperationType operationType = TokenOperationType.CONFIRM_EMAIL;
+    fun `save token for user`() {
+        val userEntity = UserEntity()
+        val operationType = TokenOperationType.CONFIRM_EMAIL
 
-        when(registryTokenRepository.save(any(TokenEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        Mockito.`when`(registryTokenRepository.save(ArgumentMatchers.any(TokenEntity::class.java)))
+            .thenAnswer { invocation: InvocationOnMock -> invocation.getArgument(0) }
 
-        TokenEntity result = defaultTokenService.saveForUser(userEntity, operationType);
+        val result = defaultTokenService.saveForUser(userEntity, operationType)
 
-        assertNotNull(result);
-        assertEquals(userEntity, result.getUser());
-        assertEquals(operationType, result.getOperationType());
-        verify(registryTokenRepository, times(1)).save(any(TokenEntity.class));
+        Assertions.assertNotNull(result)
+        Assertions.assertEquals(userEntity, result.user)
+        Assertions.assertEquals(operationType, result.operationType)
+        Mockito.verify(registryTokenRepository, Mockito.times(1)).save(ArgumentMatchers.any(TokenEntity::class.java))
     }
 
     @Test
-    void testFindByEmail() {
-        String email = "testEmail";
-        TokenEntity tokenEntity = new TokenEntity();
-        when(registryTokenRepository.findByUserEmail(email)).thenReturn(tokenEntity);
+    fun `find token by email`() {
+        val email = "testEmail"
+        val tokenEntity = TokenEntity()
+        Mockito.`when`(registryTokenRepository.findByUserEmail(email)).thenReturn(tokenEntity)
 
-        TokenEntity result = defaultTokenService.findByEmail(email);
+        val result = defaultTokenService.findByEmail(email)
 
-        assertNotNull(result);
-        assertEquals(tokenEntity, result);
-        verify(registryTokenRepository, times(1)).findByUserEmail(email);
+        Assertions.assertNotNull(result)
+        Assertions.assertEquals(tokenEntity, result)
+        Mockito.verify(registryTokenRepository, Mockito.times(1)).findByUserEmail(email)
     }
 
     @Test
-    void testDeleteByHash() {
-        String hash = "testHash";
-        defaultTokenService.deleteByHash(hash);
+    fun `delete token by hash`() {
+        val hash = "testHash"
+        defaultTokenService.deleteByHash(hash)
 
-        verify(registryTokenRepository, times(1)).deleteByHashIgnoreCase(hash);
+        Mockito.verify(registryTokenRepository, Mockito.times(1)).deleteByHashIgnoreCase(hash)
     }
 }

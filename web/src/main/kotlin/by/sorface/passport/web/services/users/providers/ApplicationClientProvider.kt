@@ -2,10 +2,9 @@ package by.sorface.passport.web.services.users.providers
 
 import by.sorface.passport.web.config.options.ClientTokenOptions
 import by.sorface.passport.web.config.options.ClientTokenOptions.TokenSetting
-import by.sorface.passport.web.dao.models.OAuth2Client
+import by.sorface.passport.web.dao.sql.models.OAuth2Client
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.services.clients.OAuth2ClientService
-import lombok.SneakyThrows
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
 import org.springframework.security.oauth2.core.oidc.OidcScopes

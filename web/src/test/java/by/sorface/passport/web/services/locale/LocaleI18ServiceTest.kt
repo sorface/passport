@@ -1,71 +1,67 @@
-package by.sorface.passport.web.services.locale;
+package by.sorface.passport.web.services.locale
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ResourceBundleMessageSource;
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.i18n.LocaleContextHolder
+import org.springframework.context.support.ResourceBundleMessageSource
 
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
-class LocaleI18ServiceTest {
+@ExtendWith(MockitoExtension::class)
+internal class LocaleI18ServiceTest {
 
     @Mock
-    private ResourceBundleMessageSource messageSource;
+    private lateinit var messageSource: ResourceBundleMessageSource
 
     @InjectMocks
-    private LocaleI18Service localeI18Service;
+    private lateinit var localeI18Service: LocaleI18Service
 
     @Test
-    void testGetI18Message() {
-        final var i18Code = "test.i18.code";
-        final var expectedMessage = "Test message";
-        when(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage);
+    fun testGetI18Message() {
+        val i18Code = "test.i18.code"
+        val expectedMessage = "Test message"
+        Mockito.`when`(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage)
 
-        final var result = localeI18Service.getI18Message(i18Code);
+        val result = localeI18Service.getI18Message(i18Code)
 
-        assertEquals(expectedMessage, result);
+        Assertions.assertEquals(expectedMessage, result)
     }
 
     @Test
-    void testGetI18MessageWithArgs() {
-        final var i18Code = "test.i18.code";
-        final var expectedMessage = "Test message with {arg1}";
-        final var args = new HashMap<String, String>() {{
-            put("arg1", "value1");
-        }};
-        when(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage);
+    fun testGetI18MessageWithArgs() {
+        val i18Code = "test.i18.code"
+        val expectedMessage = "Test message with {arg1}"
+        val args: HashMap<String, String> = hashMapOf(Pair("arg1", "value1"))
 
-        final var result = localeI18Service.getI18Message(i18Code, args);
+        Mockito.`when`(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage)
 
-        assertEquals("Test message with value1", result);
+        val result = localeI18Service.getI18Message(i18Code, args)
+
+        Assertions.assertEquals("Test message with value1", result)
     }
 
     @Test
-    void testGetI18MessageWithNullArgs() {
-        final var i18Code = "test.i18.code";
-        final var expectedMessage = "Test message";
-        when(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage);
+    fun testGetI18MessageWithNullArgs() {
+        val i18Code = "test.i18.code"
+        val expectedMessage = "Test message"
+        Mockito.`when`(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage)
 
-        final var result = localeI18Service.getI18Message(i18Code, null);
+        val result = localeI18Service.getI18Message(i18Code, hashMapOf())
 
-        assertEquals(expectedMessage, result);
+        Assertions.assertEquals(expectedMessage, result)
     }
 
     @Test
-    void testGetI18MessageWithEmptyArgs() {
-        final var i18Code = "test.i18.code";
-        final var expectedMessage = "Test message";
-        when(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage);
+    fun testGetI18MessageWithEmptyArgs() {
+        val i18Code = "test.i18.code"
+        val expectedMessage = "Test message"
+        Mockito.`when`(messageSource.getMessage(i18Code, null, LocaleContextHolder.getLocale())).thenReturn(expectedMessage)
 
-        final var result = localeI18Service.getI18Message(i18Code, new HashMap<>());
+        val result = localeI18Service.getI18Message(i18Code, HashMap())
 
-        assertEquals(expectedMessage, result);
+        Assertions.assertEquals(expectedMessage, result)
     }
 }

@@ -1,16 +1,26 @@
-package by.sorface.passport.web.utils.json.mask;
+package by.sorface.passport.web.utils.json.mask
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import by.sorface.passport.web.utils.json.mask.MaskerFields.Companion.findByFieldName
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import java.util.stream.Stream
 
-import java.util.stream.Stream;
+internal class MaskerFieldsTest {
+    @ParameterizedTest
+    @MethodSource("maskFieldsProviderFactory")
+    fun findByFieldName(field: String?, expectedMaskerField: MaskerFields?) {
+        val actualField = findByFieldName(field)
 
-class MaskerFieldsTest {
+        Assertions.assertEquals(expectedMaskerField, actualField)
+    }
 
-    static Stream<Arguments> maskFieldsProviderFactory() {
-        return Stream.of(
+    companion object {
+
+        @JvmStatic
+        fun maskFieldsProviderFactory(): Stream<Arguments> {
+            return Stream.of(
                 Arguments.of("pwd", MaskerFields.PASSWORDS),
                 Arguments.of("password", MaskerFields.PASSWORDS),
                 Arguments.of("pass", MaskerFields.PASSWORDS),
@@ -19,15 +29,8 @@ class MaskerFieldsTest {
                 Arguments.of("token", MaskerFields.TOKEN),
                 Arguments.of("hash", MaskerFields.TOKEN),
                 Arguments.of(null, MaskerFields.UNKNOWN)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("maskFieldsProviderFactory")
-    void findByFieldName(final String field, final MaskerFields expectedMaskerField) {
-        final var actualField = MaskerFields.findByFieldName(field);
-
-        Assertions.assertEquals(expectedMaskerField, actualField);
+            )
+        }
     }
 
 }

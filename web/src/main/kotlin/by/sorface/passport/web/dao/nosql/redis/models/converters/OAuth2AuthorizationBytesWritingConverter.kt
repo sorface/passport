@@ -1,9 +1,7 @@
 package by.sorface.passport.web.dao.nosql.redis.models.converters
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.core.convert.converter.Converter
 import org.springframework.data.convert.WritingConverter
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization
 import org.springframework.stereotype.Component
 import java.io.ByteArrayOutputStream

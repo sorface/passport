@@ -1,7 +1,7 @@
 package by.sorface.passport.web.facade.clients
 
 import by.sorface.passport.web.converters.OAuth2ClientConverter
-import by.sorface.passport.web.dao.models.OAuth2Client
+import by.sorface.passport.web.dao.sql.models.OAuth2Client
 import by.sorface.passport.web.exceptions.NotFoundException
 import by.sorface.passport.web.exceptions.UserRequestException
 import by.sorface.passport.web.records.I18Codes
@@ -14,8 +14,6 @@ import by.sorface.passport.web.services.clients.OAuth2ClientService
 import by.sorface.passport.web.utils.HashUtils.generateRegistryHash
 import by.sorface.passport.web.utils.URLUtils.isValidRedirectUrl
 import io.micrometer.tracing.annotation.NewSpan
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -26,16 +24,8 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
-import java.util.stream.Collectors
-import kotlin.collections.List
-import kotlin.collections.Set
-import kotlin.collections.listOf
-import kotlin.collections.map
-import kotlin.collections.toList
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 open class DefaultApplicationClientFacade(
     private val oAuth2ClientService: OAuth2ClientService,
     private val oAuth2ClientConverter: OAuth2ClientConverter,
@@ -53,11 +43,11 @@ open class DefaultApplicationClientFacade(
 
         val principal = authentication.principal as DefaultPrincipal
 
-        LOGGER.debug("Find application clients by current user [id -> {}]", principal.id)
+        val userId = principal.id ?: throw NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID)
 
-        val applicationClients = (oAuth2ClientService.findAllByUserId(principal.id) ?: listOf())
-            .map { source: OAuth2Client? -> oAuth2ClientConverter.convertWithoutSecret(source) }
-            .toList()
+        LOGGER.debug("Find application clients by current user [id -> {}]", userId)
+
+        val applicationClients = oAuth2ClientService.findAllByUserId(userId).map { oAuth2ClientConverter.convertWithoutSecret(it) }.toList()
 
         LOGGER.info("Find application clients [ids -> ${applicationClients.map { it.id }.toList()}] by current user [id -> ${principal.id}]")
 
@@ -69,11 +59,10 @@ open class DefaultApplicationClientFacade(
 
         val principal = authentication.principal as DefaultPrincipal
 
-        val oAuth2Client = oAuth2ClientService.findByIdAndUserId(clientId, principal.id)
+        val userId = principal.id ?: throw NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID)
 
-        if (Objects.isNull(oAuth2Client)) {
-            throw NotFoundException(I18Codes.I18ClientCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", clientId.toString())))
-        }
+        val oAuth2Client = oAuth2ClientService.findByIdAndUserId(clientId, userId)
+            ?: throw NotFoundException(I18Codes.I18ClientCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", clientId.toString())))
 
         return oAuth2ClientConverter.convertWithoutSecret(oAuth2Client)
     }
@@ -83,7 +72,9 @@ open class DefaultApplicationClientFacade(
 
         val principal = authentication.principal as DefaultPrincipal
 
-        val oAuth2Client = oAuth2ClientService.findByIdAndUserId(clientId, principal.id)
+        val userId = principal.id ?: throw NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID)
+
+        val oAuth2Client = oAuth2ClientService.findByIdAndUserId(clientId, userId)
             ?: throw NotFoundException(I18Codes.I18ClientCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", clientId.toString())))
 
         val clientSecret = generateClientSecret()
@@ -93,10 +84,12 @@ open class DefaultApplicationClientFacade(
 
         oAuth2ClientService.save(oAuth2Client)
 
-        return ApplicationClientRefreshSecret.builder()
-            .clientSecret(clientSecret)
-            .expiresAt(buildDefaultClientSecretExpire())
-            .build()
+        return ApplicationClientRefreshSecret().run {
+            this.clientSecret = clientSecret
+            this.expiresAt = buildDefaultClientSecretExpire()
+
+            this
+        }
     }
 
     override fun delete(clientId: UUID) {

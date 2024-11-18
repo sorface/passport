@@ -1,7 +1,7 @@
 package by.sorface.passport.web.services.users
 
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.ProviderType
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.ProviderType
 import java.util.*
 
 interface UserService {

@@ -11,6 +11,10 @@ class I18Codes {
         const val OBJECT_IS_NOT_SUPPORTED: String = "global.object_is_not_supported"
     }
 
+    object SELF {
+        const val NOT_FOUND_KEY: String = "i18.not_found_template"
+    }
+
     object I18UserCodes {
         const val ALREADY_EXISTS_WITH_THIS_EMAIL: String = "user.already_exists_with_this_email"
 

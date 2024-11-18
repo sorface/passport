@@ -1,8 +1,8 @@
 package by.sorface.passport.web.services.tokens
 
-import by.sorface.passport.web.dao.models.TokenEntity
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.TokenOperationType
+import by.sorface.passport.web.dao.sql.models.TokenEntity
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.TokenOperationType
 
 /**
  * This interface defines the methods for the TokenService.

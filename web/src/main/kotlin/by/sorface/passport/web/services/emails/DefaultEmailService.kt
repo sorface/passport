@@ -4,7 +4,6 @@ import by.sorface.passport.web.records.mails.Mail
 import by.sorface.passport.web.records.mails.MailImage
 import by.sorface.passport.web.records.mails.MailTemplate
 import jakarta.mail.MessagingException
-import liquibase.pro.packaged.e
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -15,7 +14,6 @@ import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.stereotype.Service
 import org.thymeleaf.TemplateEngine
 import java.util.*
-import java.util.function.Consumer
 
 @Service
 class DefaultEmailService(private val templateEngine: TemplateEngine, private val emailSender: JavaMailSender) : EmailService {
@@ -49,7 +47,7 @@ class DefaultEmailService(private val templateEngine: TemplateEngine, private va
             email.setText(html, true)
             email.setSentDate(Date())
 
-            (mailTemplate.images ?: listOf())
+            mailTemplate.images
                 .forEach { image: MailImage ->
                     val simpleImageName = image.name.replaceFirst("[.][^.]+$".toRegex(), "")
                     val path = buildImageResourcePath(image.name)

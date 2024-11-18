@@ -1,17 +1,11 @@
 package by.sorface.passport.web.services.locale
 
-import lombok.RequiredArgsConstructor
-import lombok.extern.slf4j.Slf4j
 import org.apache.commons.text.StringSubstitutor
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.support.ResourceBundleMessageSource
 import org.springframework.stereotype.Service
-import java.util.*
-import kotlin.collections.HashMap
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 class LocaleI18Service(private val messageSource: ResourceBundleMessageSource) : LocaleService {
 
     override fun getI18Message(i18Code: String): String? = getMessage(i18Code, java.util.Map.of())

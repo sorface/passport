@@ -7,36 +7,23 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ConfigurationProperties("sorface.cookie")
 open class CookieOptions {
-    /**
-     * The session cookie options.
-     */
-    var session: SessionCookieOptions? = null
 
-    /**
-     * The session cookie options.
-     */
-    var csrf: CsrfCookieOptions? = null
+    val session: SessionCookieOptions = SessionCookieOptions()
+
+    var csrf: CsrfCookieOptions = CsrfCookieOptions()
 
     open class SessionCookieOptions {
-        /**
-         * The session cookie options.
-         */
+
         var domainPattern: String? = null
 
-        /**
-         * The path for the session cookie.
-         */
         var path: String? = null
 
-        /**
-         * The path for the session cookie.
-         */
         var name: String? = null
 
         /**
          * The path for the session cookie.
          */
-        var sameSite: SameSiteCookies? = null
+        lateinit var sameSite: SameSiteCookies
 
         /**
          * Whether the session cookie is only accessible via HTTP.

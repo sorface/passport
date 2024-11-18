@@ -1,48 +1,43 @@
 package by.sorface.passport.web.facade.accounts
 
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.TokenOperationType
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.TokenOperationType
+import by.sorface.passport.web.exceptions.NotFoundException
 import by.sorface.passport.web.exceptions.UserRequestException
+import by.sorface.passport.web.extensions.hasNotOperation
+import by.sorface.passport.web.extensions.hasOperation
+import by.sorface.passport.web.extensions.isExpired
 import by.sorface.passport.web.facade.emails.EmailLocaleMessageFacade
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.tokens.ApplyNewPasswordRequest
 import by.sorface.passport.web.services.tokens.TokenService
-import by.sorface.passport.web.services.tokens.TokenValidator
 import by.sorface.passport.web.services.users.UserService
-import lombok.RequiredArgsConstructor
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 /**
  * DefaultRenewPasswordFacade class is a service class that implements RenewPasswordFacade interface.
  * It provides methods for forgetting password, applying new password and checking renewal password token.
  */
 @Service
-@RequiredArgsConstructor
-class DefaultRenewPasswordFacade(
+open class DefaultRenewPasswordFacade(
     private val tokenService: TokenService,
     private val userService: UserService,
     private val passwordEncoder: PasswordEncoder,
     private val emailLocaleMessageFacade: EmailLocaleMessageFacade
 ) : RenewPasswordFacade {
 
-    override fun forgetPassword(email: String?) {
-        val user = userService!!.findByEmail(email)
+    override fun forgetPassword(email: String) {
+        val user = userService.findByEmail(email) ?: throw UserRequestException(I18Codes.I18UserCodes.NOT_FOUND_BY_EMAIL)
 
-        if (Objects.isNull(user)) {
-            throw UserRequestException(I18Codes.I18UserCodes.NOT_FOUND_BY_EMAIL)
-        }
-
-        val token = tokenService!!.saveForUser(user, TokenOperationType.PASSWORD_RENEW)
+        val token = tokenService.saveForUser(user, TokenOperationType.PASSWORD_RENEW)
 
         val locale = LocaleContextHolder.getLocale()
 
-        emailLocaleMessageFacade!!.sendRenewPasswordEmail(locale, user!!.email, token.hash, user.username)
+        emailLocaleMessageFacade.sendRenewPasswordEmail(locale, user.email!!, token.hash, user.username)
     }
-
 
     /**
      * applyNewPassword method is used to apply a new password.
@@ -53,20 +48,25 @@ class DefaultRenewPasswordFacade(
      */
     @Transactional
     override fun applyNewPassword(request: ApplyNewPasswordRequest) {
-        val token = tokenService!!.findByHash(request.hashToken)
+        val token = tokenService.findByHash(request.hashToken) ?: throw NotFoundException(I18Codes.I18TokenCodes.NOT_FOUND)
 
-        tokenValidator!!.validateOperation(token!!, TokenOperationType.PASSWORD_RENEW)
-        tokenValidator.validateExpiredDate(token)
+        val user: UserEntity = token.user ?: throw NotFoundException(I18Codes.I18TokenCodes.NOT_FOUND)
 
-        val user: UserEntity = token.getUser()
+        if (token.hasNotOperation(TokenOperationType.PASSWORD_RENEW)) {
+            throw NotFoundException(I18Codes.I18TokenCodes.INVALID_OPERATION_TYPE)
+        }
 
-        val encodedPassword = passwordEncoder!!.encode(request.newPassword)
+        if (token.isExpired()) {
+            throw NotFoundException(I18Codes.I18TokenCodes.EXPIRED)
+        }
+
+        val encodedPassword = passwordEncoder.encode(request.newPassword)
 
         user.password = encodedPassword
 
-        userService!!.save(user)
+        userService.save(user)
 
-        tokenService.deleteByHash(token.getHash())
+        tokenService.deleteByHash(token.hash)
     }
 
     /**
@@ -75,10 +75,15 @@ class DefaultRenewPasswordFacade(
      *
      * @param hash the hash of the token
      */
-    override fun checkRenewPasswordToken(hash: String?) {
-        val token = tokenService!!.findByHash(hash)
+    override fun checkRenewPasswordToken(hash: String) {
+        val token = tokenService.findByHash(hash) ?: throw NotFoundException(I18Codes.I18TokenCodes.NOT_FOUND)
 
-        tokenValidator!!.validateOperation(token!!, TokenOperationType.PASSWORD_RENEW)
-        tokenValidator.validateExpiredDate(token)
+        if (token.hasOperation(TokenOperationType.PASSWORD_RENEW)) {
+            throw NotFoundException(I18Codes.I18TokenCodes.INVALID_OPERATION_TYPE)
+        }
+
+        if (token.isExpired()) {
+            throw NotFoundException(I18Codes.I18TokenCodes.EXPIRED)
+        }
     }
 }

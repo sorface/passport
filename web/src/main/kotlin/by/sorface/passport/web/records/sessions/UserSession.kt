@@ -1,17 +1,17 @@
 package by.sorface.passport.web.records.sessions
 
 class UserSession {
-    private val id: String? = null
+    var id: String? = null
 
-    private val device: String? = null
+    var device: String? = null
 
-    private val deviceBrand: String? = null
+    var deviceBrand: String? = null
 
-    private val deviceType: String? = null
+    var deviceType: String? = null
 
-    private val browser: String? = null
+    var browser: String? = null
 
-    private val createdAt: Long? = null
+    var createdAt: Long? = null
 
-    private val active = false
+    var active = false
 }

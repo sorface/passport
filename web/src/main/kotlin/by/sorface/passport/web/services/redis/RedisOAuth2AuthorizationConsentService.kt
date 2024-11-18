@@ -22,7 +22,7 @@ class RedisOAuth2AuthorizationConsentService(
         Assert.notNull(authorizationConsent, "authorizationConsent cannot be null")
         val id = getId(authorizationConsent)
 
-        authorizationConsents[buildKey(id), authorizationConsent, oAuth2Options.redis!!.consent!!.ttl] = oAuth2Options.redis!!.consent!!.unit!!
+        authorizationConsents[buildKey(id), authorizationConsent, oAuth2Options.redis.consent.ttl] = oAuth2Options.redis.consent.unit
     }
 
     override fun remove(authorizationConsent: OAuth2AuthorizationConsent) {
@@ -38,13 +38,13 @@ class RedisOAuth2AuthorizationConsentService(
         Assert.hasText(principalName, "principalName cannot be empty")
         val id = getId(registeredClientId, principalName)
 
-        val ttl = oAuth2Options.redis!!.consent!!.ttl
-        val unit = oAuth2Options.redis!!.consent!!.unit
+        val ttl = oAuth2Options.redis.consent.ttl
+        val unit = oAuth2Options.redis.consent.unit
 
         return authorizationConsents.getAndExpire(id, ttl, unit)
     }
 
-    private fun buildKey(id: String): String = oAuth2Options.redis!!.consent!!.prefix + id
+    private fun buildKey(id: String): String = oAuth2Options.redis.consent.prefix + id
 
     companion object {
 

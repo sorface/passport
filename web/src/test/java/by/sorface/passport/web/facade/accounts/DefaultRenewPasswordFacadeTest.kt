@@ -1,107 +1,95 @@
-package by.sorface.passport.web.facade.accounts;
+package by.sorface.passport.web.facade.accounts
 
-import by.sorface.passport.web.dao.models.TokenEntity;
-import by.sorface.passport.web.dao.models.UserEntity;
-import by.sorface.passport.web.exceptions.UserRequestException;
-import by.sorface.passport.web.facade.emails.EmailLocaleMessageFacade;
-import by.sorface.passport.web.records.tokens.ApplyNewPasswordRequest;
-import by.sorface.passport.web.services.tokens.TokenService;
-import by.sorface.passport.web.services.tokens.TokenValidator;
-import by.sorface.passport.web.services.users.UserService;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import by.sorface.passport.web.dao.sql.models.TokenEntity
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.exceptions.UserRequestException
+import by.sorface.passport.web.facade.emails.EmailLocaleMessageFacade
+import by.sorface.passport.web.records.tokens.ApplyNewPasswordRequest
+import by.sorface.passport.web.services.tokens.TokenService
+import by.sorface.passport.web.services.users.UserService
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatchers
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.security.crypto.password.PasswordEncoder
+import java.time.LocalDateTime
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.*;
-
-@ExtendWith(MockitoExtension.class)
-class DefaultRenewPasswordFacadeTest {
+@ExtendWith(MockitoExtension::class)
+internal class DefaultRenewPasswordFacadeTest {
+    @Mock
+    private lateinit var tokenService: TokenService
 
     @Mock
-    private TokenService tokenService;
+    private lateinit var userService: UserService
 
     @Mock
-    private TokenValidator tokenValidator;
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @Mock
-    private UserService userService;
-
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
-    @Mock
-    private EmailLocaleMessageFacade emailLocaleMessageFacade;
+    private lateinit var emailLocaleMessageFacade: EmailLocaleMessageFacade
 
     @InjectMocks
-    private DefaultRenewPasswordFacade renewPasswordFacade;
+    private lateinit var renewPasswordFacade: DefaultRenewPasswordFacade
 
     @Test
-    void forgetPassword_UserFound_Success() {
-        String email = "test@example.com";
-        UserEntity user = new UserEntity();
-        user.setEmail(email);
-        when(userService.findByEmail(email)).thenReturn(user);
-        when(tokenService.saveForUser(any(), any())).thenReturn(new TokenEntity());
+    fun forgetPassword_UserFound_Success() {
+        val email = "test@example.com"
+        val user = UserEntity()
+        user.email = email
+        Mockito.`when`(userService.findByEmail(email)).thenReturn(user)
+        Mockito.`when`(tokenService.saveForUser(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(TokenEntity())
 
-        renewPasswordFacade.forgetPassword(email);
+        renewPasswordFacade.forgetPassword(email)
 
-        verify(userService, times(1)).findByEmail(email);
-        verify(tokenService, times(1)).saveForUser(any(), any());
-        verify(emailLocaleMessageFacade, times(1)).sendRenewPasswordEmail(any(), any(), any(), any());
+        Mockito.verify(userService, Mockito.times(1)).findByEmail(email)
+        Mockito.verify(tokenService, Mockito.times(1)).saveForUser(ArgumentMatchers.any(), ArgumentMatchers.any())
+        Mockito.verify(emailLocaleMessageFacade, Mockito.times(1))
+            .sendRenewPasswordEmail(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any())
     }
 
     @Test
-    void forgetPassword_UserNotFound_ThrowsException() {
-        String email = "test@example.com";
-        when(userService.findByEmail(email)).thenReturn(null);
+    fun forgetPassword_UserNotFound_ThrowsException() {
+        val email = "test@example.com"
+        Mockito.`when`(userService.findByEmail(email)).thenReturn(null)
 
-        assertThrows(UserRequestException.class, () -> renewPasswordFacade.forgetPassword(email));
+        Assertions.assertThrows(UserRequestException::class.java) { renewPasswordFacade.forgetPassword(email) }
 
-        verify(userService, times(1)).findByEmail(email);
-        verifyNoInteractions(tokenService, emailLocaleMessageFacade);
+        Mockito.verify(userService, Mockito.times(1)).findByEmail(email)
+        Mockito.verifyNoInteractions(tokenService, emailLocaleMessageFacade)
     }
 
     @Test
-    void applyNewPassword_Success() {
-        ApplyNewPasswordRequest request = new ApplyNewPasswordRequest("newPassword", "tokenHash");
-        TokenEntity token = Mockito.spy(new TokenEntity());
-        UserEntity user = new UserEntity();
-        when(tokenService.findByHash(anyString())).thenReturn(token);
-        doNothing().when(tokenValidator).validateOperation(any(), any());
-        doNothing().when(tokenValidator).validateExpiredDate(any());
-        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
-        when(token.getUser()).thenReturn(user);
-        when(token.getHash()).thenReturn("tokenHash");
+    fun `apply new password success`() {
+        val request = ApplyNewPasswordRequest("newPassword", "tokenHash")
+        val token = Mockito.spy(TokenEntity())
+        val user = UserEntity()
 
-        renewPasswordFacade.applyNewPassword(request);
+        Mockito.`when`(tokenService.findByHash(ArgumentMatchers.anyString())).thenReturn(token)
+        Mockito.`when`(passwordEncoder.encode(ArgumentMatchers.any())).thenReturn("encodedPassword")
+        Mockito.`when`(token.user).thenReturn(user)
+        Mockito.`when`(token.hash).thenReturn("tokenHash")
+        Mockito.`when`(token.modifiedDate).thenReturn(LocalDateTime.now())
 
-        verify(tokenService, times(1)).findByHash(anyString());
-        verify(tokenValidator, times(1)).validateOperation(any(), any());
-        verify(tokenValidator, times(1)).validateExpiredDate(any());
-        verify(passwordEncoder, times(1)).encode(any());
-        verify(userService, times(1)).save(any());
-        verify(tokenService, times(1)).deleteByHash(anyString());
+        renewPasswordFacade.applyNewPassword(request)
+
+        Mockito.verify(tokenService, Mockito.times(1)).findByHash(ArgumentMatchers.anyString())
+        Mockito.verify(passwordEncoder, Mockito.times(1)).encode(ArgumentMatchers.any())
+        Mockito.verify(userService, Mockito.times(1)).save(ArgumentMatchers.any())
+        Mockito.verify(tokenService, Mockito.times(1)).deleteByHash(ArgumentMatchers.anyString())
     }
 
     @Test
-    void checkRenewPasswordToken_Success() {
-        String hash = "tokenHash";
-        TokenEntity token = new TokenEntity();
-        when(tokenService.findByHash(anyString())).thenReturn(token);
-        doNothing().when(tokenValidator).validateOperation(any(), any());
-        doNothing().when(tokenValidator).validateExpiredDate(any());
+    fun `check renew password token success`() {
+        val hash = "tokenHash"
+        val token = TokenEntity()
+        Mockito.`when`(tokenService.findByHash(ArgumentMatchers.anyString())).thenReturn(token)
 
-        renewPasswordFacade.checkRenewPasswordToken(hash);
+        renewPasswordFacade.checkRenewPasswordToken(hash)
 
-        verify(tokenService, times(1)).findByHash(anyString());
-        verify(tokenValidator, times(1)).validateOperation(any(), any());
-        verify(tokenValidator, times(1)).validateExpiredDate(any());
+        Mockito.verify(tokenService, Mockito.times(1)).findByHash(ArgumentMatchers.anyString())
     }
 }

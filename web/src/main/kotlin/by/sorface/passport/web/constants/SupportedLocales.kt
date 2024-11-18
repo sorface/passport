@@ -2,9 +2,7 @@ package by.sorface.passport.web.constants
 
 import java.util.*
 
-object SupportedLocales {
-    @JvmField
-    val EN: Locale = Locale.ENGLISH
-
-    val RU: Locale = Locale("ru", "RU")
+enum class SupportedLocales(val locale: Locale) {
+    EN(Locale.ENGLISH),
+    RU(Locale("ru", "RU"))
 }

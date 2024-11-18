@@ -1,7 +1,7 @@
 package by.sorface.passport.web.services.users.social
 
-import by.sorface.passport.web.dao.models.UserEntity
-import by.sorface.passport.web.dao.models.enums.ProviderType
+import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.dao.sql.models.enums.ProviderType
 import by.sorface.passport.web.records.socialusers.*
 import by.sorface.passport.web.services.users.RoleService
 import by.sorface.passport.web.services.users.UserService

@@ -1,3 +1,5 @@
 package by.sorface.passport.web.records.responses
 
-data class AccountSignupResponse(val username: String, val email: String)
+import java.util.*
+
+data class AccountSignupResponse(val id: UUID, val username: String, val email: String)
