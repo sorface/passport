@@ -1,8 +1,11 @@
 package by.sorface.passport.web.security.oauth2.config
 
-import by.sorface.passport.web.config.security.slo.DelegateLogoutHandler
-import by.sorface.passport.web.config.security.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.passport.web.config.options.CookieProperties
 import by.sorface.passport.web.security.oauth2.jwt.Jwks.generateRsa
+import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutHandler
+import by.sorface.passport.web.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.passport.web.security.oauth2.slo.OidcWebSessionLogoutHandler
+import by.sorface.passport.web.security.sessions.AccountSessionService
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
@@ -16,6 +19,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.jwt.JwtEncoder
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcConfigurer
@@ -26,13 +30,16 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
 
 @Configuration
-@EnableWebSecurity
-open class OAuth2SecurityConfiguration {
+@EnableWebSecurity(debug = true)
+class OAuth2SecurityConfiguration(
+    private val accountSessionService: AccountSessionService,
+    private val authorizationService: OAuth2AuthorizationService
+) {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Throws(Exception::class)
-    open fun authServerSecurityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
+    fun authServerSecurityFilterChain(httpSecurity: HttpSecurity, cookieProperties: CookieProperties): SecurityFilterChain {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(httpSecurity)
 
         httpSecurity
@@ -40,7 +47,8 @@ open class OAuth2SecurityConfiguration {
             .oidc { oidcConfigurer: OidcConfigurer ->
                 oidcConfigurer.logoutEndpoint { logoutEndpointConfigurer: OidcLogoutEndpointConfigurer ->
                     val delegateLogoutHandler = DelegateLogoutHandler(
-                        CookieClearingLogoutHandler("JSESSIONID"),
+                        CookieClearingLogoutHandler(cookieProperties.session.name, cookieProperties.csrf.name),
+                        OidcWebSessionLogoutHandler(accountSessionService, authorizationService),
                         OidcPostRedirectLocationLogoutHandler()
                     )
 
@@ -56,19 +64,21 @@ open class OAuth2SecurityConfiguration {
     }
 
     @Bean
-    open fun authorizationServerSettings(): AuthorizationServerSettings = AuthorizationServerSettings.builder().build()
+    fun authorizationServerSettings(): AuthorizationServerSettings = AuthorizationServerSettings.builder().build()
 
     @Bean
-    open fun jwkSource(): JWKSource<SecurityContext> {
-        val rsaKey = generateRsa()
-        val jwkSet = JWKSet(rsaKey)
+    fun jwkSource(): JWKSource<SecurityContext> {
+        val rsa = generateRsa()
+
+        val jwkSet = JWKSet(rsa)
+
         return JWKSource { jwkSelector: JWKSelector, _ -> jwkSelector.select(jwkSet) }
     }
 
     @Bean
-    open fun jwtDecoder(jwkSource: JWKSource<SecurityContext?>?): JwtDecoder = OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
+    fun jwtDecoder(jwkSource: JWKSource<SecurityContext?>?): JwtDecoder = OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
 
     @Bean
-    open fun jwtEncoder(jwkSource: JWKSource<SecurityContext?>?): JwtEncoder = NimbusJwtEncoder(jwkSource)
+    fun jwtEncoder(jwkSource: JWKSource<SecurityContext?>?): JwtEncoder = NimbusJwtEncoder(jwkSource)
 
 }

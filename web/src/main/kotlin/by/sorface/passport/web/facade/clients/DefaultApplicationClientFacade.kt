@@ -1,6 +1,5 @@
 package by.sorface.passport.web.facade.clients
 
-import by.sorface.passport.web.converters.OAuth2ClientConverter
 import by.sorface.passport.web.dao.sql.models.OAuth2Client
 import by.sorface.passport.web.exceptions.NotFoundException
 import by.sorface.passport.web.exceptions.UserRequestException
@@ -10,7 +9,8 @@ import by.sorface.passport.web.records.requests.ApplicationClientPatchRequest
 import by.sorface.passport.web.records.requests.ApplicationRegistry
 import by.sorface.passport.web.records.responses.ApplicationClient
 import by.sorface.passport.web.records.responses.ApplicationClientRefreshSecret
-import by.sorface.passport.web.services.clients.OAuth2ClientService
+import by.sorface.passport.web.security.converters.OAuth2ClientConverter
+import by.sorface.passport.web.security.oauth2.client.provider.database.OAuth2ClientService
 import by.sorface.passport.web.utils.HashUtils.generateRegistryHash
 import by.sorface.passport.web.utils.URLUtils.isValidRedirectUrl
 import io.micrometer.tracing.annotation.NewSpan
@@ -140,6 +140,14 @@ open class DefaultApplicationClientFacade(
 
             val redirects = java.lang.String.join(";", redirectUrls)
             oAuth2Client.redirectUris = redirects
+        }
+
+        request.postLogoutUrl?.let { postLogoutRedirectUri: String ->
+            if (isValidRedirectUrl(postLogoutRedirectUri).not()) {
+                throw UserRequestException(I18Codes.I18ClientCodes.REDIRECT_URL_NOT_VALID, mapOf(Pair("url", postLogoutRedirectUri)))
+            }
+
+            oAuth2Client.postLogoutRedirectUri = postLogoutRedirectUri
         }
 
         request.name?.let { oAuth2Client.clientName = it }

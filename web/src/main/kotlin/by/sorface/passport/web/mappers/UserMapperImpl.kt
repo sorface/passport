@@ -13,9 +13,6 @@ class UserMapperImpl(private val passwordEncoder: PasswordEncoder) : UserMapper 
 
         userEntity.username = accountSignup.username
         userEntity.email = accountSignup.email
-        userEntity.firstName = accountSignup.firstName
-        userEntity.lastName = accountSignup.lastName
-        userEntity.middleName = accountSignup.middleName
         userEntity.enabled = false
 
         val passwordHash = passwordEncoder.encode(accountSignup.password)

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class AdvancedSecurityEvaluator {
+open class AdvancedSecurityEvaluator {
 
     fun hasUserId(id: UUID): Boolean = SecurityContextHolder.getContext().getPrincipalIdOrNull() == id
 

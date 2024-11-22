@@ -126,7 +126,7 @@ sorface:
     session:
       domain-pattern: '^.+?\.(\w+\.[a-z]+)$'
       path: '/'
-      name: 'JSESSIONID'
+      name: 'pspt_id'
       http-only: true
     csrf:
       domain: 'localhost'

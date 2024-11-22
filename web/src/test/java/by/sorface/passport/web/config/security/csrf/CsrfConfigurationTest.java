@@ -1,6 +1,6 @@
 package by.sorface.passport.web.config.security.csrf;
 
-import by.sorface.passport.web.config.options.CookieOptions;
+import by.sorface.passport.web.config.options.CookieProperties;
 import by.sorface.passport.web.security.csrf.CsrfConfiguration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ class CsrfConfigurationTest {
 
     @Test
     public void cookieCsrfTokenRepository() {
-        final var csrfCookieOptions = new CookieOptions.CsrfCookieOptions();
+        final var csrfCookieOptions = new CookieProperties.CsrfCookieOptions();
         {
             csrfCookieOptions.setDomain("localhost");
             csrfCookieOptions.setName("csrf-cookie-name");
@@ -19,7 +19,7 @@ class CsrfConfigurationTest {
             csrfCookieOptions.setPath("/");
         }
 
-        final var cookieOptions = new CookieOptions();
+        final var cookieOptions = new CookieProperties();
         cookieOptions.setCsrf(csrfCookieOptions);
 
         final var cookieCsrfTokenRepository = csrfConfiguration.cookieCsrfTokenRepository(cookieOptions);

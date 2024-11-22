@@ -18,4 +18,6 @@ class ApplicationClient {
     var expiresAt: LocalDateTime? = null
 
     var redirectUrls: Set<String>? = null
+
+    var postLogoutUrl: String? = null
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.*
 @Entity
 @Table(name = "T_REGISTRYTOKEN")
 class TokenEntity : BaseEntity() {
+
     @Column(name = "C_HASH")
     var hash: String? = null
 

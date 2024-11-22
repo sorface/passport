@@ -1,9 +1,9 @@
 package by.sorface.passport.web.security.oauth2.provider.service.database
 
-import by.sorface.passport.web.converters.PrincipalConverter
-import by.sorface.passport.web.records.socialusers.GitHubOAuth2User
+import by.sorface.passport.web.security.converters.PrincipalConverter
 import by.sorface.passport.web.security.oauth2.provider.converter.GitHubOAuth2UserConverter
-import by.sorface.passport.web.services.users.social.GitHubOAuth2UserService
+import by.sorface.passport.web.security.oauth2.provider.service.GitHubOAuth2UserService
+import by.sorface.passport.web.security.oauth2.records.GitHubOAuth2User
 import org.springframework.stereotype.Service
 
 @Service

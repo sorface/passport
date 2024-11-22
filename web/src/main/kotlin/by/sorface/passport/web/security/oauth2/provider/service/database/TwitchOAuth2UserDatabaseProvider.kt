@@ -1,10 +1,10 @@
 package by.sorface.passport.web.security.oauth2.provider.service.database
 
-import by.sorface.passport.web.converters.OAuth2TwitchUserRequestEntityConverter
-import by.sorface.passport.web.converters.PrincipalConverter
-import by.sorface.passport.web.records.socialusers.TwitchOAuth2User
+import by.sorface.passport.web.security.converters.OAuth2TwitchUserRequestEntityConverter
+import by.sorface.passport.web.security.converters.PrincipalConverter
 import by.sorface.passport.web.security.oauth2.provider.converter.TwitchOAuth2UserConverter
-import by.sorface.passport.web.services.users.social.TwitchOAuth2UserService
+import by.sorface.passport.web.security.oauth2.provider.service.TwitchOAuth2UserService
+import by.sorface.passport.web.security.oauth2.records.TwitchOAuth2User
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

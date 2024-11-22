@@ -1,6 +1,6 @@
 package by.sorface.passport.web.security.cookies
 
-import by.sorface.passport.web.config.options.CookieOptions
+import by.sorface.passport.web.config.options.CookieProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.session.web.http.CookieSerializer
@@ -11,12 +11,12 @@ open class CookieConfiguration {
     /**
      * Bean method to configure the cookie serializer.
      *
-     * @param cookieOptions The cookie options to be used for configuration.
+     * @param cookieProperties The cookie options to be used for configuration.
      * @return The configured cookie serializer.
      */
     @Bean
-    open fun cookieSerializer(cookieOptions: CookieOptions): CookieSerializer {
-        val sessionCookieOptions = cookieOptions.session
+    open fun cookieSerializer(cookieProperties: CookieProperties): CookieSerializer {
+        val sessionCookieOptions = cookieProperties.session
 
         return sessionCookieOptions.let { sessionProperties ->
             val serializer = DefaultCookieSerializer()

@@ -9,7 +9,7 @@ import java.time.LocalDate
 class UserEntity : BaseEntity() {
 
     @Column(name = "C_USERNAME", unique = true)
-    var username: String? = null
+    lateinit var username: String
 
     @Column(name = "C_EMAIL", unique = true)
     var email: String? = null
@@ -33,8 +33,14 @@ class UserEntity : BaseEntity() {
     @Column(name = "C_MIDDLENAME")
     var middleName: String? = null
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinTable(name = "LT_USER_ROLE_STORE", joinColumns = [JoinColumn(name = "C_FK_USER")], inverseJoinColumns = [JoinColumn(name = "C_FK_ROLE")])
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "LT_USER_ROLE_STORE",
+        joinColumns = [JoinColumn(name = "C_FK_USER")],
+        inverseJoinColumns = [
+            JoinColumn(name = "C_FK_ROLE")
+        ]
+    )
     var roles: List<RoleEntity> = listOf()
 
     @Column(name = "C_ISENABLED", nullable = false)

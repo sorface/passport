@@ -1,9 +1,9 @@
 package by.sorface.passport.web.security.oauth2.provider.converter
 
 import by.sorface.passport.web.constants.claims.YandexClaims
-import by.sorface.passport.web.converters.socialusers.OAuth2UserConverter
-import by.sorface.passport.web.converters.socialusers.getValueAsStringOrNull
-import by.sorface.passport.web.records.socialusers.YandexOAuth2User
+import by.sorface.passport.web.security.extensions.OAuth2UserConverter
+import by.sorface.passport.web.security.extensions.getValueAsStringOrNull
+import by.sorface.passport.web.security.oauth2.records.YandexOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Component
 

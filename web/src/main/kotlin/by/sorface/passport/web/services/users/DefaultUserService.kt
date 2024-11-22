@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-open class DefaultUserService(private val userRepository: UserRepository) : UserService {
+class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
     @Transactional(readOnly = true)
     override fun findById(id: UUID): UserEntity? = userRepository.findById(id).orElse(null)

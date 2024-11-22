@@ -5,7 +5,7 @@ import by.sorface.passport.web.records.sessions.CleanupSession
 import by.sorface.passport.web.records.sessions.UserContextSession
 import by.sorface.passport.web.records.sessions.UserSession
 import by.sorface.passport.web.security.constants.SessionAttributes
-import by.sorface.passport.web.services.sessions.AccountSessionService
+import by.sorface.passport.web.security.sessions.AccountSessionService
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.session.Session
@@ -25,7 +25,7 @@ class DefaultAccountSessionFacade(private val accountSessionService: AccountSess
         return UserContextSession(userSessions)
     }
 
-    override fun getCurrentActiveSessions(): UserContextSession {
+    override fun getActiveSessions(): UserContextSession {
         val authentication = SecurityContextHolder.getContext().authentication
 
         val principal = authentication.principal as DefaultPrincipal
@@ -59,7 +59,9 @@ class DefaultAccountSessionFacade(private val accountSessionService: AccountSess
         return UserContextSession(userSessions)
     }
 
-    override fun batchDelete(cleanupSession: CleanupSession) = accountSessionService.batchDeleteById(cleanupSession.sessions)
+    override fun batchDelete(cleanupSession: CleanupSession): Set<String> {
+        return accountSessionService.batchDeleteById(cleanupSession.sessions)
+    }
 
     private fun buildUserSession(activeId: String, session: Session): UserSession {
         val attribute = session.getAttribute<String>(SessionAttributes.USER_AGENT)

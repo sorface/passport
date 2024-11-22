@@ -1,6 +1,6 @@
 package by.sorface.passport.web.security.csrf
 
-import by.sorface.passport.web.config.options.CookieOptions
+import by.sorface.passport.web.config.options.CookieProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.ResponseCookie.ResponseCookieBuilder
@@ -12,10 +12,10 @@ import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 open class CsrfConfiguration {
 
     @Bean
-    open fun cookieCsrfTokenRepository(cookieOptions: CookieOptions): CookieCsrfTokenRepository {
+    open fun cookieCsrfTokenRepository(cookieProperties: CookieProperties): CookieCsrfTokenRepository {
         val cookieCsrfTokenRepository = CookieCsrfTokenRepository()
 
-        val csrfCookieOptions = cookieOptions.csrf
+        val csrfCookieOptions = cookieProperties.csrf
 
         cookieCsrfTokenRepository.cookiePath = csrfCookieOptions.path
         cookieCsrfTokenRepository.setCookieName(csrfCookieOptions.name)

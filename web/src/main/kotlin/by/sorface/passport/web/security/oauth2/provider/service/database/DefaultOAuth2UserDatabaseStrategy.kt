@@ -1,7 +1,6 @@
 package by.sorface.passport.web.security.oauth2.provider.service.database
 
 import by.sorface.passport.web.security.oauth2.provider.enums.OAuth2ProviderType
-import by.sorface.passport.web.services.users.providers.OAuth2UserDatabaseStrategy
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService

@@ -59,8 +59,8 @@ class DefaultPrincipal(username: String?, password: String?, enabled: Boolean, a
      */
     var oauthAttributes: Map<String, Any>? = null
 
-    override fun getAttributes(): Map<String, Any> {
-        return oauthAttributes!!
+    override fun getAttributes(): Map<String, Any>? {
+        return oauthAttributes
     }
 
     override fun getName(): String {

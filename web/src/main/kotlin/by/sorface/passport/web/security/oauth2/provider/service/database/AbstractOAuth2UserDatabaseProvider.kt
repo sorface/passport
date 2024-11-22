@@ -1,17 +1,17 @@
 package by.sorface.passport.web.security.oauth2.provider.service.database
 
-import by.sorface.passport.web.converters.socialusers.OAuth2UserConverter
 import by.sorface.passport.web.dao.sql.models.UserEntity
 import by.sorface.passport.web.records.principals.DefaultPrincipal
-import by.sorface.passport.web.records.socialusers.SocialOAuth2User
-import by.sorface.passport.web.services.users.social.SocialOAuth2UserService
+import by.sorface.passport.web.security.extensions.OAuth2UserConverter
+import by.sorface.passport.web.security.oauth2.provider.service.SocialOAuth2UserService
+import by.sorface.passport.web.security.oauth2.records.ExternalOAuth2User
 import org.springframework.core.convert.converter.Converter
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.transaction.annotation.Transactional
 
-abstract class AbstractOAuth2UserDatabaseProvider<T : SocialOAuth2User>(
+abstract class AbstractOAuth2UserDatabaseProvider<T : ExternalOAuth2User>(
     private val oAuth2UserSocialOAuth2UserService: SocialOAuth2UserService<T>,
     private val principalConverter: Converter<UserEntity, DefaultPrincipal>,
     private val oAuth2UserConverter: OAuth2UserConverter<T>

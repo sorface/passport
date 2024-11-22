@@ -1,6 +1,7 @@
 package by.sorface.passport.web.config.security.handlers;
 
 import by.sorface.passport.web.config.options.EndpointOptions;
+import by.sorface.passport.web.security.handlers.AuthenticationExternalClientErrorHandler;
 import by.sorface.passport.web.services.locale.LocaleService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

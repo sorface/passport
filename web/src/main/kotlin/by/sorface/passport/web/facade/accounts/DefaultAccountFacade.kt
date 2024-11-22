@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-open class DefaultAccountFacade(private val userService: UserService) : AccountFacade {
+class DefaultAccountFacade(private val userService: UserService) : AccountFacade {
 
     override fun getCurrentAuthorizedUser(): ProfileRecord {
         val principalId = SecurityContextHolder.getContext().getPrincipalIdOrThrow(AccessDeniedException(I18Codes.I18GlobalCodes.ACCESS_DENIED))
@@ -32,4 +32,5 @@ open class DefaultAccountFacade(private val userService: UserService) : AccountF
 
         userService.save(user)
     }
+
 }

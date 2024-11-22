@@ -7,10 +7,10 @@ interface AccountSessionFacade {
 
     fun findByUsername(username: String): UserContextSession?
 
-    fun getCurrentActiveSessions(): UserContextSession?
+    fun getActiveSessions(): UserContextSession?
 
     fun deleteSessions(cleanupSession: CleanupSession): UserContextSession?
 
-    fun batchDelete(cleanupSession: CleanupSession)
+    fun batchDelete(cleanupSession: CleanupSession): Set<String>
 
 }

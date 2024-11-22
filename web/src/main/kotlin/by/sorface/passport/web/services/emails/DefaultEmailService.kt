@@ -24,13 +24,11 @@ class DefaultEmailService(private val templateEngine: TemplateEngine, private va
     override fun send(mail: Mail) {
         val message = SimpleMailMessage()
 
-        run {
-            message.from = sender
-            message.setTo(mail.to)
-            message.subject = mail.subject
-            message.text = mail.body
-            message.sentDate = Date()
-        }
+        message.from = sender
+        message.setTo(mail.to)
+        message.subject = mail.subject
+        message.text = mail.body
+        message.sentDate = Date()
 
         emailSender.send(message)
     }

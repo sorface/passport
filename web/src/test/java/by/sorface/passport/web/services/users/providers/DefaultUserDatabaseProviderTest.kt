@@ -2,6 +2,7 @@ package by.sorface.passport.web.services.users.providers
 
 import by.sorface.passport.web.dao.sql.models.UserEntity
 import by.sorface.passport.web.records.principals.DefaultPrincipal
+import by.sorface.passport.web.security.DefaultUserDatabaseProvider
 import by.sorface.passport.web.services.users.UserService
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

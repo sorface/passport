@@ -18,6 +18,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.web.servlet.function.ServerResponse.async
 import org.thymeleaf.context.Context
 
 @Service
@@ -39,7 +40,9 @@ class DefaultSignupEmailFacade(
 
         LOGGER.info("User registration completed. [account id - {}]", registry.id)
 
-        sendRegistryEmailAsync(registry)
+        async {
+            sendRegistryEmailAsync(registry)
+        }
 
         return UserRegistered(registry.id, registry.username, registry.email)
     }
@@ -51,7 +54,9 @@ class DefaultSignupEmailFacade(
     override fun resendConfirmEmail(email: ResendConfirmEmail): UserRegistered {
         val registry = userRegistryFacade.findTokenByEmail(email.email)
 
-        sendRegistryEmailAsync(registry)
+        async {
+            sendRegistryEmailAsync(registry)
+        }
 
         return UserRegistered(registry.id, registry.username, registry.email)
     }

@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.web.csrf.CsrfToken
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler
-import org.springframework.util.StringUtils
 import java.util.function.Supplier
 
 open class SpaCsrfTokenRequestHandler(private val delegate: CsrfTokenRequestHandler) : CsrfTokenRequestAttributeHandler() {
@@ -15,7 +14,7 @@ open class SpaCsrfTokenRequestHandler(private val delegate: CsrfTokenRequestHand
     }
 
     override fun resolveCsrfTokenValue(request: HttpServletRequest, csrfToken: CsrfToken): String {
-        if (StringUtils.hasText(request.getHeader(csrfToken.headerName))) {
+        if (request.getHeader(csrfToken.headerName)?.isNotBlank() == true) {
             return super.resolveCsrfTokenValue(request, csrfToken)
         }
 
