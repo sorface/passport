@@ -1,7 +1,7 @@
 package by.sorface.passport.web.facade.accounts
 
 import by.sorface.passport.web.exceptions.NotFoundException
-import by.sorface.passport.web.extensions.toProfileRecord
+import by.sorface.passport.web.extensions.toProfile
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.requests.UserPatchUpdate
 import by.sorface.passport.web.records.responses.ProfileRecord
@@ -18,19 +18,20 @@ class DefaultAccountFacade(private val userService: UserService) : AccountFacade
     override fun getCurrentAuthorizedUser(): ProfileRecord {
         val principalId = SecurityContextHolder.getContext().getPrincipalIdOrThrow(AccessDeniedException(I18Codes.I18GlobalCodes.ACCESS_DENIED))
 
-        val user = userService.findById(principalId)
-            ?: throw NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", principalId.toString())))
-
-        return user.toProfileRecord()
+        return userService.findByIdOrThrow(principalId) { userId ->
+            NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, hashMapOf(Pair("id", userId.toString())))
+        }.toProfile()
     }
 
-    override fun update(id: UUID, request: UserPatchUpdate) {
-        val user = userService.findById(id) ?: throw NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", id.toString())))
+    override fun update(id: UUID, request: UserPatchUpdate): ProfileRecord {
+        val user = userService.findByIdOrThrow(id) { userId ->
+            NotFoundException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", userId.toString())))
+        }
 
         request.firstname?.let { user.firstName = it }
         request.lastname?.let { user.lastName = it }
 
-        userService.save(user)
+        return userService.save(user).toProfile()
     }
 
 }

@@ -14,6 +14,11 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
     override fun findById(id: UUID): UserEntity? = userRepository.findById(id).orElse(null)
 
     @Transactional(readOnly = true)
+    override fun findByIdOrThrow(id: UUID, throwableConsumer: (id: UUID) -> Throwable): UserEntity {
+        return findById(id) ?: throw throwableConsumer.invoke(id)
+    }
+
+    @Transactional(readOnly = true)
     override fun findByUsername(username: String): UserEntity? = userRepository.findFirstByUsernameIgnoreCase(username)
 
     @Transactional(readOnly = true)
@@ -31,5 +36,8 @@ class DefaultUserService(private val userRepository: UserRepository) : UserServi
 
     @Transactional(readOnly = true)
     override fun isExistUsername(username: String): Boolean = userRepository.existsByUsernameIgnoreCase(username)
+
+    @Transactional(readOnly = true)
+    override fun isExistEmail(email: String): Boolean = userRepository.existsByEmail(email)
 
 }

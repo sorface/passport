@@ -15,7 +15,7 @@ enum class MaskerFields(val fieldNames: Set<String>) : Masker {
         }
     },
 
-    EMAILS(setOf("email", "mail")) {
+    EMAILS(setOf("email", "mail", "to")) {
         override fun mask(value: String?): String? {
             if (Objects.isNull(value)) {
                 return null

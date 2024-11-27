@@ -1,11 +1,14 @@
 package by.sorface.passport.web.facade.session
 
+import by.sorface.passport.web.exceptions.UserRequestException
+import by.sorface.passport.web.records.I18Codes.I18SessionCodes.DELETE_ACTIVE_SESSION_ERROR
 import by.sorface.passport.web.records.principals.DefaultPrincipal
 import by.sorface.passport.web.records.sessions.CleanupSession
 import by.sorface.passport.web.records.sessions.UserContextSession
 import by.sorface.passport.web.records.sessions.UserSession
 import by.sorface.passport.web.security.constants.SessionAttributes
-import by.sorface.passport.web.security.sessions.AccountSessionService
+import by.sorface.passport.web.security.oauth2.services.AccountSessionService
+import nl.basjes.parse.useragent.UserAgent
 import nl.basjes.parse.useragent.UserAgentAnalyzer
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.session.Session
@@ -60,6 +63,12 @@ class DefaultAccountSessionFacade(private val accountSessionService: AccountSess
     }
 
     override fun batchDelete(cleanupSession: CleanupSession): Set<String> {
+        val currentSessionId = RequestContextHolder.currentRequestAttributes().sessionId
+
+        if (cleanupSession.sessions.contains(currentSessionId)) {
+            throw UserRequestException(DELETE_ACTIVE_SESSION_ERROR)
+        }
+
         return accountSessionService.batchDeleteById(cleanupSession.sessions)
     }
 
@@ -68,16 +77,15 @@ class DefaultAccountSessionFacade(private val accountSessionService: AccountSess
 
         val immutableUserAgent = userAgentAnalyzer.parse(attribute)
 
-        return UserSession().run {
-            this.id = session.id
-            this.createdAt = session.creationTime.toEpochMilli()
-            this.browser = immutableUserAgent.getValue("AgentName")
-            this.deviceBrand = immutableUserAgent.getValue("DeviceBrand")
-            this.deviceType = immutableUserAgent.getValue("DeviceClass")
-            this.device = immutableUserAgent.getValue("DeviceName")
-            this.active = activeId.equals(session.id, ignoreCase = true)
-
-            this
-        }
+        return UserSession()
+            .apply {
+                id = session.id
+                createdAt = session.creationTime.toEpochMilli()
+                browser = immutableUserAgent.getValue(UserAgent.AGENT_NAME)
+                deviceBrand = immutableUserAgent.getValue(UserAgent.DEVICE_BRAND)
+                deviceType = immutableUserAgent.getValue(UserAgent.DEVICE_CLASS)
+                device = immutableUserAgent.getValue(UserAgent.DEVICE_NAME)
+                active = activeId.equals(session.id, ignoreCase = true)
+            }
     }
 }

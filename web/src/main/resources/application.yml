@@ -2,15 +2,21 @@ spring:
   application:
     name: sorface-passport
 
+  config:
+    import:
+      - classpath:imports/passport.smtp.yml
+      - classpath:imports/passport.datasource.yml
+      - classpath:imports/passport.session.yml
+      - classpath:imports/passport.security.yml
+      - classpath:imports/passport.redirect.yml
+      - classpath:imports/passport.account.yml
+
   cloud:
     compatibility-verifier:
       enabled: false
+
   sleuth:
     enabled: true
-
-  liquibase:
-    enabled: true
-    change-log: classpath:db/changelog/master.yaml
 
   mvc:
     static-path-pattern: /static/**
@@ -22,146 +28,15 @@ spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
 
-  security:
-    oauth2:
-      client:
-        registration:
-          github:
-            client-name: github
-            client-id: ${OAUTH_CLIENT_GITHUB_ID}
-            client-secret: ${OAUTH_CLIENT_GITHUB_SECRET}
-          google:
-            client-name: google
-            clientId: ${OAUTH_CLIENT_GOOGLE_ID}
-            clientSecret: ${OAUTH_CLIENT_GOOGLE_SECRET}
-            authorization-grant-type: authorization_code
-            scope:
-              - profile
-              - email
-          yandex:
-            client-name: yandex
-            client-id: ${OAUTH_CLIENT_YANDEX_ID}
-            client-secret: ${OAUTH_CLIENT_YANDEX_SECRET}
-            authorization-grant-type: authorization_code
-            provider: yandex
-            redirect-uri: ${OAUTH_CLIENT_YANDEX_REDIRECT_URL}
-          twitch:
-            client-name: twitch
-            client-id: ${OAUTH_CLIENT_TWITCH_ID}
-            client-secret: ${OAUTH_CLIENT_TWITCH_SECRET}
-            authorization-grant-type: authorization_code
-            client-authentication-method: client_secret_post
-            scope:
-              - user:read:email
-            provider: twitch
-            redirect-uri: ${OAUTH_CLIENT_TWITCH_REDIRECT_URL}
-        provider:
-          yandex:
-            authorization-uri: https://oauth.yandex.ru/authorize
-            token-uri: https://oauth.yandex.ru/token
-            user-name-attribute: default_email
-            userInfoUri: https://login.yandex.ru/info
-          twitch:
-            authorization-uri: https://id.twitch.tv/oauth2/authorize
-            token-uri: https://id.twitch.tv/oauth2/token
-            userInfoUri: https://api.twitch.tv/helix/users/
-            user-info-authentication-method: GET
-            user-name-attribute: data
-
-  mail:
-    username: ${MAIL_NOTIFICATOR_USERNAME}
-    password: ${MAIL_NOTIFICATOR_PASSWORD}
-    port: 465
-    host: smtp.yandex.ru
-    properties:
-      mail.transport.protocol: smtp
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-      mail.smtp.ssl.enable: true
-
-  session:
-    timeout: 5d
-    redis:
-      flush-mode: on_save
-      namespace: sorface:session
-      save-mode: on_set_attribute
-      repository-type: indexed
-      cleanup-cron: 0 * * * * *
-
-  data:
-    redis:
-      client-type: lettuce
-      database: 1
-      host: ${REDIS_HOST}
-      port: 6379
-      username: ${REDIS_USERNAME}
-      password: ${REDIS_PASSWORD}
-      lettuce:
-        pool:
-          max-active: 60
-          max-idle: 10
-
 management:
   endpoint:
     health:
       probes:
         enabled: true
 
-# common properties
-sorface:
-  client:
-    domain: ${CLIENT_SERVER_DOMAIN}
-    token:
-      access-token:
-        time-to-live-cron: minutes
-        time-to-live-value: 5
-      refresh-token:
-        time-to-live-cron: days
-        time-to-live-value: 5
-      authorization-code:
-        time-to-live-cron: minutes
-        time-to-live-value: 30
-
-  cookie:
-    session:
-      domain-pattern: '^.+?\.(\w+\.[a-z]+)$'
-      path: '/'
-      name: 'pspt_id'
-      http-only: true
-    csrf:
-      domain: 'localhost'
-      path: '/'
-      name: 'x_csrf_token'
-      http-only: true
-
-  endpoint:
-    uri-page-signin: '${sorface.client.domain}/account/signin'
-    uri-page-signup: '${sorface.client.domain}/account/signup'
-    uri-page-not-found: '${sorface.client.domain}/account/404'
-    uri-page-profile: '${sorface.client.domain}/account'
-    uri-page-failure: "${sorface.client.domain}/failure"
-    uri-api-login: "/api/accounts/signin"
-    uri-api-logout: "/api/accounts/logout"
-
-  oauth2:
-    issuer-url: ${OAUTH_SERVER_ISSUER_URL}
-    redis:
-      init:
-        prefix: 'oauth2_auth_init:'
-        unit: minutes
-        ttl: 3
-      consent:
-        prefix: 'oauth2_authorization_consent:'
-        ttl: 5
-        unit: days
-      complete:
-        prefix: 'oauth2_auth_complete:'
-        ttl: 5
-        unit: days
-
 logging:
   level:
-    root: info
+    root: error
     nl.basjes.parse: error
   pattern:
     console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%blue(%X{traceId:-})|%green(%X{spanId})] [%thread] %magenta([%file:%line]) : %msg%n'

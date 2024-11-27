@@ -1,6 +1,7 @@
 package by.sorface.passport.web.security
 
 import by.sorface.passport.web.dao.sql.models.UserEntity
+import by.sorface.passport.web.extensions.toStringMask
 import by.sorface.passport.web.records.principals.DefaultPrincipal
 import by.sorface.passport.web.services.users.UserService
 import by.sorface.passport.web.utils.json.mask.MaskerFields
@@ -23,9 +24,10 @@ class DefaultUserDatabaseProvider(
 
     @Transactional(readOnly = true)
     override fun loadUserByUsername(username: String): UserDetails? =
-        (userRepository.findByUsernameOrEmail(username, username) ?: throw UsernameNotFoundException("User with username or email $username} not found"))
+        (userRepository.findByUsernameOrEmail(username, username) ?: throw UsernameNotFoundException("user with username or email $username} not found"))
             .let {
-                logger.info("user with username/email [$username/${MaskerFields.EMAILS.mask(it.email)}] and ID [${it.id}] was loaded")
+                logger.info("user with username/email [$username/${it.email.toStringMask(MaskerFields.EMAILS)}] and ID [${it.id}] was loaded")
+
                 principalConverter.convert(it)
             }
 

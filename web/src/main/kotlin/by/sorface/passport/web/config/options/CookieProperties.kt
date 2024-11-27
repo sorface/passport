@@ -2,54 +2,47 @@ package by.sorface.passport.web.config.options
 
 import org.apache.tomcat.util.http.SameSiteCookies
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.context.annotation.Configuration
 
-@Configuration
-@ConfigurationProperties("sorface.cookie")
-class CookieProperties {
 
-    val session: SessionCookieOptions = SessionCookieOptions()
+@ConfigurationProperties("passport.session.cookie")
+open class SessionCookieOptions {
 
-    var csrf: CsrfCookieOptions = CsrfCookieOptions()
+    var domainPattern: String? = null
 
-    open class SessionCookieOptions {
+    var path: String? = null
 
-        var domainPattern: String? = null
+    var name: String? = null
 
-        var path: String? = null
+    /**
+     * The path for the session cookie.
+     */
+    lateinit var sameSite: SameSiteCookies
 
-        var name: String? = null
+    /**
+     * Whether the session cookie is only accessible via HTTP.
+     */
+    var httpOnly = false
+}
 
-        /**
-         * The path for the session cookie.
-         */
-        lateinit var sameSite: SameSiteCookies
+@ConfigurationProperties("passport.csrf.cookie")
+open class CsrfCookieOptions {
+    /**
+     * The domain for the CSRF cookie.
+     */
+    var domain: String? = null
 
-        /**
-         * Whether the session cookie is only accessible via HTTP.
-         */
-        var httpOnly = false
-    }
+    /**
+     * The domain for the CSRF cookie.
+     */
+    var path: String? = null
 
-    open class CsrfCookieOptions {
-        /**
-         * The domain for the CSRF cookie.
-         */
-        var domain: String? = null
+    /**
+     * The domain for the CSRF cookie.
+     */
+    var name: String? = null
 
-        /**
-         * The domain for the CSRF cookie.
-         */
-        var path: String? = null
-
-        /**
-         * The domain for the CSRF cookie.
-         */
-        var name: String? = null
-
-        /**
-         * Whether the CSRF cookie is only accessible via HTTP.
-         */
-        var httpOnly = false
-    }
+    /**
+     * Whether the CSRF cookie is only accessible via HTTP.
+     */
+    var httpOnly = false
 }

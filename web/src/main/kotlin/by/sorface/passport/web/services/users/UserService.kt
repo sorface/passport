@@ -8,6 +8,8 @@ interface UserService {
 
     fun findById(id: UUID): UserEntity?
 
+    fun findByIdOrThrow(id: UUID, throwableConsumer: (id: UUID) -> Throwable): UserEntity
+
     fun findByUsername(username: String): UserEntity?
 
     fun findByEmail(email: String): UserEntity?
@@ -19,5 +21,7 @@ interface UserService {
     fun save(user: UserEntity): UserEntity
 
     fun isExistUsername(username: String): Boolean
+
+    fun isExistEmail(email: String): Boolean
 
 }

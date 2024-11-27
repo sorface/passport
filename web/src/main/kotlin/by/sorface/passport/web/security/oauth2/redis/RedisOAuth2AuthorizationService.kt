@@ -1,7 +1,7 @@
 package by.sorface.passport.web.security.oauth2.redis
 
-import by.sorface.passport.web.dao.nosql.redis.models.RedisOAuth2AuthorizationComplete
-import by.sorface.passport.web.dao.nosql.redis.models.RedisOAuth2AuthorizationInit
+import by.sorface.passport.web.dao.nosql.redis.models.OAuth2AuthorizationComplete
+import by.sorface.passport.web.dao.nosql.redis.models.OAuth2AuthorizationInit
 import by.sorface.passport.web.dao.nosql.redis.repository.RedisOAuth2AuthorizationCompleteRepository
 import by.sorface.passport.web.dao.nosql.redis.repository.RedisOAuth2AuthorizationInitRepository
 import org.slf4j.LoggerFactory
@@ -15,7 +15,6 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType
 import org.springframework.stereotype.Service
 import org.springframework.util.Assert
-import java.util.*
 
 @Service
 class RedisOAuth2AuthorizationService(
@@ -89,7 +88,7 @@ class RedisOAuth2AuthorizationService(
             }
 
             OAuth2ParameterNames.REFRESH_TOKEN -> {
-                return redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
+                redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
             }
 
             else -> {
@@ -100,33 +99,26 @@ class RedisOAuth2AuthorizationService(
 
     private fun OAuth2Authorization.isComplete(): Boolean = this.accessToken != null
 
-    private fun OAuth2Authorization.toComplete(): RedisOAuth2AuthorizationComplete {
-        val authorizationComplete = RedisOAuth2AuthorizationComplete()
+    private fun OAuth2Authorization.toComplete(): OAuth2AuthorizationComplete = OAuth2AuthorizationComplete()
+        .also {
+            it.id = this.id
+            it.accessToken = this.accessToken.getTokenValueOrNull()
+            it.refreshToken = this.refreshToken.getTokenValueOrNull()
+            it.oidcToken = this.getToken(OidcIdToken::class.java).getTokenValueOrNull()
+            it.authorization = this
+        }
 
-        authorizationComplete.id = this.id
-        authorizationComplete.accessToken = this.accessToken.getTokenValueOrNull()
-        authorizationComplete.refreshToken = this.refreshToken.getTokenValueOrNull()
-        authorizationComplete.oidcToken = this.getToken(OidcIdToken::class.java).getTokenValueOrNull()
-        authorizationComplete.authorization = this
+    private fun OAuth2Authorization.toInit(): OAuth2AuthorizationInit = OAuth2AuthorizationInit()
+        .also { initAuthorization ->
+            val state = this.getAttribute<Any>(OAuth2ParameterNames.STATE)
+                ?.takeIf { attribute -> attribute is String }
+                ?.toString()
 
-        return authorizationComplete
-    }
-
-    private fun OAuth2Authorization.toInit(): RedisOAuth2AuthorizationInit {
-        val state = Optional.ofNullable(this.getAttribute<Any>(OAuth2ParameterNames.STATE))
-            .filter { obj: Any? -> String::class.java.isInstance(obj) }
-            .map { obj: Any? -> java.lang.String.valueOf(obj) }
-            .orElse(null)
-
-        val initAuthorization = RedisOAuth2AuthorizationInit()
-
-        initAuthorization.id = this.id
-        initAuthorization.code = this.getToken(OAuth2AuthorizationCode::class.java).getTokenValueOrNull()
-        initAuthorization.state = state
-        initAuthorization.authorization = this
-
-        return initAuthorization
-    }
+            initAuthorization.id = this.id
+            initAuthorization.code = this.getToken(OAuth2AuthorizationCode::class.java).getTokenValueOrNull()
+            initAuthorization.state = state
+            initAuthorization.authorization = this
+        }
 
     private fun <T : OAuth2Token> OAuth2Authorization.Token<T>?.getTokenValueOrNull(): String? {
         return this?.token?.tokenValue

@@ -10,7 +10,7 @@ import by.sorface.passport.web.records.requests.ApplicationRegistry
 import by.sorface.passport.web.records.responses.ApplicationClient
 import by.sorface.passport.web.records.responses.ApplicationClientRefreshSecret
 import by.sorface.passport.web.security.converters.OAuth2ClientConverter
-import by.sorface.passport.web.security.oauth2.client.provider.database.OAuth2ClientService
+import by.sorface.passport.web.security.oauth2.services.OAuth2ClientService
 import by.sorface.passport.web.utils.HashUtils.generateRegistryHash
 import by.sorface.passport.web.utils.URLUtils.isValidRedirectUrl
 import io.micrometer.tracing.annotation.NewSpan
@@ -104,14 +104,14 @@ open class DefaultApplicationClientFacade(
         val clientSecret = generateClientSecret()
 
         val oAuth2Client = OAuth2Client()
-        run {
-            oAuth2Client.clientId = generateRegistryHash(55) + "@sorface.oauth.client"
-            oAuth2Client.clientSecret = passwordEncoder.encode(clientSecret)
-            oAuth2Client.clientName = registryClient.name
-            oAuth2Client.clientIdIssueAt = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
-            oAuth2Client.clientSecretExpiresAt = buildDefaultClientSecretExpire()
-            oAuth2Client.redirectUris = java.lang.String.join(";", registryClient.redirectionUrls)
-        }
+            .apply {
+                clientId = generateRegistryHash(55) + "@sorface.oauth.client"
+                this.clientSecret = passwordEncoder.encode(clientSecret)
+                clientName = registryClient.name
+                clientIdIssueAt = LocalDateTime.ofInstant(Instant.now(), ZoneOffset.UTC)
+                clientSecretExpiresAt = buildDefaultClientSecretExpire()
+                redirectUris = java.lang.String.join(";", registryClient.redirectionUrls)
+            }
 
         val oAuth2ClientSaved = oAuth2ClientService.save(oAuth2Client)
 

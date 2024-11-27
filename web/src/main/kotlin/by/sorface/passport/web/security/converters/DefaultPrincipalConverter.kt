@@ -15,17 +15,17 @@ class DefaultPrincipalConverter : PrincipalConverter {
 
         val userPassword = user.password ?: ""
 
-        val sorfaceUser = DefaultPrincipal(user.username, userPassword, true, authorities)
-        sorfaceUser.id = user.id
-        sorfaceUser.firstName = user.firstName
-        sorfaceUser.lastName = user.lastName
-        sorfaceUser._middleName = user.middleName
-        sorfaceUser.avatarUrl = user.avatarUrl
-        sorfaceUser._email = user.email
-        sorfaceUser.birthday = user.birthday
-        sorfaceUser.confirm = user.confirm
-
-        return sorfaceUser
+        return DefaultPrincipal(user.username, userPassword, true, authorities)
+            .apply {
+                id = user.id
+                firstName = user.firstName
+                lastName = user.lastName
+                _middleName = user.middleName
+                avatarUrl = user.avatarUrl
+                _email = user.email
+                birthday = user.birthday
+                confirm = user.confirm
+            }
     }
 
     private fun convertRoles(roles: Collection<RoleEntity?>): List<GrantedAuthority> {

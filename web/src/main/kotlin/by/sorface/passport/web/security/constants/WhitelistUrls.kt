@@ -4,7 +4,12 @@ enum class WhitelistUrls(val patterns: List<String>) {
     OPTION_REQUEST(listOf("/**")),
 
     API_ACCOUNT(listOf("/api/accounts/current")),
-    SIGN_UP(listOf("/api/accounts/signup")),
+    SIGN_UP(
+        listOf(
+            "/api/accounts/signup",
+            "/api/accounts/confirm/otp"
+        )
+    ),
 
     WHITE_LIST(
         listOf(
@@ -12,7 +17,9 @@ enum class WhitelistUrls(val patterns: List<String>) {
             "/swagger-ui/**",
             "/swagger-ui.html",
             "/actuator/health/liveness",
-            "/actuator/health/readiness"
+            "/actuator/health/readiness",
+            "/api/accounts/confirm",
+            "/api/accounts/otp"
         )
     ),
 

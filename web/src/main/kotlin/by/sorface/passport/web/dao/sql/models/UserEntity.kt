@@ -9,7 +9,7 @@ import java.time.LocalDate
 class UserEntity : BaseEntity() {
 
     @Column(name = "C_USERNAME", unique = true)
-    lateinit var username: String
+    var username: String? = null
 
     @Column(name = "C_EMAIL", unique = true)
     var email: String? = null
@@ -44,7 +44,7 @@ class UserEntity : BaseEntity() {
     var roles: List<RoleEntity> = listOf()
 
     @Column(name = "C_ISENABLED", nullable = false)
-    var enabled = false
+    var enabled = true
 
     @Column(name = "C_CONFIRMED", nullable = false)
     var confirm = false

@@ -47,4 +47,12 @@ interface UserRepository : BaseRepository<UserEntity?> {
      * @return true - уже существует, false - не существует
      */
     fun existsByUsernameIgnoreCase(username: String?): Boolean
+
+    /**
+     * Проверка существования пользователя с таким email
+     *
+     * @param email email
+     * @return true - уже существует, false - не существует
+     */
+    fun existsByEmail(email: String): Boolean
 }

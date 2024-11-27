@@ -13,6 +13,16 @@ class OAuth2ClientConverter {
 
     fun convert(source: OAuth2Client, clientSecret: String? = source.clientSecret): ApplicationClient {
         val applicationClient = ApplicationClient()
+            .apply {
+                id = source.id.toString()
+                clientId = source.clientId.toString()
+                clientName = source.clientName.toString()
+                this.clientSecret = clientSecret
+                redirectUrls = (source.redirectUris ?: "").split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().toSet()
+                expiresAt = source.clientSecretExpiresAt
+                issueTime = source.clientIdIssueAt
+                postLogoutUrl = source.postLogoutRedirectUri
+            }
 
         applicationClient.id = source.id.toString()
         applicationClient.clientId = source.clientId.toString()

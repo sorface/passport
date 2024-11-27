@@ -3,14 +3,15 @@ package by.sorface.passport.web.api.advices
 import by.sorface.passport.web.api.AccountController
 import by.sorface.passport.web.api.AccountSessionController
 import by.sorface.passport.web.api.ApplicationClientController
+import by.sorface.passport.web.api.SecurityCsrfController
 import by.sorface.passport.web.exceptions.*
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.responses.OperationError
 import by.sorface.passport.web.records.responses.ValidateOperationError
 import by.sorface.passport.web.records.responses.ValidateOperationError.ValidateError
-import by.sorface.passport.web.security.csrf.CsrfController
 import by.sorface.passport.web.services.locale.LocaleI18Service
 import by.sorface.passport.web.services.sleuth.SleuthService
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
@@ -25,10 +26,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import java.util.*
 
 @RestControllerAdvice(
-    basePackageClasses = [AccountController::class, AccountSessionController::class, ApplicationClientController::class, CsrfController::class
+    basePackageClasses = [
+        AccountController::class,
+        AccountSessionController::class,
+        ApplicationClientController::class,
+        SecurityCsrfController::class
     ]
 )
 class ExceptionAdvice(private val sleuthService: SleuthService, private val localeI18Service: LocaleI18Service) {
+
+    companion object {
+        private val logger = LoggerFactory.getLogger(ExceptionAdvice::class.java)
+    }
 
     @ExceptionHandler(
         value = [
@@ -41,9 +50,11 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
         ]
     )
     fun handleUserRequestException(e: GlobalSystemException): ResponseEntity<OperationError> {
-        val body = buildError(e, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(e, sleuthService.getSpanId(), sleuthService.getTraceId())
 
-        return ResponseEntity.status(e.httpStatus).body(body)
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return ResponseEntity.status(e.httpStatus).body(error)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
@@ -65,37 +76,61 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
             }
             .toList()
 
-        return buildValidateError(HttpStatus.BAD_REQUEST, errors, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildValidateError(HttpStatus.BAD_REQUEST, errors, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     @ExceptionHandler(AccessDeniedException::class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun handleAccessDenied(e: AccessDeniedException): OperationError {
-        return buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     @ExceptionHandler(InsufficientAuthenticationException::class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun handleInsufficientAuthentication(e: InsufficientAuthenticationException): OperationError {
-        return buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     @ExceptionHandler(AuthenticationException::class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     fun handleAuthenticationException(e: AuthenticationException): OperationError {
-        return buildError(HttpStatus.FORBIDDEN, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(HttpStatus.FORBIDDEN, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     @ExceptionHandler(RuntimeException::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleNotFoundException(e: RuntimeException?): OperationError {
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, I18Codes.I18GlobalCodes.UNKNOWN_ERROR, sleuthService.getSpanId(), sleuthService.getTraceId())
+    fun handleNotFoundException(e: RuntimeException): OperationError {
+        val error = buildError(HttpStatus.INTERNAL_SERVER_ERROR, I18Codes.I18GlobalCodes.UNKNOWN_ERROR, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleException(e: Exception?): OperationError {
-        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, I18Codes.I18GlobalCodes.UNKNOWN_ERROR, sleuthService.getSpanId(), sleuthService.getTraceId())
+    fun handleException(e: Exception): OperationError {
+        val error = buildError(HttpStatus.INTERNAL_SERVER_ERROR, I18Codes.I18GlobalCodes.UNKNOWN_ERROR, sleuthService.getSpanId(), sleuthService.getTraceId())
+
+        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+
+        return error
     }
 
     private fun buildError(exception: GlobalSystemException, spanId: String?, traceId: String?): OperationError {

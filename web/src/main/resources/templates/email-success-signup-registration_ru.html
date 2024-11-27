@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Благодарим за регистрацию на платформе Sorface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.5;
+            color: #555;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Спасибо за регистрацию!</h1>
+    <p th:inline="text">Уважаемый, [[${username}]]</p>
+    <p>Мы рады приветствовать Вас среди наших пользователей! Ваша регистрация успешно завершена.</p>
+    <p>Теперь Вы можете воспользоваться всеми возможностями нашего сервиса. Если у Вас возникнут вопросы или потребуется помощь, мы всегда готовы помочь Вам.</p>
+    <p>Для входа в личный кабинет перейдите по ссылке: <a href="#">Войти</a></p>
+    <p>Благодарим за выбор нашего сервиса и желаем приятного использования!</p>
+
+    <footer>
+        С уважением,<br>
+        Sorface Team
+    </footer>
+</div>
+</body>
+</html>

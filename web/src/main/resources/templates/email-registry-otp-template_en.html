@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Complete the registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.5;
+            color: #555;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        .code-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .otp-code {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Welcome!</h1>
+    <p>Thank you for starting registration on our website. To complete the process, please enter the 6-digit confirmation code:</p>
+
+    <div class="code-container">
+        <span class="otp-code" th:inline="text">[[${otp}]]</span>
+    </div>
+
+    <footer>
+        If you have any questions or problems, please contact our support team.<br>
+        Sincerely, Sorface
+    </footer>
+</div>
+</body>
+</html>

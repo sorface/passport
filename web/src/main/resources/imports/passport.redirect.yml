@@ -1,0 +1,8 @@
+passport.endpoint:
+  uri-page-signin: '${CLIENT_SERVER_DOMAIN}/account/signin'
+  uri-page-signup: '${CLIENT_SERVER_DOMAIN}/account/signup'
+  uri-page-not-found: '${CLIENT_SERVER_DOMAIN}/account/404'
+  uri-page-profile: '${CLIENT_SERVER_DOMAIN}/account'
+  uri-page-failure: '${CLIENT_SERVER_DOMAIN}/failure'
+  uri-api-login: '/api/accounts/signin'
+  uri-api-logout: '/api/accounts/logout'

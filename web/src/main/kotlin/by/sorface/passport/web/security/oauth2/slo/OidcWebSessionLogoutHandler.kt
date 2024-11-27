@@ -1,6 +1,6 @@
 package by.sorface.passport.web.security.oauth2.slo
 
-import by.sorface.passport.web.security.sessions.AccountSessionService
+import by.sorface.passport.web.security.oauth2.services.AccountSessionService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication

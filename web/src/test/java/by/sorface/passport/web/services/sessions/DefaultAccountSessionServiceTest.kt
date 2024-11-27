@@ -1,6 +1,6 @@
 package by.sorface.passport.web.services.sessions
 
-import by.sorface.passport.web.security.sessions.DefaultAccountSessionService
+import by.sorface.passport.web.security.oauth2.services.DefaultAccountSessionService
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

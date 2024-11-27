@@ -1,6 +1,6 @@
 package by.sorface.passport.web.security.handlers
 
-import by.sorface.passport.web.config.options.EndpointOptions
+import by.sorface.passport.web.config.options.EndpointProperties
 import by.sorface.passport.web.services.locale.LocaleService
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -13,14 +13,15 @@ import org.springframework.stereotype.Component
 import java.util.*
 
 @Component
-class AuthenticationExternalClientErrorHandler(private val endpointOptions: EndpointOptions, private val localeService: LocaleService) : AuthenticationFailureHandler {
+class AuthenticationExternalClientErrorHandler(private val endpointProperties: EndpointProperties, private val localeService: LocaleService) :
+    AuthenticationFailureHandler {
 
     override fun onAuthenticationFailure(request: HttpServletRequest, response: HttpServletResponse, exception: AuthenticationException) {
         if (exception is OAuth2AuthorizationCodeRequestAuthenticationException) {
             val error = exception.error
 
             if (Objects.isNull(error)) {
-                response.sendRedirect(endpointOptions.uriPageFailure + "?error=" + exception.message)
+                response.sendRedirect(endpointProperties.uriPageFailure + "?error=" + exception.message)
                 return
             }
 
@@ -28,12 +29,12 @@ class AuthenticationExternalClientErrorHandler(private val endpointOptions: Endp
 
             val message = localeService.getI18Message(localMessageByErrorCode)
 
-            response.sendRedirect(endpointOptions.uriPageFailure + "?message=" + message + "&description=" + error.description)
+            response.sendRedirect(endpointProperties.uriPageFailure + "?message=" + message + "&description=" + error.description)
 
             return
         }
 
-        response.sendRedirect(endpointOptions.uriPageFailure + "?error=" + exception.message)
+        response.sendRedirect(endpointProperties.uriPageFailure + "?error=" + exception.message)
     }
 
     private fun getLocalMessageByErrorCode(error: OAuth2Error): String {

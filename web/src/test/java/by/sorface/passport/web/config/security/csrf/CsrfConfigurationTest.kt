@@ -1,31 +1,26 @@
-package by.sorface.passport.web.config.security.csrf;
+package by.sorface.passport.web.config.security.csrf
 
-import by.sorface.passport.web.config.options.CookieProperties;
-import by.sorface.passport.web.security.csrf.CsrfConfiguration;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import by.sorface.passport.web.config.options.CsrfCookieOptions
+import by.sorface.passport.web.security.config.CsrfConfiguration
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
-class CsrfConfigurationTest {
-
-    private final CsrfConfiguration csrfConfiguration = new CsrfConfiguration();
+internal class CsrfConfigurationTest {
+    private val csrfConfiguration = CsrfConfiguration()
 
     @Test
-    public void cookieCsrfTokenRepository() {
-        final var csrfCookieOptions = new CookieProperties.CsrfCookieOptions();
-        {
-            csrfCookieOptions.setDomain("localhost");
-            csrfCookieOptions.setName("csrf-cookie-name");
-            csrfCookieOptions.setHttpOnly(true);
-            csrfCookieOptions.setPath("/");
+    fun cookieCsrfTokenRepository() {
+        val csrfCookieOptions = CsrfCookieOptions()
+        run {
+            csrfCookieOptions.domain = "localhost"
+            csrfCookieOptions.name = "csrf-cookie-name"
+            csrfCookieOptions.httpOnly = true
+            csrfCookieOptions.path = "/"
         }
 
-        final var cookieOptions = new CookieProperties();
-        cookieOptions.setCsrf(csrfCookieOptions);
+        val cookieCsrfTokenRepository = csrfConfiguration.cookieCsrfTokenRepository(csrfCookieOptions)
 
-        final var cookieCsrfTokenRepository = csrfConfiguration.cookieCsrfTokenRepository(cookieOptions);
-
-        Assertions.assertNotNull(cookieCsrfTokenRepository);
-        Assertions.assertEquals(csrfCookieOptions.getPath(), cookieCsrfTokenRepository.getCookiePath());
+        Assertions.assertNotNull(cookieCsrfTokenRepository)
+        Assertions.assertEquals(csrfCookieOptions.path, cookieCsrfTokenRepository.cookiePath)
     }
-
 }

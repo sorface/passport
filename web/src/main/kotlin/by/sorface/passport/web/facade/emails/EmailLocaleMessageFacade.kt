@@ -1,13 +1,12 @@
 package by.sorface.passport.web.facade.emails
 
-import by.sorface.passport.web.config.options.OAuth2Options
 import by.sorface.passport.web.exceptions.NotFoundException
+import by.sorface.passport.web.extensions.toJson
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.mails.MailImage
 import by.sorface.passport.web.records.mails.MailTemplate
 import by.sorface.passport.web.services.emails.EmailService
 import by.sorface.passport.web.services.locale.LocaleI18Service
-import by.sorface.passport.web.utils.json.Json.stringify
 import org.slf4j.LoggerFactory
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
@@ -15,7 +14,7 @@ import org.thymeleaf.context.Context
 import java.util.*
 
 @Service
-class EmailLocaleMessageFacade(private val localeI18Service: LocaleI18Service, private val emailService: EmailService, private val oAuth2Options: OAuth2Options) {
+class EmailLocaleMessageFacade(private val localeI18Service: LocaleI18Service, private val emailService: EmailService) {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(EmailLocaleMessageFacade::class.java)
@@ -26,7 +25,6 @@ class EmailLocaleMessageFacade(private val localeI18Service: LocaleI18Service, p
 
         val context = Context().run {
             this.setVariable("token", hash)
-            this.setVariable("issuer", oAuth2Options.issuerUrl)
 
             this
         }
@@ -39,7 +37,7 @@ class EmailLocaleMessageFacade(private val localeI18Service: LocaleI18Service, p
         val mailTemplate = MailTemplate(recipient, subject, emailTemplate, context, images)
 
         LOGGER.info("Preparing an email to confirm the account")
-        LOGGER.debug("{}{}", System.lineSeparator(), stringify(mailTemplate))
+        LOGGER.debug("{}{}", System.lineSeparator(), mailTemplate.toJson(mask = true))
 
         emailService.sendHtml(mailTemplate)
 
@@ -49,11 +47,10 @@ class EmailLocaleMessageFacade(private val localeI18Service: LocaleI18Service, p
     fun sendRenewPasswordEmail(locale: Locale?, recipient: String, hash: String?, username: String?) {
         LocaleContextHolder.setLocale(locale)
 
-        val context = Context()
-        run {
-            context.setVariable("username", username)
-            context.setVariable("token", hash)
-            context.setVariable("issuer", oAuth2Options.issuerUrl)
+        val context = Context().run {
+            this.setVariable("username", username)
+            this.setVariable("token", hash)
+            this
         }
 
         val emailTemplate = localeI18Service.getI18Message(I18Codes.I18EmailCodes.TEMPLATE_RENEW_PASSWORD) ?: throw NotFoundException(I18Codes.SELF.NOT_FOUND_KEY)

@@ -10,16 +10,16 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/sessions")
-open class AccountSessionController(private val accountSessionFacade: AccountSessionFacade) {
+class AccountSessionController(private val accountSessionFacade: AccountSessionFacade) {
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{username}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun findByUsername(@PathVariable @Valid username: @NotBlank String): UserContextSession? {
         return accountSessionFacade.findByUsername(username)
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/batch")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun batchDelete(@RequestBody cleanupSession: CleanupSession): Set<String> {
         return accountSessionFacade.batchDelete(cleanupSession)
     }

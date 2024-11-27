@@ -8,6 +8,6 @@ interface AccountFacade {
 
     fun getCurrentAuthorizedUser(): ProfileRecord
 
-    fun update(id: UUID, request: UserPatchUpdate)
+    fun update(id: UUID, request: UserPatchUpdate): ProfileRecord
 
 }

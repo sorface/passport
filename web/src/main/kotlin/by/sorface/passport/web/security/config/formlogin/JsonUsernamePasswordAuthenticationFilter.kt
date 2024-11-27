@@ -1,9 +1,11 @@
 package by.sorface.passport.web.security.config.formlogin
 
-import by.sorface.passport.web.security.AccountSignIn
+import by.sorface.passport.web.security.AccountCredentials
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.security.authentication.AuthenticationServiceException
@@ -13,6 +15,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
+
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(JsonUsernamePasswordAuthenticationFilter::class.java)
+    }
 
     private val mapper = ObjectMapper()
 
@@ -28,9 +34,11 @@ class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationF
         val authentication: UsernamePasswordAuthenticationToken?
 
         try {
-            val accountSignIn: AccountSignIn = mapper.readValue(request.reader, AccountSignIn::class.java)
+            val accountCredentials: AccountCredentials = mapper.readValue(request.reader, AccountCredentials::class.java)
 
-            authentication = UsernamePasswordAuthenticationToken(accountSignIn.username, accountSignIn.password)
+            logger.info("authentication user by username [${accountCredentials.username}] and password [*****]")
+
+            authentication = UsernamePasswordAuthenticationToken(accountCredentials.username, accountCredentials.password)
         } catch (e: java.lang.Exception) {
             throw InternalAuthenticationServiceException("Failed to parse authentication request body")
         }

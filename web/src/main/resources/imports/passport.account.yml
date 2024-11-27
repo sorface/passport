@@ -1,0 +1,12 @@
+passport:
+  account:
+    registry:
+      live-to-cache-seconds: ${PASSPORT_ACCOUNT_REGISTRY_LIVE_TO_CACHE_SECONDS}
+      cookie:
+        domain: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_DOMAIN}
+        name: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_NAME}
+        path: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_PATH}
+        http-only: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_HTTP_ONLY}
+        secure: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_SECURE}
+      otp:
+        live-to-cache-seconds: ${PASSPORT_ACCOUNT_REGISTRY_OTP_LIVE_TO_CACHE_SECONDS}

@@ -4,7 +4,7 @@ import by.sorface.passport.web.dao.sql.models.UserEntity
 import by.sorface.passport.web.records.responses.ProfileRecord
 
 
-fun UserEntity.toProfileRecord() = ProfileRecord(
+fun UserEntity.toProfile() = ProfileRecord(
     this.id,
     this.username,
     this.email,

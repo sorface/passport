@@ -1,6 +1,6 @@
 package by.sorface.passport.web.facade.signup
 
-import by.sorface.passport.web.config.options.OAuth2Options
+import by.sorface.passport.web.extensions.toLazyJson
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.mails.MailImage
 import by.sorface.passport.web.records.mails.MailTemplate
@@ -10,8 +10,6 @@ import by.sorface.passport.web.records.responses.UserRegistered
 import by.sorface.passport.web.records.responses.UserRegisteredHash
 import by.sorface.passport.web.services.emails.EmailService
 import by.sorface.passport.web.services.locale.LocaleI18Service
-import by.sorface.passport.web.utils.json.Json.lazyStringifyWithMasking
-import by.sorface.passport.web.utils.json.Json.stringify
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -25,7 +23,6 @@ import org.thymeleaf.context.Context
 class DefaultSignupEmailFacade(
     private val emailService: EmailService,
     private val userRegistryFacade: DefaultSignupFacade,
-    private val oAuth2Options: OAuth2Options,
     private val localeI18Service: LocaleI18Service
 ) : SignupEmailFacade {
 
@@ -34,7 +31,7 @@ class DefaultSignupEmailFacade(
     }
 
     override fun signup(user: AccountSignup): UserRegistered {
-        LOGGER.info("User registration request received {}{}", System.lineSeparator(), lazyStringifyWithMasking(user))
+        LOGGER.info("User registration request received {}{}", System.lineSeparator(), user.toLazyJson(mask = true))
 
         val registry = userRegistryFacade.signup(user)
 
@@ -71,7 +68,6 @@ class DefaultSignupEmailFacade(
         val context = Context()
         run {
             context.setVariable("token", registeredUser!!.hash)
-            context.setVariable("issuer", oAuth2Options.issuerUrl)
         }
 
         val emailTemplate = localeI18Service.getI18Message(I18Codes.I18EmailCodes.TEMPLATE)
@@ -82,7 +78,7 @@ class DefaultSignupEmailFacade(
         val mailTemplate = MailTemplate(registeredUser!!.email, subject!!, emailTemplate!!, context, images)
 
         LOGGER.info("Preparing an email to confirm the account")
-        LOGGER.debug("{}{}", System.lineSeparator(), stringify(mailTemplate))
+        LOGGER.debug("{}{}", System.lineSeparator(), mailTemplate.toLazyJson(mask = true))
 
         emailService.sendHtml(mailTemplate)
 

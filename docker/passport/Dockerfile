@@ -4,7 +4,7 @@ COPY . .
 
 ARG ACTIVE_PROFILE=docker
 
-RUN mvn clean package -P run.context.$ACTIVE_PROFILE
+RUN mvn clean package -P passport.$ACTIVE_PROFILE
 
 FROM eclipse-temurin:19
 

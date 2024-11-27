@@ -1,6 +1,6 @@
 package by.sorface.passport.web.constants
 
-import by.sorface.passport.web.security.oauth2.provider.enums.OAuth2ProviderType
+import by.sorface.passport.web.security.oauth2.records.enums.OAuth2ProviderType
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments

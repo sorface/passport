@@ -11,6 +11,26 @@ class I18Codes {
         const val OBJECT_IS_NOT_SUPPORTED: String = "global.object_is_not_supported"
     }
 
+    object I18AuthenticationCodes {
+        const val UNKNOWN_ERROR: String = "authentication.unknown"
+
+        const val PASSWORD_OR_USERNAME_INVALID: String = "authentication.password_or_username_invalid"
+        const val NOT_AUTHENTICATED: String = "authentication.not_authenticated"
+    }
+
+    object I18SessionCodes {
+        const val DELETE_ACTIVE_SESSION_ERROR: String = "session.delete_active_session_error"
+    }
+
+    object I18CsrfCodes {
+        const val INVALID: String = "csrf.invalid"
+    }
+
+    object I18OtpCodes {
+        const val INVALID_CODE: String = "otp.invalid_code"
+        const val EXPIRED_CODE: String = "otp.expired_code"
+    }
+
     object SELF {
         const val NOT_FOUND_KEY: String = "i18.not_found_template"
     }
@@ -29,6 +49,10 @@ class I18Codes {
         const val ALREADY_AUTHENTICATED: String = "user.already_authenticated"
 
         const val EMAIL_NOT_VALID: String = "user.email.not_valid"
+    }
+
+    object I18AccountRegistryCodes {
+        const val ACCOUNT_DATA_NOT_FOUND: String = "account.registry.data_not_found"
     }
 
     object I18ClientCodes {
@@ -62,7 +86,12 @@ class I18Codes {
 
         const val CONFIRMATION_REGISTRATION: String = "email.confirmation_registration"
 
+        const val HTML_TEMPLATE_OTP: String = "email.template.otp"
+
+        const val HTML_TEMPLATE_SUCCESS_REGISTRATION: String = "email.template.success_registration"
+
         const val SUBJECT_TITLE_RESET_PASSWORD: String = "email.title_reset_password"
+        const val SUBJECT_SUCCESS_REGISTRATION: String = "email.subject_success_registration"
 
         const val TEMPLATE_RENEW_PASSWORD: String = "email.template_renew_password"
     }

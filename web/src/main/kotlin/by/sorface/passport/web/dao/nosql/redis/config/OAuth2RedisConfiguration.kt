@@ -5,6 +5,7 @@ import by.sorface.passport.web.dao.nosql.redis.models.converters.OAuth2Authoriza
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
+import org.springframework.data.redis.core.RedisKeyValueAdapter
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.convert.RedisCustomConversions
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories
@@ -12,7 +13,10 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent
 
 @Configuration
-@EnableRedisRepositories(basePackages = ["by.sorface.passport.web.dao.nosql.redis.repository"])
+@EnableRedisRepositories(
+    enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP,
+    basePackages = ["by.sorface.passport.web.dao.nosql.redis.repository"]
+)
 open class OAuth2RedisConfiguration {
 
     @Bean

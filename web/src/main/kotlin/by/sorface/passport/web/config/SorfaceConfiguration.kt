@@ -1,33 +1,60 @@
 package by.sorface.passport.web.config
 
 import brave.sampler.Sampler
+import by.sorface.passport.web.constants.SupportedLocales
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
 import nl.basjes.parse.useragent.UserAgentAnalyzer
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.support.ResourceBundleMessageSource
+import org.springframework.web.servlet.LocaleResolver
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver
 import java.nio.charset.StandardCharsets
 
 @Configuration
-@EnableConfigurationProperties
-open class SorfaceConfiguration {
+class SorfaceConfiguration {
 
     @Bean
-    open fun resourceBundleMessageSource(): ResourceBundleMessageSource {
-        val source = ResourceBundleMessageSource()
-        source.setBasename(I18_BUNDLE_LOCATION)
-        source.setDefaultEncoding(StandardCharsets.UTF_8.name())
-
-        return source
+    fun resourceBundleMessageSource(): ResourceBundleMessageSource = ResourceBundleMessageSource().apply {
+        setBasename(I18_BUNDLE_LOCATION)
+        setDefaultEncoding(StandardCharsets.UTF_8.name())
     }
 
     @Bean
-    open fun userAgentAnalyzer(): UserAgentAnalyzer = UserAgentAnalyzer.newBuilder().hideMatcherLoadStats().withCache(10000).build()
+    fun userAgentAnalyzer(): UserAgentAnalyzer = UserAgentAnalyzer.newBuilder()
+        .hideMatcherLoadStats()
+        .withoutCache()
+        .build()
 
     @Bean
-    open fun defaultSampler(): Sampler = Sampler.ALWAYS_SAMPLE
+    fun defaultSampler(): Sampler = Sampler.ALWAYS_SAMPLE
+
+    @Bean
+    fun localeResolver(): LocaleResolver = AcceptHeaderLocaleResolver().apply {
+        supportedLocales = SupportedLocales.entries.map { it.locale }
+        setDefaultLocale(SupportedLocales.EN.locale)
+    }
+
+    @Bean
+    fun accountCookieBuilder(accountCookieProperties: AccountCookieProperties): (otpId: String, maxAge: Int) -> Cookie = { otpId, maxAge ->
+        Cookie(accountCookieProperties.name, otpId).apply {
+            domain = accountCookieProperties.domain
+            path = accountCookieProperties.path
+            secure = accountCookieProperties.secure
+            isHttpOnly = accountCookieProperties.httpOnly
+            setMaxAge(maxAge)
+        }
+    }
+
+    @Bean
+    fun accountCookieValue(accountCookieProperties: AccountCookieProperties): (request: HttpServletRequest) -> String? = funcCookie@{ request: HttpServletRequest ->
+        return@funcCookie request.cookies.firstOrNull { it.name == accountCookieProperties.name }?.value ?: return@funcCookie null
+    }
+
 
     companion object {
         const val I18_BUNDLE_LOCATION: String = "language/messages"
     }
+
 }
