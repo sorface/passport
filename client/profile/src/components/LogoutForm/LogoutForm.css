@@ -1,0 +1,4 @@
+.form-logout input[type="submit"] {
+  background-color: var(--button-bg);
+  border-color: var(--active);
+}

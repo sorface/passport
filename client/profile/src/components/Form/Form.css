@@ -1,0 +1,65 @@
+.form {
+    --padding: 1.75rem;
+    position: relative;
+    display: inline-block;
+    width: 19.875rem;
+    padding: 1.5rem 1.25rem;
+    background-color: white;
+    margin-top: 2rem;
+    box-shadow: 0px 4px 7.6px rgba(0, 0, 0, 0.06);
+    border-radius: 18px;
+}
+
+.form .form-content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form .form-field-wrapper {
+    margin-bottom: 1rem;
+}
+
+.form .form-field-error {
+    color: var(--error);
+    text-align: left;
+    margin-left: 0.25rem;
+    margin-top: 0.15rem;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.form .form-status {
+    padding-top: 0.25rem;
+    text-align: center;
+}
+
+.form .form-additional-content {
+    text-align: center;
+    padding-top: 1rem;
+}
+
+.form label {
+    display: block;
+    color: var(--list-border-color);
+    font-size: 0.75rem;
+    text-align: left;
+    font-weight: bold;
+    margin-left: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.form input {
+    padding: 0rem 0.5rem;
+    width: calc(100% - 12px - 1rem);
+    height: 2.5rem;
+    font-size: 0.9rem;
+    color: var(--text);
+    background-color: var(--button-bg);
+    border: 1px solid var(--button-border-color);
+    border-radius: var(--border-radius);
+}
+
+.form input[type="submit"] {
+    margin-top: 1rem;
+}

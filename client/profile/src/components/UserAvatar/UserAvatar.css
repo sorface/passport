@@ -1,0 +1,13 @@
+.user-avatar {
+  border-radius: 100%;
+  object-fit: contain;
+}
+
+.user-avatar-plug {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: capitalize;
+  background-color: #E3E3FE;
+  color: #3838F5;
+}

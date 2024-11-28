@@ -1,0 +1,28 @@
+.menu {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.5rem;
+  padding: 1rem;
+  background-color: var(--text);
+}
+
+.menu .menu-item {
+  padding-top: 1rem;
+  text-decoration: none;
+}
+
+.menu .menu-item:first-child {
+  padding-top: 0rem;
+}
+
+.menu .menu-item:last-child {
+  margin-top: auto;
+}
+
+.menu .form-logout button {
+  background-color: unset;
+  border: unset;
+  padding: 0rem;
+  color: var(--link);
+  font-size: 1.5rem;
+}

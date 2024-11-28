@@ -1,0 +1,139 @@
+:root {
+    --border: #000033;
+    --primary: #66CCFF;
+    --primary-text: white;
+    --error: #FF3333;
+    --active: #b9221c;
+    --link: #0066CC;
+    --text: #1F1F1F;
+    --dark: #24243A;
+    --grey3: #838AA4;
+    --grey2: #C3CBDF;
+    --grey1: #F5F6F8;
+    --white: #FFFFFF;
+    --light-active: #DFE4F0;
+    --page-bg: var(--grey1);
+    --button-border-color: var(--grey2);
+    --button-hover-color: #4096FF;
+    --button-bg: #FFF;
+    --list-border-color: #444;
+    --active-nav-tab: #424242;
+    --border-radius: 0.5rem;
+}
+
+
+body {
+    margin: 0;
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    font-weight: normal;
+    background-color: var(--page-bg);
+}
+
+a {
+    color: var(--link);
+}
+
+button,
+input[type="submit"] {
+    width: 100% !important;
+    color: var(--text);
+    background-color: var(--primary);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0rem 2rem;
+    min-height: 1.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 300ms !important;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+    background-color: var(--button-bg);
+    font-size: 0.9rem;
+    border: 1px solid var(--button-border-color);
+    padding: 0rem 2rem;
+    min-height: 1.75rem;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: 300ms !important;
+    font-family: 'Manrope';
+    border-radius: 0.75rem;
+}
+
+button:hover,
+input[type="submit"]:hover {
+    border-color: var(--text);
+}
+
+button.active {
+    background-color: var(--button-hover-color);
+    color: var(--button-bg);
+}
+
+button.danger {
+    border-color: var(--active);
+}
+
+button:disabled,
+button[disabled] {
+    opacity: 0.45;
+}
+
+button:disabled:hover,
+button[disabled]:hover {
+    border-color: var(--button-border-color);
+}
+
+textarea,
+input[type="text"],
+input[type="color"] {
+    font-size: 1.0rem;
+    color: var(--text);
+    background-color: var(--wrap-bg);
+    border: 1px solid var(--button-border-color);
+    border-radius: var(--border-radius);
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th,
+table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: top;
+}
+
+table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+table tr.current_session {
+    background-color: #dedede;
+}
+
+table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    background-color: #efefef;
+    color: black;
+}
+
+table tr:hover {
+    background-color: #d4d4d4;
+}
