@@ -30,7 +30,7 @@ class JsonFormLoginFailureHandler(private val sleuthService: SleuthService, priv
 
         val operationError = buildError(HttpStatus.UNAUTHORIZED, i18ErrorCode)
 
-        logger.info("exception [${exception.javaClass.simpleName}] during processing. message: ${exception.localizedMessage}")
+        logger.error("exception [${exception.javaClass.simpleName}] during processing. message: ${exception.message}", exception)
 
         response.useErrorJsonStream(operationError)
     }

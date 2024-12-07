@@ -30,7 +30,8 @@ class DefaultOAuth2UserDatabaseStrategy(
             OAuth2ProviderType.YANDEX -> yandexOAuth2UserSocialOAuth2UserService
             OAuth2ProviderType.TWITCH -> twitchOAuth2UserSocialOAuth2UserService
             OAuth2ProviderType.GOOGLE -> googleOAuth2UserSocialOAuth2UserService
-            else -> throw OAuth2AuthenticationException("provider %s not supported".formatted(provider))
+
+            else -> throw OAuth2AuthenticationException("provider $provider not supported")
         }
     }
 

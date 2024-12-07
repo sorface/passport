@@ -3,6 +3,7 @@ package by.sorface.passport.web.services.users
 import by.sorface.passport.web.dao.sql.models.UserEntity
 import by.sorface.passport.web.dao.sql.models.enums.ProviderType
 import by.sorface.passport.web.dao.sql.repository.UserRepository
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -11,7 +12,7 @@ import java.util.*
 class DefaultUserService(private val userRepository: UserRepository) : UserService {
 
     @Transactional(readOnly = true)
-    override fun findById(id: UUID): UserEntity? = userRepository.findById(id).orElse(null)
+    override fun findById(id: UUID): UserEntity? = userRepository.findByIdOrNull(id)
 
     @Transactional(readOnly = true)
     override fun findByIdOrThrow(id: UUID, throwableConsumer: (id: UUID) -> Throwable): UserEntity {

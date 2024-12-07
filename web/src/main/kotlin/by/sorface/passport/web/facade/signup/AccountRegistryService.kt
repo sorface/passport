@@ -21,15 +21,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.junit.jupiter.api.function.ThrowingSupplier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.thymeleaf.context.Context
 import java.time.Instant
+import java.util.*
+import java.util.function.Supplier
 
 @Service
 class OTPService(private val redisAccountRegistryOTPRepository: RedisAccountRegistryOTPRepository) {
@@ -37,7 +39,7 @@ class OTPService(private val redisAccountRegistryOTPRepository: RedisAccountRegi
     fun save(code: String, ttlSeconds: Long): AccountRegistryOTP = AccountRegistryOTP(code, Instant.now().plusSeconds(ttlSeconds), ttlSeconds)
         .also { redisAccountRegistryOTPRepository.save(it) }
 
-    fun <E : Throwable> findByIdOrThrow(id: String, throwingConsumer: ThrowingSupplier<E>): AccountRegistryOTP =
+    fun <E : Throwable> findByIdOrThrow(id: String, throwingConsumer: Supplier<E>): AccountRegistryOTP =
         redisAccountRegistryOTPRepository.findByIdOrNull(id) ?: throw throwingConsumer.get()
 
     fun findByIdOrNull(id: String): AccountRegistryOTP? = redisAccountRegistryOTPRepository.findByIdOrNull(id)
@@ -97,8 +99,10 @@ class AccountRegistryService(
 
         logger.info("temporary data for the new account is saved to cache with the ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
 
+        val locale = LocaleContextHolder.getLocale()
+
         CoroutineScope(Dispatchers.IO).launch {
-            sendOtpCodeToEmailAsync(user.email, otp.code)
+            sendOtpCodeToEmailAsync(user.email, otp.code, locale = locale)
         }
 
         logger.info("Forming a response to the operation of creating a new account with ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
@@ -142,8 +146,10 @@ class AccountRegistryService(
 
         userService.save(user)
 
+        val locale = LocaleContextHolder.getLocale()
+
         CoroutineScope(Dispatchers.IO).launch {
-            sendEmailSuccessRegistrationAsync(accountRegistry.email, accountRegistry.username)
+            sendEmailSuccessRegistrationAsync(accountRegistry.email, accountRegistry.username, locale = locale)
         }
 
         redisAccountRegistryRepository.deleteById(accountRegistry.id!!)
@@ -166,16 +172,18 @@ class AccountRegistryService(
 
         redisAccountRegistryRepository.save(accountRegistry)
 
+        val locale = LocaleContextHolder.getLocale()
+
         CoroutineScope(Dispatchers.IO).launch {
-            sendOtpCodeToEmailAsync(accountRegistry.email, newOtp.code)
+            sendOtpCodeToEmailAsync(accountRegistry.email, newOtp.code, locale = locale)
         }
     }
 
-    private suspend fun sendOtpCodeToEmailAsync(email: String, otpCode: String) {
+    private suspend fun sendOtpCodeToEmailAsync(email: String, otpCode: String, locale: Locale) {
         val context = Context().apply { setVariable("otp", otpCode) }
 
-        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_OTP)!!
-        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.CONFIRMATION_REGISTRATION)!!
+        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_OTP, locale = locale)!!
+        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.CONFIRMATION_REGISTRATION, locale = locale)!!
 
         val mailTemplate = MailTemplate(email, subject, emailTemplate, context)
 
@@ -186,11 +194,11 @@ class AccountRegistryService(
         logger.info("the email to confirm your account has been sent to ${email.toStringMask(MaskerFields.EMAILS)}")
     }
 
-    private suspend fun sendEmailSuccessRegistrationAsync(email: String, username: String) {
+    private suspend fun sendEmailSuccessRegistrationAsync(email: String, username: String, locale: Locale) {
         val context = Context().apply { setVariable("username", username) }
 
-        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_SUCCESS_REGISTRATION)!!
-        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.SUBJECT_SUCCESS_REGISTRATION)!!
+        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_SUCCESS_REGISTRATION, locale = locale)!!
+        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.SUBJECT_SUCCESS_REGISTRATION, locale = locale)!!
 
         val mailTemplate = MailTemplate(email, subject, emailTemplate, context)
 
@@ -208,7 +216,6 @@ class AccountRegistryService(
     }
 
     fun generateOtp(): String {
-        val random = java.util.Random()
-        return (0..5).joinToString(separator = "") { random.nextInt(10).toString() }
+        return (0..5).joinToString(separator = "") { (1 until 10).random().toString() }
     }
 }

@@ -9,4 +9,5 @@ spring:
 springdoc.swagger-ui.enabled: true
 
 logging.level:
-  by.sorface.passport.web: info
+  root: info
+  by.sorface.passport.web: trace

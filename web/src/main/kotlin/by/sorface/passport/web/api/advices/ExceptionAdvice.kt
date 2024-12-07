@@ -51,15 +51,12 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
     )
     fun handleUserRequestException(e: GlobalSystemException): ResponseEntity<OperationError> {
         val error = buildError(e, sleuthService.getSpanId(), sleuthService.getTraceId())
-
-        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
-
         return ResponseEntity.status(e.httpStatus).body(error)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    fun handleException(e: MethodArgumentNotValidException): ValidateOperationError {
+    fun handleValidateException(e: MethodArgumentNotValidException): ValidateOperationError {
         val errors = e.bindingResult.allErrors.stream()
             .map { error: ObjectError ->
                 val validateError = ValidateError()
@@ -78,7 +75,7 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
 
         val error = buildValidateError(HttpStatus.BAD_REQUEST, errors, sleuthService.getSpanId(), sleuthService.getTraceId())
 
-        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+        logger.error("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
 
         return error
     }
@@ -86,7 +83,7 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
     @ExceptionHandler(AccessDeniedException::class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun handleAccessDenied(e: AccessDeniedException): OperationError {
-        val error = buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(HttpStatus.UNAUTHORIZED, I18Codes.I18GlobalCodes.ACCESS_DENIED, sleuthService.getSpanId(), sleuthService.getTraceId())
 
         logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
 
@@ -96,7 +93,7 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
     @ExceptionHandler(InsufficientAuthenticationException::class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     fun handleInsufficientAuthentication(e: InsufficientAuthenticationException): OperationError {
-        val error = buildError(HttpStatus.UNAUTHORIZED, e.message, sleuthService.getSpanId(), sleuthService.getTraceId())
+        val error = buildError(HttpStatus.UNAUTHORIZED, I18Codes.I18GlobalCodes.ACCESS_DENIED, sleuthService.getSpanId(), sleuthService.getTraceId())
 
         logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
 
@@ -125,15 +122,17 @@ class ExceptionAdvice(private val sleuthService: SleuthService, private val loca
 
     @ExceptionHandler(Exception::class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    fun handleException(e: Exception): OperationError {
+    fun handleValidateException(e: Exception): OperationError {
         val error = buildError(HttpStatus.INTERNAL_SERVER_ERROR, I18Codes.I18GlobalCodes.UNKNOWN_ERROR, sleuthService.getSpanId(), sleuthService.getTraceId())
 
-        logger.info("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
+        logger.error("exception [${e.javaClass.simpleName}] during processing. Message: ${e.message}")
 
         return error
     }
 
     private fun buildError(exception: GlobalSystemException, spanId: String?, traceId: String?): OperationError {
+        logger.error("exception [${exception.javaClass.simpleName}] during processing. Message: ${exception.message}")
+
         val message = localeI18Service.getI18Message(exception.i18Code, exception.args)
 
         return OperationError(message!!, exception.httpStatus.reasonPhrase, exception.httpStatus.value(), spanId!!, traceId!!)

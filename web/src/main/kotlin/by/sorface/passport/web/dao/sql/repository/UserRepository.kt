@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface UserRepository : BaseRepository<UserEntity?> {
+
     /**
      * Поиск пользователя по логину
      *

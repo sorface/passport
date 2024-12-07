@@ -20,29 +20,27 @@ import java.util.*
 @Service
 class ApplicationClientProvider(
     private val oAuth2ClientService: OAuth2ClientService,
-    private val OAuthTokenProperties: OAuthTokenProperties
+    private val oAuthTokenProperties: OAuthTokenProperties
 ) : RegisteredClientRepository {
 
     override fun save(registeredClient: RegisteredClient) {
-        val oAuth2Client = OAuth2Client()
-        run {
-            oAuth2Client.id = UUID.fromString(registeredClient.id)
-            oAuth2Client.clientId = registeredClient.clientId
-            oAuth2Client.clientName = registeredClient.clientName
-            oAuth2Client.clientSecret = registeredClient.clientSecret
+        val oAuth2Client = OAuth2Client().apply {
+            id = UUID.fromString(registeredClient.id)
+            clientId = registeredClient.clientId
+            clientName = registeredClient.clientName
+            clientSecret = registeredClient.clientSecret
 
-            val clientIdIssueAt = if (registeredClient.clientIdIssuedAt != null
-            ) LocalDateTime.ofInstant(registeredClient.clientIdIssuedAt, ZoneOffset.UTC)
-            else null
+            clientIdIssueAt = if (registeredClient.clientIdIssuedAt != null)
+                LocalDateTime.ofInstant(registeredClient.clientIdIssuedAt, ZoneOffset.UTC)
+            else
+                null
 
-            oAuth2Client.clientIdIssueAt = clientIdIssueAt
+            clientSecretExpiresAt = if (registeredClient.clientSecretExpiresAt != null)
+                LocalDateTime.ofInstant(registeredClient.clientSecretExpiresAt, ZoneOffset.UTC)
+            else
+                null
 
-            val clientSecretExpiresAt = if (registeredClient.clientSecretExpiresAt != null
-            ) LocalDateTime.ofInstant(registeredClient.clientSecretExpiresAt, ZoneOffset.UTC)
-            else null
-
-            oAuth2Client.clientSecretExpiresAt = clientSecretExpiresAt
-            oAuth2Client.redirectUris = java.lang.String.join(REDIRECT_URL_SPLITERATOR, registeredClient.redirectUris)
+            redirectUris = java.lang.String.join(REDIRECT_URL_SPLITERATOR, registeredClient.redirectUris)
         }
 
         oAuth2ClientService.save(oAuth2Client)
@@ -50,13 +48,11 @@ class ApplicationClientProvider(
 
     override fun findById(id: String): RegisteredClient {
         val oAuth2Client = oAuth2ClientService.findById(UUID.fromString(id)) ?: throw AccessDeniedException(I18Codes.I18ClientCodes.NOT_FOUND)
-
         return this.buildClient(oAuth2Client)
     }
 
-    override fun findByClientId(clientId: String): RegisteredClient {
+    override fun findByClientId(clientId: String): RegisteredClient? {
         val oAuth2Client = oAuth2ClientService.findByClientId(clientId) ?: throw AccessDeniedException(I18Codes.I18ClientCodes.NOT_FOUND)
-
         return buildClient(oAuth2Client)
     }
 
@@ -65,8 +61,8 @@ class ApplicationClientProvider(
 
         val scopes = setOf(OidcScopes.OPENID, OidcScopes.PROFILE, OidcScopes.EMAIL)
 
-        val accessTokenTimeToLive = OAuthTokenProperties.access.run { Duration.of(this.ttl, this.cron) }
-        val refreshTokenTimeToLive = OAuthTokenProperties.refresh.run { Duration.of(this.ttl, this.cron) }
+        val accessTokenTimeToLive = oAuthTokenProperties.access.run { Duration.of(this.ttl, this.cron) }
+        val refreshTokenTimeToLive = oAuthTokenProperties.refresh.run { Duration.of(this.ttl, this.cron) }
 
         val tokenSettings = TokenSettings.builder()
             .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
@@ -74,7 +70,7 @@ class ApplicationClientProvider(
             .refreshTokenTimeToLive(refreshTokenTimeToLive)
             .reuseRefreshTokens(true)
             .deviceCodeTimeToLive(accessTokenTimeToLive)
-            .authorizationCodeTimeToLive(OAuthTokenProperties.authorizationCode.run { Duration.of(this.ttl, this.cron) })
+            .authorizationCodeTimeToLive(oAuthTokenProperties.authorizationCode.run { Duration.of(this.ttl, this.cron) })
             .build()
 
         val grantTypes = setOf(
