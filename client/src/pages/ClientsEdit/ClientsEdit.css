@@ -1,9 +1,0 @@
-.client-edit-body {
-  padding: 0rem 2rem;
-}
-
-.client-edit-body .form {
-  width: calc(100% - var(--padding) * 2);
-  box-shadow: unset;
-  background-color: unset;
-}
