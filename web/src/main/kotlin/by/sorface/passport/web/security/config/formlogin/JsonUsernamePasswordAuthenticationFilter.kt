@@ -27,7 +27,7 @@ class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationF
             throw AuthenticationServiceException("Authentication method not supported: " + request.method)
         }
 
-        if (MediaType.APPLICATION_JSON_VALUE.equals(request.contentType, ignoreCase = true).not()) {
+        if (request.contentType == null || request.contentType.startsWith(MediaType.APPLICATION_JSON_VALUE, ignoreCase = true).not()) {
             throw AuthenticationServiceException("Authentication method not supported application/json: " + request.contentType)
         }
 
@@ -43,7 +43,7 @@ class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationF
             throw InternalAuthenticationServiceException("Failed to parse authentication request body")
         }
 
-        return super.getAuthenticationManager().authenticate(authentication);
+        return super.getAuthenticationManager().authenticate(authentication)
     }
 
 }

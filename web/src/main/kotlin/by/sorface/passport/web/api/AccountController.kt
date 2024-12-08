@@ -2,10 +2,7 @@ package by.sorface.passport.web.api
 
 import by.sorface.passport.web.exceptions.UserRequestException
 import by.sorface.passport.web.facade.accounts.AccountFacade
-import by.sorface.passport.web.facade.signup.AccountRegistrationInfo
-import by.sorface.passport.web.facade.signup.AccountRegistryService
-import by.sorface.passport.web.facade.signup.ConfirmAccount
-import by.sorface.passport.web.facade.signup.UserRegistration
+import by.sorface.passport.web.facade.signup.*
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.requests.UserPatchUpdate
 import by.sorface.passport.web.records.responses.ProfileRecord
@@ -46,9 +43,10 @@ class AccountController(
 
     @PutMapping(value = ["/otp"])
     @PreAuthorize("isAnonymous()")
-    fun updateOtp(request: HttpServletRequest) {
+    fun updateOtp(request: HttpServletRequest): OtpRefreshed {
         val registrationId = accountCookieValue.invoke(request) ?: throw UserRequestException(I18Codes.I18AccountRegistryCodes.ACCOUNT_DATA_NOT_FOUND)
-        accountRegistryService.updateOtp(registrationId)
+
+        return accountRegistryService.updateOtp(registrationId)
     }
 
     @PatchMapping("/{id}")

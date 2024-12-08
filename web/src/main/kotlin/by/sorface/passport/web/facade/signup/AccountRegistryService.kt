@@ -55,7 +55,18 @@ data class UserRegistration(
     val lastName: String?,
 )
 
-data class AccountRegistrationInfo(val registrationId: String, @JsonIgnore val otpId: String, @JsonIgnore val registryExpiredSeconds: Int)
+data class AccountRegistrationInfo(
+    val registrationId: String,
+    @JsonIgnore
+    val otpId: String,
+    @JsonIgnore
+    val registryExpiredSeconds: Int,
+    val otpExpiredTime: Instant
+)
+
+data class OtpRefreshed(
+    val otpExpiredTime: Instant
+)
 
 data class ConfirmAccount(val code: String)
 
@@ -107,7 +118,12 @@ class AccountRegistryService(
 
         logger.info("forming a response to the operation of creating a new account with ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
 
-        return AccountRegistrationInfo(newProfile.id!!, otp.id!!, accountRegistryProperties.liveToCacheSeconds.toInt())
+        return AccountRegistrationInfo(
+            newProfile.id!!,
+            otp.id!!,
+            accountRegistryProperties.liveToCacheSeconds.toInt(),
+            Instant.now().plusSeconds(accountRegistryOTPProperties.liveToCacheSeconds)
+        )
     }
 
     @Transactional
@@ -156,7 +172,7 @@ class AccountRegistryService(
         otpService.deleteById(accountRegistry.otpId)
     }
 
-    fun updateOtp(registrationId: String) {
+    fun updateOtp(registrationId: String): OtpRefreshed {
         val accountRegistry =
             redisAccountRegistryRepository.findByIdOrNull(registrationId) ?: throw UserRequestException(I18Codes.I18AccountRegistryCodes.ACCOUNT_DATA_NOT_FOUND)
 
@@ -177,6 +193,8 @@ class AccountRegistryService(
         CoroutineScope(Dispatchers.IO).launch {
             sendOtpCodeToEmailAsync(accountRegistry.email, newOtp.code, locale = locale)
         }
+
+        return OtpRefreshed(Instant.now().plusSeconds(accountRegistryOTPProperties.liveToCacheSeconds))
     }
 
     private suspend fun sendOtpCodeToEmailAsync(email: String, otpCode: String, locale: Locale) {
