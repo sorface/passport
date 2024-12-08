@@ -105,7 +105,7 @@ class AccountRegistryService(
             sendOtpCodeToEmailAsync(user.email, otp.code, locale = locale)
         }
 
-        logger.info("Forming a response to the operation of creating a new account with ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
+        logger.info("forming a response to the operation of creating a new account with ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
 
         return AccountRegistrationInfo(newProfile.id!!, otp.id!!, accountRegistryProperties.liveToCacheSeconds)
     }

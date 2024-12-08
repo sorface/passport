@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/accounts/passwords")
-open class RenewPasswordController(private val renewPasswordFacade: RenewPasswordFacade) {
+class RenewPasswordController(private val renewPasswordFacade: RenewPasswordFacade) {
 
     @PostMapping("/forget")
     fun forgetPassword(@RequestBody(required = true) request: @Valid AccountRenewPasswordRequest): ResponseEntity<*> {
