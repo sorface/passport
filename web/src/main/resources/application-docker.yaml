@@ -2,12 +2,9 @@
 server:
   port: 8080
 
-spring:
-  liquibase:
-    contexts: development
+spring.liquibase.contexts: development
 
 springdoc.swagger-ui.enabled: true
 
 logging.level:
   root: info
-  by.sorface.passport.web: trace
