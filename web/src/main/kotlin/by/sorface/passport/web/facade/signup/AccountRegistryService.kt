@@ -55,7 +55,7 @@ data class UserRegistration(
     val lastName: String?,
 )
 
-data class AccountRegistrationInfo(val registrationId: String, @JsonIgnore val otpId: String, @JsonIgnore val otpExpirationSeconds: Long)
+data class AccountRegistrationInfo(val registrationId: String, @JsonIgnore val otpId: String, @JsonIgnore val registryExpiredSeconds: Int)
 
 data class ConfirmAccount(val code: String)
 
@@ -107,7 +107,7 @@ class AccountRegistryService(
 
         logger.info("forming a response to the operation of creating a new account with ID [${newProfile.id}] and OTP ID [${newProfile.otpId}]")
 
-        return AccountRegistrationInfo(newProfile.id!!, otp.id!!, accountRegistryProperties.liveToCacheSeconds)
+        return AccountRegistrationInfo(newProfile.id!!, otp.id!!, accountRegistryProperties.liveToCacheSeconds.toInt())
     }
 
     @Transactional

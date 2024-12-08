@@ -34,7 +34,7 @@ class AccountController(
     @PreAuthorize("isAnonymous()")
     fun signup(@RequestBody userRegistration: @Valid UserRegistration, response: HttpServletResponse): AccountRegistrationInfo =
         accountRegistryService.registry(userRegistration).apply {
-            response.addCookie(accountCookieBuilder.invoke(registrationId, 300))
+            response.addCookie(accountCookieBuilder.invoke(registrationId, this.registryExpiredSeconds))
         }
 
     @PostMapping(value = ["/confirm"])
