@@ -5,6 +5,7 @@ import by.sorface.passport.web.dao.nosql.redis.models.OAuth2AuthorizationInit
 import by.sorface.passport.web.dao.nosql.redis.repository.RedisOAuth2AuthorizationCompleteRepository
 import by.sorface.passport.web.dao.nosql.redis.repository.RedisOAuth2AuthorizationInitRepository
 import org.slf4j.LoggerFactory
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.lang.Nullable
 import org.springframework.security.oauth2.core.OAuth2Token
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames
@@ -47,32 +48,25 @@ class RedisOAuth2AuthorizationService(
     override fun remove(authorization: OAuth2Authorization) {
         Assert.notNull(authorization, "authorization cannot be null")
 
-        logger.debug("Remove authorization object with key ${authorization.id}")
+        logger.debug("remove authorization object with key ${authorization.id}")
 
         redisOAuth2AuthorizationCompleteRepository.deleteById(authorization.id)
         redisOAuth2AuthorizationInitRepository.deleteById(authorization.id)
     }
 
     @Nullable
-    override fun findById(id: String): OAuth2Authorization? {
-        Assert.hasText(id, "id cannot be empty")
-
-        return redisOAuth2AuthorizationCompleteRepository.findById(id)
-            .map { it.authorization }
-            .or { redisOAuth2AuthorizationInitRepository.findById(id).map { it?.authorization } }
-            .orElse(null)
-    }
+    override fun findById(id: String): OAuth2Authorization? =
+        redisOAuth2AuthorizationCompleteRepository.findByIdOrNull(id)?.authorization
+            ?: redisOAuth2AuthorizationInitRepository.findByIdOrNull(id)?.authorization
 
     override fun findByToken(token: String, @Nullable tokenType: OAuth2TokenType?): OAuth2Authorization? {
         Assert.hasText(token, "token cannot be empty")
 
-        if (tokenType == null) {
-            return redisOAuth2AuthorizationInitRepository.findFirstByCode(token)?.authorization
-                ?: redisOAuth2AuthorizationInitRepository.findFirstByState(token)?.authorization
-                ?: redisOAuth2AuthorizationCompleteRepository.findFirstByAccessToken(token)?.authorization
-                ?: redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
-                ?: redisOAuth2AuthorizationCompleteRepository.findFirstByOidcToken(token)?.authorization
-        }
+        tokenType ?: return redisOAuth2AuthorizationInitRepository.findFirstByCode(token)?.authorization
+            ?: redisOAuth2AuthorizationInitRepository.findFirstByState(token)?.authorization
+            ?: redisOAuth2AuthorizationCompleteRepository.findFirstByAccessToken(token)?.authorization
+            ?: redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
+            ?: redisOAuth2AuthorizationCompleteRepository.findFirstByOidcToken(token)?.authorization
 
         return when (tokenType.value) {
             OAuth2ParameterNames.CODE -> {

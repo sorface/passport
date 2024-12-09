@@ -31,7 +31,7 @@ class AccountController(
     @PreAuthorize("isAnonymous()")
     fun signup(@RequestBody userRegistration: @Valid UserRegistration, response: HttpServletResponse): AccountRegistrationInfo =
         accountRegistryService.registry(userRegistration).apply {
-            response.addCookie(accountCookieBuilder.invoke(registrationId, this.registryExpiredSeconds))
+            response.addCookie(accountCookieBuilder.invoke(registrationId.toString(), this.registryExpiredSeconds))
         }
 
     @PostMapping(value = ["/confirm"])
@@ -45,7 +45,6 @@ class AccountController(
     @PreAuthorize("isAnonymous()")
     fun updateOtp(request: HttpServletRequest): OtpRefreshed {
         val registrationId = accountCookieValue.invoke(request) ?: throw UserRequestException(I18Codes.I18AccountRegistryCodes.ACCOUNT_DATA_NOT_FOUND)
-
         return accountRegistryService.updateOtp(registrationId)
     }
 
