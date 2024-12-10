@@ -3,7 +3,7 @@ package by.sorface.passport.web.api.advices
 import by.sorface.passport.web.api.AccountController
 import by.sorface.passport.web.api.AccountSessionController
 import by.sorface.passport.web.api.ApplicationClientController
-import by.sorface.passport.web.api.SecurityCsrfController
+import by.sorface.passport.web.api.SpaCsrfController
 import by.sorface.passport.web.exceptions.*
 import by.sorface.passport.web.records.I18Codes
 import by.sorface.passport.web.records.responses.OperationError
@@ -30,7 +30,7 @@ import java.util.*
         AccountController::class,
         AccountSessionController::class,
         ApplicationClientController::class,
-        SecurityCsrfController::class
+        SpaCsrfController::class
     ]
 )
 class ExceptionAdvice(private val sleuthService: SleuthService, private val localeI18Service: LocaleI18Service) {
