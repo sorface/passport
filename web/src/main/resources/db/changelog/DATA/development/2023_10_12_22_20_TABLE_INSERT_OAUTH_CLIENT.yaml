@@ -1,9 +1,9 @@
 databaseChangeLog:
 
   - changeSet:
-      id: 2023_11_09_20_09_INSERT_DEFAULT_OAUTH_CLIENT
-      author: Pavel Talayko
-      comment: Установка клиентов приложения по умолчанию
+      id: '2024_12_08_08_47_INSERT_DEFAULT_OAUTH_CLIENT'
+      author: 'Павел Талайко'
+      comment: 'Установка клиентов приложения по умолчанию'
 
       context: "development"
 
@@ -13,19 +13,19 @@ databaseChangeLog:
             columns:
               - column:
                   name: C_ID
-                  value: 4d1060a2-e148-44cf-9a21-397adcedf6ea
+                  value: 4d1060a2-e144-44cf-9a21-397adcedf6ea
               - column:
                   name: C_CLIENTID
-                  value: ZFXYNOMYEJTwGkpbCCTIRrAkMHxKfNcHtUbhGuqBHCaSAVprAtpqmLY@sorface.oauth.client
+                  value: QFXYNOMYEJTwGkpbCCTIRrAkMHxKfNcHtUbhGuqBHCaSAVprAtpqmLY@sorface.oauth.client
               - column:
                   name: C_CLIENTSECRET
                   value: $2a$10$gWp1PH0uoYs9Y/ycSDIFwO4VP8tOg6fhHyl1/YKUPVfEP0omc2/RK
               - column:
                   name: C_CLIENTNAME
-                  value: Клиент C# backend
+                  value: 'gateway client'
               - column:
                   name: C_REDIRECTURIS
-                  value: http://localhost:5043/oauth2/sorface
+                  value: http://localhost:9000/login/oauth2/code/passport,http://backend.gateway:8080/login/oauth2/code/passport
               - column:
                   name: C_CLIENTIDISSUEDAT
                   value: "2072-11-09 20:20:39.000000"

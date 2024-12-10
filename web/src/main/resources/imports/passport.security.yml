@@ -1,0 +1,76 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-name: github
+            client-id: ${OAUTH_CLIENT_GITHUB_ID}
+            client-secret: ${OAUTH_CLIENT_GITHUB_SECRET}
+
+          google:
+            client-name: google
+            clientId: ${OAUTH_CLIENT_GOOGLE_ID}
+            clientSecret: ${OAUTH_CLIENT_GOOGLE_SECRET}
+            authorization-grant-type: authorization_code
+            scope:
+              - profile
+              - email
+
+          yandex:
+            client-name: yandex
+            client-id: ${OAUTH_CLIENT_YANDEX_ID}
+            client-secret: ${OAUTH_CLIENT_YANDEX_SECRET}
+            authorization-grant-type: authorization_code
+            provider: yandex
+            redirect-uri: ${OAUTH_CLIENT_YANDEX_REDIRECT_URL}
+
+          twitch:
+            client-name: twitch
+            client-id: ${OAUTH_CLIENT_TWITCH_ID}
+            client-secret: ${OAUTH_CLIENT_TWITCH_SECRET}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - user:read:email
+            provider: twitch
+            redirect-uri: ${OAUTH_CLIENT_TWITCH_REDIRECT_URL}
+
+        provider:
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-name-attribute: default_email
+            userInfoUri: https://login.yandex.ru/info
+          twitch:
+            authorization-uri: https://id.twitch.tv/oauth2/authorize
+            token-uri: https://id.twitch.tv/oauth2/token
+            userInfoUri: https://api.twitch.tv/helix/users/
+            user-info-authentication-method: GET
+            user-name-attribute: data
+
+passport.csrf.cookie:
+  domain: ${PASSPORT_CSRF_COOKIE_DOMAIN}
+  path: ${PASSPORT_CSRF_COOKIE_PATH}
+  name: ${PASSPORT_CSRF_COOKIE_NAME}
+  http-only: ${PASSPORT_CSRF_COOKIE_HTTP_ONLY}
+
+passport.cors.options:
+  - pattern: /**
+    allowed-origins: 'http://localhost:9020,http://localhost:9030,http://localhost:9000'
+    allowed-headers: "*"
+    allowed-methods: "*"
+    exposed-headers: "*"
+    allow-credentials: true
+    max-age: 3600
+
+passport.oauth.token:
+  access:
+    cron: ${PASSPORT_OAUTH_TOKEN_ACCESS_CRON}
+    ttl: ${PASSPORT_OAUTH_TOKEN_ACCESS_TTL}
+  refresh:
+    cron: ${PASSPORT_OAUTH_TOKEN_REFRESH_CRON}
+    ttl: ${PASSPORT_OAUTH_TOKEN_REFRESH_TTL}
+  authorization-code:
+    cron: ${PASSPORT_OAUTH_TOKEN_AUTHORIZATION_CODE_CRON}
+    ttl: ${PASSPORT_OAUTH_TOKEN_AUTHORIZATION_CODE_TTL}

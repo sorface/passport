@@ -1,0 +1,16 @@
+spring.session:
+  timeout: ${SPRING_SESSION_TIMEOUT}
+  redis:
+    flush-mode: on_save
+    namespace: ${SPRING_SESSION_REDIS_NAMESPACE}
+    save-mode: on_set_attribute
+    repository-type: indexed
+    cleanup-cron: 0 * * * * *
+
+passport.session.cookie:
+  domain-pattern: ${PASSPORT_SESSION_COOKIE_DOMAIN_PATTERN}
+  path: ${PASSPORT_SESSION_COOKIE_DOMAIN_PATH}
+  name: ${PASSPORT_SESSION_COOKIE_DOMAIN_NAME}
+  http-only: ${PASSPORT_SESSION_COOKIE_DOMAIN_HTTP_ONLY}
+  same-site: ${PASSPORT_SESSION_COOKIE_DOMAIN_SAME_SITE}
+
