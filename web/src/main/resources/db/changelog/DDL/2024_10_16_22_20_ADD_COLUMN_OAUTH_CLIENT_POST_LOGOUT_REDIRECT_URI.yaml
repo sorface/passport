@@ -1,0 +1,23 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 2024_10_16_22_20_ADD_COLUMN_OAUTH_CLIENT_POST_LOGOUT_REDIRECT_URI.yaml
+      author: Павел Талайко
+      comment: Добавление колонки для oauth2 client. Callback для клиента после успешного выхода из системы.
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            columnExists:
+              tableName: T_OAUTH2CLIENT
+              columnName: C_POST_LOGOUT_REDIRECT_URI
+
+      changes:
+        - addColumn:
+            tableName: T_OAUTH2CLIENT
+            columns:
+              - column:
+                  name: C_POST_LOGOUT_REDIRECT_URI
+                  type: VARCHAR(500)

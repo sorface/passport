@@ -28,10 +28,15 @@ sorface-sso.trace.db
 web/.idea/
 web/target/
 
-# submodules client frontend
-client/.node/
-client/build/
-client/node_modules/
+# submodules client frontend authorization
+frontend/authorization/.node/
+frontend/authorization/build/
+frontend/authorization/node_modules/
+
+# submodules client frontend profile
+frontend/profile/.node/
+frontend/profile/build/
+frontend/profile/node_modules/
 
 ### IntelliJ IDEA ###
 .idea

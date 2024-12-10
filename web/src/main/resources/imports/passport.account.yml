@@ -1,0 +1,16 @@
+passport:
+  account:
+    registry:
+      cookie:
+        domain: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_DOMAIN}
+        name: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_NAME}
+        path: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_PATH}
+        http-only: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_HTTP_ONLY}
+        secure: ${PASSPORT_ACCOUNT_REGISTRY_COOKIE_SECURE}
+
+      life-time: ${PASSPORT_ACCOUNT_REGISTRY_LIVE_TO_CACHE_SECONDS}
+      keyspace: 'keyspace:account-registry'
+
+      one-time-password:
+        keyspace: 'keyspace:one-time-password'
+        life-time: ${PASSPORT_ACCOUNT_REGISTRY_OTP_LIVE_TO_CACHE_SECONDS}
