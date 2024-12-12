@@ -57,7 +57,7 @@ passport.csrf.cookie:
 
 passport.cors.options:
   - pattern: /**
-    allowed-origins: 'http://localhost:9020,http://localhost:9030,http://localhost:9000'
+    allowed-origins: ${PASSPORT_CORS_OPTIONS_ALLOW_CREDENTIALS}
     allowed-headers: "*"
     allowed-methods: "*"
     exposed-headers: "*"
