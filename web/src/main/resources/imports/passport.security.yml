@@ -54,6 +54,7 @@ passport.csrf.cookie:
   path: ${PASSPORT_CSRF_COOKIE_PATH}
   name: ${PASSPORT_CSRF_COOKIE_NAME}
   http-only: ${PASSPORT_CSRF_COOKIE_HTTP_ONLY}
+  secure: ${PASSPORT_CSRF_COOKIE_SECURE}
 
 passport.cors.options:
   - pattern: /**

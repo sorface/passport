@@ -45,4 +45,6 @@ open class CsrfCookieOptions {
      * Whether the CSRF cookie is only accessible via HTTP.
      */
     var httpOnly = false
+
+    var secure: Boolean = true
 }
