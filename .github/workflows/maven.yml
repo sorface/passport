@@ -29,7 +29,7 @@ jobs:
         cache: maven
 
     - name: mvn package with coverage
-      run: mvn -B package --file pom.xml -P passport.coverage,passport.development
+      run: mvn -B package --file pom.xml -P coverage,run.context.development,passport.coverage,passport.development
 
     - name: Generate JaCoCo Badge
       id: jacoco
