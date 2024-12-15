@@ -1,0 +1,11 @@
+spring:
+  mail:
+    username: ${MAIL_NOTIFICATOR_USERNAME}
+    password: ${MAIL_NOTIFICATOR_PASSWORD}
+    port: 465
+    host: smtp.yandex.ru
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: true
