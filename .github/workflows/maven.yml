@@ -13,8 +13,6 @@ on:
     types:
       - opened
       - reopened
-    branches:
-      - 'master'
   push:
     branches: [ "master" ]
 
