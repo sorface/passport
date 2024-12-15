@@ -15,6 +15,7 @@ on:
       - 'bugfix/**'
       - 'hotfix/**'
   push:
+    branches: [ "master" ]
 
 jobs:
   build:
