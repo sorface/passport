@@ -10,6 +10,10 @@ name: Java CI with Maven
 
 on:
   pull_request:
+    branches:
+      - 'feature/**'
+      - 'bugfix/**'
+      - 'hotfix/**'
   push:
 
 jobs:
