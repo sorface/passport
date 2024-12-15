@@ -14,19 +14,15 @@ class AccountSessionController(private val accountSessionFacade: AccountSessionF
 
     @GetMapping("/{username}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    fun findByUsername(@PathVariable @Valid username: @NotBlank String): UserContextSession? {
-        return accountSessionFacade.findByUsername(username)
-    }
+    fun findByUsername(@PathVariable @Valid username: @NotBlank String): UserContextSession? = accountSessionFacade.findByUsername(username)
 
     @DeleteMapping("/batch")
     @PreAuthorize("hasAuthority('ADMIN')")
-    fun batchDelete(@RequestBody cleanupSession: CleanupSession): Set<String> {
-        return accountSessionFacade.batchDelete(cleanupSession)
-    }
+    fun batchDelete(@RequestBody cleanupSession: CleanupSession): Set<String> = accountSessionFacade.batchDelete(cleanupSession)
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    fun activeSessions(): UserContextSession? = accountSessionFacade.getActiveSessions()
+    fun getActiveSessions(): UserContextSession? = accountSessionFacade.getActiveSessions()
 
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
