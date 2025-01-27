@@ -4,6 +4,7 @@ enum class WhitelistUrls(val patterns: List<String>) {
     OPTION_REQUEST(listOf("/**")),
 
     API_ACCOUNT(listOf("/api/accounts/current")),
+
     SIGN_UP(
         listOf(
             "/api/accounts/signup",
@@ -19,19 +20,12 @@ enum class WhitelistUrls(val patterns: List<String>) {
             "/actuator/health/liveness",
             "/actuator/health/readiness",
             "/api/accounts/confirm",
-            "/api/accounts/otp"
+            "/api/accounts/otp",
+            "/api/accounts/*/exists"
         )
     ),
 
-    PERMIT_ALL_PATTERNS(
-        listOf<String>(
-            "/error**",
-            "/static/**",
-            "/account/**"
-        )
-    ),
-
-    CSRF(listOf<String>("/api/csrf")),
+    CSRF(listOf("/api/csrf")),
     ;
 
     companion object {
