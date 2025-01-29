@@ -1,6 +1,0 @@
-package by.sorface.sso.web.services.redis.events;
-
-import org.springframework.security.oauth2.server.authorization.OAuth2Authorization;
-
-public record OAuth2AuthorizationCompleteEvent(OAuth2Authorization authorization) {
-}

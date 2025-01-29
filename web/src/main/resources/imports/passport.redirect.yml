@@ -1,0 +1,8 @@
+passport.endpoint:
+  uri-page-signin: '${PASSPORT_FRONTEND_DOMAIN}'
+  uri-page-signup: '${PASSPORT_FRONTEND_DOMAIN}/account/signup'
+  uri-page-not-found: '${PASSPORT_FRONTEND_DOMAIN}/account/404'
+  uri-page-profile: '${PROFILE_FRONTEND_URL}/account'
+  uri-page-failure: '${PASSPORT_FRONTEND_DOMAIN}/failure'
+  uri-api-login: '/api/accounts/signin'
+  uri-api-logout: '/api/accounts/logout'

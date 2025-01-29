@@ -2,61 +2,23 @@
 server:
   port: 8080
 
-sorface:
-  cookie:
-    session:
-      same-site: lax
-  cors:
-    options:
-      - pattern: /**
-        allowed-origins: ${CLIENT_SERVER_DOMAIN}, http://localhost:3000, http://127.0.0.1:3000, http://localhost:3001, http://127.0.0.1:3001
-        allowed-headers: "*"
-        allowed-methods: "*"
-        exposed-headers: "*"
-        allow-credentials: true
-        max-age: 3600
-  locale:
-    default-locale: ru_RU
-    cookie:
-      domain: "localhost"
-      path: "/"
-      name: "lang"
-      http-only: false
-    change-locale-methods:
-      - POST
-    change-locale-parameter-name: "lang"
+spring.liquibase.contexts: development
 
-spring:
-  jpa:
-    show-sql: true
-    database: postgresql
-    properties:
-      hibernate:
-        format_sql: true
+springdoc.swagger-ui.enabled: true
 
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: "org.postgresql.Driver"
-    hikari:
-      connection-timeout: 30000
-      connection-test-query: select 1
-      maximum-pool-size: 10
-      minimum-idle: 10
-      initialization-fail-timeout: 1
-      leak-detection-threshold: 0
-      pool-name: "HikariPool-sso"
-      register-mbeans: true
+logging.level:
+  by:
+    sorface:
+      passport:
+        web:
+          security:
+            config: DEBUG
+  org:
+    springframework:
+      security:
+        web: ERROR
+      web:
+        servlet: ERROR
+        cors: TRACE
 
-  liquibase:
-    contexts: development
-
-springdoc:
-  swagger-ui:
-    enabled: true
-
-logging:
-  level:
-    root: info
-    org.springframework.security: debug
+  root: error
