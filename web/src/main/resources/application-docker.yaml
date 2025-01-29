@@ -7,4 +7,18 @@ spring.liquibase.contexts: development
 springdoc.swagger-ui.enabled: true
 
 logging.level:
-  root: info
+  by:
+    sorface:
+      passport:
+        web:
+          security:
+            config: DEBUG
+  org:
+    springframework:
+      security:
+        web: ERROR
+      web:
+        servlet: ERROR
+        cors: TRACE
+
+  root: error

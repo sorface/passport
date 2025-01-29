@@ -1,5 +1,5 @@
 passport.endpoint:
-  uri-page-signin: '${PASSPORT_FRONTEND_DOMAIN}/account/signin'
+  uri-page-signin: '${PASSPORT_FRONTEND_DOMAIN}'
   uri-page-signup: '${PASSPORT_FRONTEND_DOMAIN}/account/signup'
   uri-page-not-found: '${PASSPORT_FRONTEND_DOMAIN}/account/404'
   uri-page-profile: '${PROFILE_FRONTEND_URL}/account'

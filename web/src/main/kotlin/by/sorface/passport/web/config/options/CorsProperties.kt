@@ -10,7 +10,6 @@ open class CorsProperties {
     open class CorsItemProperties {
         lateinit var pattern: String
         var allowedOrigins: String? = null
-        var allowedOriginPatterns: String? = null
         var allowedHeaders: String? = null
         var exposedHeaders: String? = null
         var allowedMethods: String? = null
