@@ -1,5 +1,5 @@
 import { useCallback, useReducer } from 'react';
-import { REACT_APP_BACKEND_URL } from '../config';
+import { VITE_BACKEND_URL } from '../config';
 import { ApiContract } from '../types/apiContracts';
 
 export interface ApiMethodState<ResponseData = any> {
@@ -92,9 +92,9 @@ const createFetchUrl = (apiContract: ApiContract, additionalUrlParams?: object) 
                     return createUrlParam(paramName, paramValue);
                 })
                 .join('&');
-        return `${REACT_APP_BACKEND_URL}${apiContract.baseUrl}?${params}`;
+        return `${VITE_BACKEND_URL}${apiContract.baseUrl}?${params}`;
     }
-    return `${REACT_APP_BACKEND_URL}${apiContract.baseUrl}`;
+    return `${VITE_BACKEND_URL}${apiContract.baseUrl}`;
 };
 
 const createFetchRequestInit = (apiContract: ApiContract): RequestInit => {

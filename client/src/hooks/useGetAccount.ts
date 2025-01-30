@@ -1,5 +1,5 @@
 import {useCallback, useReducer} from 'react';
-import {REACT_APP_BACKEND_URL} from '../config';
+import {VITE_BACKEND_URL} from '../config';
 import {Account} from '../types/account';
 
 interface GetMeState {
@@ -68,7 +68,7 @@ export const useGetAccountApi = () => {
         const headers = new Headers();
 
         try {
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/api/accounts/current`, {
+            const response = await fetch(`${VITE_BACKEND_URL}/api/accounts/current`, {
                 headers,
                 credentials: 'include'
             });

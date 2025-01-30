@@ -8,7 +8,7 @@ import emailLogo from './img/email-svgrepo-com.svg';
 import { FormWrapper } from '../../components/Form/FormWrapper';
 import { useQueryFromErrors } from '../../hooks/useQueryFromErrors';
 import { ApiEndpoint } from '../../types/apiContracts';
-import { REACT_APP_BACKEND_URL } from "../../config";
+import { VITE_BACKEND_URL } from "../../config";
 import { PageLogo } from '../../components/PageLogo/PageLogo';
 
 import './SignIn.css';
@@ -95,7 +95,7 @@ export const SignIn: FunctionComponent = () => {
                             ) : (
                                 <a
                                     className="signin-link"
-                                    href={REACT_APP_BACKEND_URL + signinItem.href}
+                                    href={VITE_BACKEND_URL + signinItem.href}
                                     onClick={signinItem.onClick}
                                 >
                                     <button className='signin-button' disabled={signinItem.disabled}>

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {BrowserRouter} from 'react-router-dom';
 import {AppRoutes} from './routes/AppRoutes';
-import {REACT_APP_VERSION} from './config';
+import {VITE_BUILD_HASH} from './config';
 import {Menu} from './components/Menu/Menu';
 import {Footer} from "./components/Footer/Footer";
 import {Loader} from './components/Loader/Loader';
@@ -59,7 +59,7 @@ function App() {
                         <div className="App-content">
                             <AppRoutes/>
                         </div>
-                        <Footer version={REACT_APP_VERSION}/>
+                        <Footer version={VITE_BUILD_HASH}/>
                     </div>
                 </div>
             </AuthContext.Provider>

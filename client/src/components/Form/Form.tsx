@@ -3,7 +3,7 @@ import { Captions } from '../../constants';
 import { FormFields } from './FormFields';
 import { useCsrfApi } from '../../hooks/useGetCsrf';
 import { ApiEndpoint } from '../../types/apiContracts';
-import { REACT_APP_BACKEND_URL } from '../../config';
+import { VITE_BACKEND_URL } from '../../config';
 
 export type FieldErrors = Record<string, string>;
 
@@ -74,7 +74,7 @@ export const Form: FunctionComponent<FormProps> = ({
     return (
         <form
             ref={formRef}
-            action={REACT_APP_BACKEND_URL + htmlAction}
+            action={VITE_BACKEND_URL + htmlAction}
             method={htmlMethod}
             className={`${styled ? 'form' : ''} ${className}`}
             onSubmit={csrfConfig ? undefined : handleSubmit}
