@@ -17,3 +17,9 @@ fun HttpServletResponse.useErrorJsonStream(status: HttpStatus, operationError: O
     this.status = status.value()
     this.outputStream.use { servletOutputStream -> ObjectMapper().writeValue(servletOutputStream, operationError) }
 }
+
+fun <T> HttpServletResponse.useJsonStream(status: HttpStatus, obj: T) {
+    this.contentType = MediaType.APPLICATION_JSON_VALUE
+    this.status = status.value()
+    this.outputStream.use { servletOutputStream -> ObjectMapper().writeValue(servletOutputStream, obj) }
+}

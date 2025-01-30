@@ -1,6 +1,7 @@
 package by.sorface.passport.web.api
 
 import by.sorface.passport.web.facade.accounts.AccountFacade
+import by.sorface.passport.web.records.accounts.AccountAuthenticated
 import by.sorface.passport.web.records.requests.UserPatchUpdate
 import by.sorface.passport.web.records.requests.UserUsernamePatchUpdate
 import by.sorface.passport.web.records.responses.ProfileRecord
@@ -14,6 +15,9 @@ import java.util.*
 @RestController
 @RequestMapping("/api/accounts")
 class AccountController(private val accountFacade: AccountFacade) {
+
+    @GetMapping(value = ["/authenticated"])
+    fun isAuthorizedUser(): AccountAuthenticated = accountFacade.isAuthenticated()
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = ["/current"])

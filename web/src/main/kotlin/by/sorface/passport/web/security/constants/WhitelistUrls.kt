@@ -21,7 +21,8 @@ enum class WhitelistUrls(val patterns: List<String>) {
             "/actuator/health/readiness",
             "/api/accounts/confirm",
             "/api/accounts/otp",
-            "/api/accounts/*/exists"
+            "/api/accounts/*/exists",
+            "/api/accounts/authenticated"
         )
     ),
 

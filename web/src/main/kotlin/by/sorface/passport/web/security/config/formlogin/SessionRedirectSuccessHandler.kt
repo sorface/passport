@@ -2,11 +2,13 @@ package by.sorface.passport.web.security.config.formlogin
 
 import by.sorface.passport.web.config.options.EndpointProperties
 import by.sorface.passport.web.security.constants.SessionAttributes
+import by.sorface.passport.web.security.extensions.useJsonStream
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
@@ -45,7 +47,7 @@ open class SessionRedirectSuccessHandler(endpointProperties: EndpointProperties)
         if (savedRequest == null) {
             LOGGER.info("saved request is NULL for session [id -> {}]", request.requestedSessionId)
 
-            super.handle(request, response, authentication)
+            response.useJsonStream<Map<String, String>>(HttpStatus.OK, mapOf())
 
             return
         }
@@ -57,7 +59,7 @@ open class SessionRedirectSuccessHandler(endpointProperties: EndpointProperties)
         LOGGER.info("target url parameter [{}], session [id -> {}]", targetUrlParameter, request.requestedSessionId)
 
         if (isAlwaysUseDefaultTargetUrl || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-            super.handle(request, response, authentication)
+            response.useJsonStream<Map<String, String>>(HttpStatus.OK, mapOf())
             return
         }
 
