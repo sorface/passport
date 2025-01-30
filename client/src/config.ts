@@ -6,6 +6,6 @@ const getFromEnv = (varName: string) => {
     return value;
 };
 
-export const REACT_APP_BACKEND_URL = getFromEnv('REACT_APP_BACKEND_URL');
+export const VITE_BACKEND_URL = getFromEnv('VITE_BACKEND_URL');
 
-export const REACT_APP_VERSION = getFromEnv('REACT_APP_VERSION');
+export const VITE_BUILD_HASH = getFromEnv('VITE_BUILD_HASH');
