@@ -1,17 +1,17 @@
-import React, {FunctionComponent, ReactNode} from 'react';
+import React, { FunctionComponent, ReactNode } from 'react';
 
 import './Form.css';
 
 export interface FormWrapperProps {
-    children?: ReactNode;
+  children?: ReactNode;
 }
 
-export const FormWrapper: FunctionComponent<FormWrapperProps> = ({children}) => {
-    return (
-        <div className='form'>
-            <div className='form-content'>
-                {children}
-            </div>
-        </div>
-    );
+export const FormWrapper: FunctionComponent<FormWrapperProps> = ({
+  children,
+}) => {
+  return (
+    <div className="form">
+      <div className="form-content">{children}</div>
+    </div>
+  );
 };

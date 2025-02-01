@@ -16,10 +16,7 @@ export const UserAvatar: FunctionComponent<UserAvatarProps> = ({
 }) => {
   if (!src) {
     return (
-      <div
-        className='user-avatar user-avatar-plug'
-        {...restProps}
-      >
+      <div className="user-avatar user-avatar-plug" {...restProps}>
         {caption || nickname[0].toLocaleUpperCase()}
       </div>
     );
@@ -28,7 +25,7 @@ export const UserAvatar: FunctionComponent<UserAvatarProps> = ({
   return (
     <img
       src={src}
-      className='user-avatar'
+      className="user-avatar"
       alt={`${nickname} avatar`}
       {...restProps}
     />

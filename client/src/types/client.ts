@@ -1,17 +1,15 @@
 export interface Client {
+  id: string;
 
-    id: string;
+  clientId: string;
 
-    clientId: string;
+  clientSecret: string;
 
-    clientSecret: string;
+  clientName: string;
 
-    clientName: string;
+  issueTime: string;
 
-    issueTime: string;
+  expiresAt: string;
 
-    expiresAt: string;
-
-    redirectUrls: string;
-
+  redirectUrls: string;
 }

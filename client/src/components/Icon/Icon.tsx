@@ -5,11 +5,7 @@ interface IconProps {
   name: IconNames;
 }
 
-export const Icon: FunctionComponent<IconProps> = ({
-  name,
-}) => {
+export const Icon: FunctionComponent<IconProps> = ({ name }) => {
   const iconPostfix = IconThemePostfix.Light;
-  return (
-    <ion-icon name={`${name}${iconPostfix}`}></ion-icon>
-  );
+  return <ion-icon name={`${name}${iconPostfix}`}></ion-icon>;
 };
