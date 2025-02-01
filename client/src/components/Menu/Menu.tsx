@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { IconNames, pathnames } from '../../constants';
 import { Icon } from '../Icon/Icon';
@@ -18,36 +18,30 @@ export const Menu: FunctionComponent = () => {
   }
 
   const items = [
-    <Link
-      to={pathnames.account}
-    >
+    <Link key={pathnames.account} to={pathnames.account}>
       <Icon name={IconNames.Person} />
     </Link>,
-    <Link
-      to={pathnames.session}
-    >
+    <Link key={pathnames.session} to={pathnames.session}>
       <Icon name={IconNames.List} />
     </Link>,
     admin && (
-      <Link
-        to={pathnames.clients}
-      >
+      <Link key={pathnames.clients} to={pathnames.clients}>
         <Icon name={IconNames.Apps} />
       </Link>
     ),
-    <LogoutForm
-      submitCaption={''}
-    >
-      <button type='submit'>
+    <LogoutForm key={'LogoutForm'} submitCaption={''}>
+      <button type="submit">
         <Icon name={IconNames.Exit} />
       </button>
-    </LogoutForm>
+    </LogoutForm>,
   ];
 
   return (
     <div className="menu">
       {items.map((item, index) => (
-        <div key={index} className="menu-item">{item}</div>
+        <div key={index} className="menu-item">
+          {item}
+        </div>
       ))}
     </div>
   );

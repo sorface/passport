@@ -1,6 +1,6 @@
-import {FunctionComponent} from 'react';
-import {Form, FormProps} from '../Form/Form';
-import {Captions} from '../../constants';
+import React, { FunctionComponent } from 'react';
+import { Form, FormProps } from '../Form/Form';
+import { Captions } from '../../constants';
 import { ApiEndpoint } from '../../types/apiContracts';
 
 import './LogoutForm.css';
@@ -16,13 +16,14 @@ export const LogoutForm: FunctionComponent<LogoutFormProps> = ({
 }) => {
   return (
     <Form
-      htmlMethod='POST'
+      htmlMethod="POST"
       htmlAction={ApiEndpoint.AccountsLogout}
-      className='form-logout'
+      className="form-logout"
       fields={[]}
       fieldErrors={{ '': '' }}
       submitCaption={submitCaption ?? Captions.Logout}
-      children={children}
-    />
+    >
+      {children}
+    </Form>
   );
 };

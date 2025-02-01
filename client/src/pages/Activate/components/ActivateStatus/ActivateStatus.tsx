@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { IconNames } from '../../../../constants';
 import { Icon } from '../../../../components/Icon/Icon';
 
@@ -14,7 +14,7 @@ export const ActivateStatus: FunctionComponent<ActivateStatusProps> = ({
   message,
 }) => {
   return (
-    <div className='activate-status'>
+    <div className="activate-status">
       <Icon name={icon} />
       <h2>{title}</h2>
       <div>{message}</div>

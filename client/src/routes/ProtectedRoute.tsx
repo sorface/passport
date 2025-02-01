@@ -4,7 +4,7 @@ import { RouteProps, Navigate } from 'react-router-dom';
 type PrivateRouteProps = RouteProps & {
   allowed: boolean;
   redirect: string;
-  children: ReactElement<any, any> | null;
+  children: ReactElement;
 };
 
 export const ProtectedRoute: FunctionComponent<PrivateRouteProps> = ({

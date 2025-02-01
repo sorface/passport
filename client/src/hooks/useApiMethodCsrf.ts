@@ -1,13 +1,24 @@
 import { useCallback, useEffect, useState } from 'react';
-import { ApiContract } from '../types/apiContracts'
-import { AnyObject, ApiMethodState, useApiMethod } from './useApiMethod'
+import { ApiContract } from '../types/apiContracts';
+import { ApiMethodState, useApiMethod } from './useApiMethod';
 import { useCsrfApi } from './useGetCsrf';
+import { AnyObject } from '../types/anyObject';
 
-export const useApiMethodCsrf = <ResponseData, RequestData = AnyObject>(apiContractCall: (data: RequestData) => ApiContract) => {
-  const { apiMethodState: apiMethodStateInternal, fetchData: fetchDataInternal } = useApiMethod<ResponseData, RequestData>(apiContractCall);
+export const useApiMethodCsrf = <ResponseData, RequestData = AnyObject>(
+  apiContractCall: (data: RequestData) => ApiContract,
+) => {
+  const {
+    apiMethodState: apiMethodStateInternal,
+    fetchData: fetchDataInternal,
+  } = useApiMethod<ResponseData, RequestData>(apiContractCall);
   const { csrfConfigState, loadCsrfConfig } = useCsrfApi();
-  const { process: { csrfConfigLoading, csrfConfigError }, csrfConfig } = csrfConfigState;
-  const [lastRequestData, setLastRequestData] = useState<RequestData | null>(null);
+  const {
+    process: { csrfConfigLoading, csrfConfigError },
+    csrfConfig,
+  } = csrfConfigState;
+  const [lastRequestData, setLastRequestData] = useState<RequestData | null>(
+    null,
+  );
 
   const apiMethodState: ApiMethodState<ResponseData> = {
     data: apiMethodStateInternal.data,
@@ -18,10 +29,13 @@ export const useApiMethodCsrf = <ResponseData, RequestData = AnyObject>(apiContr
     },
   };
 
-  const fetchData: typeof fetchDataInternal = useCallback(async (requestData) => {
-    setLastRequestData(requestData);
-    loadCsrfConfig();
-  }, [loadCsrfConfig]);
+  const fetchData: typeof fetchDataInternal = useCallback(
+    async (requestData) => {
+      setLastRequestData(requestData);
+      loadCsrfConfig();
+    },
+    [loadCsrfConfig],
+  );
 
   useEffect(() => {
     if (!csrfConfig || lastRequestData === null) {
@@ -36,5 +50,5 @@ export const useApiMethodCsrf = <ResponseData, RequestData = AnyObject>(apiContr
   return {
     fetchData,
     apiMethodState,
-  }
+  };
 };

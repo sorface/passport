@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApiMethodCsrf } from '../../hooks/useApiMethodCsrf';
 import { ConfirmBody, accountsApiDeclaration } from '../../apiDeclarations';
@@ -14,8 +14,13 @@ export const Activate: FunctionComponent = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tokenParam = searchParams.get(tokenParamName);
-  const { apiMethodState, fetchData } = useApiMethodCsrf<unknown, ConfirmBody>(accountsApiDeclaration.confirm);
-  const { process: { error }, data } = apiMethodState;
+  const { apiMethodState, fetchData } = useApiMethodCsrf<unknown, ConfirmBody>(
+    accountsApiDeclaration.confirm,
+  );
+  const {
+    process: { error },
+    data,
+  } = apiMethodState;
 
   useEffect(() => {
     if (!tokenParam) {
@@ -34,7 +39,7 @@ export const Activate: FunctionComponent = () => {
 
     return () => {
       clearTimeout(timeoutId);
-    }
+    };
   }, [data, navigate]);
 
   if (!tokenParam) {
@@ -62,7 +67,10 @@ export const Activate: FunctionComponent = () => {
       <ActivateStatus
         icon={IconNames.Checkmark}
         title={Captions.ActivateSuccess}
-        message={Captions.YouWillBeRedirected.replace(':redirectTimeoutSec', `${redirectTimeoutSec}`)}
+        message={Captions.YouWillBeRedirected.replace(
+          ':redirectTimeoutSec',
+          `${redirectTimeoutSec}`,
+        )}
       />
     );
   }
