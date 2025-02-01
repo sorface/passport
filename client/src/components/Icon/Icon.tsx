@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import { IconNames, IconThemePostfix } from '../../constants';
 
 interface IconProps {

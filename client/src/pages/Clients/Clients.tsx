@@ -1,4 +1,4 @@
-import {FunctionComponent, useEffect} from 'react';
+import React, {FunctionComponent, useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import {Icon} from '../../components/Icon/Icon';
 import {IconNames, pathnames} from '../../constants';

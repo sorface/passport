@@ -1,8 +1,11 @@
+import { AnyObject } from "./anyObject";
+
 export enum ApiEndpoint {
     Csrf = '/csrf',
     Apps = '/api/applications',
-    GetAppById = '/api/applications/:id',
-    DeleteAppById = '/api/applications/:id',
+    AppById = '/api/applications/:id',
+    // GetAppById = '/api/applications/:id',
+    // DeleteAppById = '/api/applications/:id',
     RefreshApp = '/api/applications/:clientId/refresh',
     AccountsSignup = '/accounts/signup',
     AccountsSignin = '/api/accounts/signin',
@@ -23,21 +26,21 @@ export interface ApiContractPost {
     method: 'POST';
     baseUrl: ApiEndpoint;
     urlParams?: object;
-    body: any;
+    body?: AnyObject;
 }
 
 export interface ApiContractPut {
     method: 'PUT';
     baseUrl: ApiEndpoint;
     urlParams?: object;
-    body: any;
+    body?: AnyObject;
 }
 
 export interface ApiContractPatch {
     method: 'PATCH';
     baseUrl: ApiEndpoint;
     urlParams?: object;
-    body: any;
+    body?: AnyObject;
 }
 
 export interface ApiContractDelete {

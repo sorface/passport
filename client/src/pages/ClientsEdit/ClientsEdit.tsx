@@ -1,4 +1,4 @@
-import {FunctionComponent, MouseEvent, useEffect} from 'react';
+import React, {FunctionComponent, MouseEvent, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
 import {useApiMethod} from "../../hooks/useApiMethod";
 import {appsApiDeclaration, EditAppBody} from "../../apiDeclarations";

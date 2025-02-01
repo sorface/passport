@@ -1,4 +1,4 @@
-import { FunctionComponent, useContext } from 'react';
+import React, { FunctionComponent, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { IconNames, pathnames } from '../../constants';
 import { Icon } from '../Icon/Icon';
@@ -19,23 +19,27 @@ export const Menu: FunctionComponent = () => {
 
   const items = [
     <Link
+      key={pathnames.account}
       to={pathnames.account}
     >
       <Icon name={IconNames.Person} />
     </Link>,
     <Link
+      key={pathnames.session}
       to={pathnames.session}
     >
       <Icon name={IconNames.List} />
     </Link>,
     admin && (
       <Link
+        key={pathnames.clients}
         to={pathnames.clients}
       >
         <Icon name={IconNames.Apps} />
       </Link>
     ),
     <LogoutForm
+      key={'LogoutForm'}
       submitCaption={''}
     >
       <button type='submit'>

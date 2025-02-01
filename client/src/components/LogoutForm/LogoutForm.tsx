@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import React, {FunctionComponent} from 'react';
 import {Form, FormProps} from '../Form/Form';
 import {Captions} from '../../constants';
 import { ApiEndpoint } from '../../types/apiContracts';
@@ -22,7 +22,8 @@ export const LogoutForm: FunctionComponent<LogoutFormProps> = ({
       fields={[]}
       fieldErrors={{ '': '' }}
       submitCaption={submitCaption ?? Captions.Logout}
-      children={children}
-    />
+    >
+      {children}
+    </Form>
   );
 };

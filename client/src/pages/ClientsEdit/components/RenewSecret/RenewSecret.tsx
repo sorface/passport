@@ -1,4 +1,4 @@
-import {FunctionComponent, MouseEvent} from 'react';
+import React, {FunctionComponent, MouseEvent} from 'react';
 import {Captions} from '../../../../constants';
 import {appsApiDeclaration, RefreshAppParams, RefreshSecretResponse} from '../../../../apiDeclarations';
 import {Loader} from '../../../../components/Loader/Loader';

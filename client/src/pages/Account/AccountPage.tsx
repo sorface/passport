@@ -67,7 +67,7 @@ export const AccountPage: FunctionComponent = () => {
     };
 
     const convertRole = (role: string): string | undefined => {
-        let mapRole: Map<string, string> = new Map<string, string>()
+        const mapRole: Map<string, string> = new Map<string, string>()
 
         mapRole.set("ADMIN", "Admin");
         mapRole.set("USER", "User");

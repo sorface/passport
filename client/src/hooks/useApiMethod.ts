@@ -1,8 +1,9 @@
 import { useCallback, useReducer } from 'react';
 import { VITE_BACKEND_URL } from '../config';
 import { ApiContract } from '../types/apiContracts';
+import { AnyObject } from '../types/anyObject';
 
-export interface ApiMethodState<ResponseData = any> {
+export interface ApiMethodState<ResponseData = AnyObject | string> {
     process: {
         loading: boolean;
         code: number | null;
@@ -24,7 +25,7 @@ type ApiMethodAction = {
     name: 'startLoad';
 } | {
     name: 'setData';
-    payload: any;
+    payload: AnyObject | string;
 } | {
     name: 'setError';
     payload: string;
@@ -119,8 +120,6 @@ const createFetchRequestInit = (apiContract: ApiContract): RequestInit => {
     } as RequestInit;
 };
 
-export type AnyObject = Record<string, any>;
-
 const getResponseContent = async (response: Response): Promise<AnyObject | string> => {
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
@@ -165,10 +164,10 @@ export const useApiMethod = <ResponseData, RequestData = AnyObject>(apiContractC
                 throw new Error(errorMessage);
             }
             dispatch({ name: 'setData', payload: responseData });
-        } catch (err: any) {
+        } catch (err: unknown) {
             dispatch({
                 name: 'setError',
-                payload: err.message || `Failed to fetch ${apiContract.method} ${apiContract.baseUrl}`,
+                payload: err instanceof Error ? err.message : `Failed to fetch ${apiContract.method} ${apiContract.baseUrl}`,
             });
         }
     }, [apiContractCall]);

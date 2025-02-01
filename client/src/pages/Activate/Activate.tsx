@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useApiMethodCsrf } from '../../hooks/useApiMethodCsrf';
 import { ConfirmBody, accountsApiDeclaration } from '../../apiDeclarations';

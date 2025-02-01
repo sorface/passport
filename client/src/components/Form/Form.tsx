@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, FormEvent, FunctionComponent, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
+import React, { DetailedHTMLProps, FormEvent, FunctionComponent, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 import { Captions } from '../../constants';
 import { FormFields } from './FormFields';
 import { useCsrfApi } from '../../hooks/useGetCsrf';

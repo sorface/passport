@@ -76,10 +76,10 @@ export const useCsrfApi = () => {
             }
             const responseJson = await response.json();
             dispatch({name: 'setCsrfConfig', payload: responseJson});
-        } catch (err: any) {
+        } catch (err: unknown) {
             dispatch({
                 name: 'setError',
-                payload: err.message || 'Failed to get csrf config',
+                payload: err instanceof Error ? err.message : 'Failed to get csrf config',
             });
         }
     }, []);

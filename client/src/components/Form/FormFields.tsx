@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import React, {FunctionComponent} from 'react';
 import {FormProps} from './Form';
 import {Captions} from '../../constants';
 

@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import React, {FunctionComponent} from 'react';
 
 import logo from './logo-mini.jpg';
 import './PageLogo.css';

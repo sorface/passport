@@ -1,7 +1,7 @@
 const getFromEnv = (varName: string) => {
-    const value = process.env && process.env[varName];
+    const value = import.meta.env && import.meta.env[varName];
     if (!value) {
-        throw new Error(`process.env.${varName} are not defined`);
+        throw new Error(`import.meta.env.${varName} are not defined`);
     }
     return value;
 };

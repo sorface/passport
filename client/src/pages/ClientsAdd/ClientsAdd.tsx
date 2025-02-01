@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import React, {FunctionComponent} from 'react';
 import {Field, Form} from "../../components/Form/Form";
 import {useApiMethodCsrf} from '../../hooks/useApiMethodCsrf';
 import {appsApiDeclaration, CreateAppBody} from '../../apiDeclarations';

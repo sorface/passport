@@ -11,7 +11,7 @@ export const useQueryFromErrors = () => {
 
   useEffect(() => {
     const currentQueryFromErrors: FieldErrors = {};
-    for (let [name, value] of searchParams.entries()) {
+    for (const [name, value] of searchParams.entries()) {
       const formErrorParam = formErrorParamRegexp.test(name);
       if (!formErrorParam) {
         continue;

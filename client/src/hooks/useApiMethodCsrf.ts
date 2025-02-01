@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { ApiContract } from '../types/apiContracts'
-import { AnyObject, ApiMethodState, useApiMethod } from './useApiMethod'
+import { ApiMethodState, useApiMethod } from './useApiMethod'
 import { useCsrfApi } from './useGetCsrf';
+import { AnyObject } from '../types/anyObject';
 
 export const useApiMethodCsrf = <ResponseData, RequestData = AnyObject>(apiContractCall: (data: RequestData) => ApiContract) => {
   const { apiMethodState: apiMethodStateInternal, fetchData: fetchDataInternal } = useApiMethod<ResponseData, RequestData>(apiContractCall);

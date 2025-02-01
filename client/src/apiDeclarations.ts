@@ -42,11 +42,11 @@ export const appsApiDeclaration = {
     }),
     getById: (id: string): ApiContractGet => ({
         method: 'GET',
-        baseUrl: ApiEndpoint.GetAppById.replace(':id', id) as ApiEndpoint,
+        baseUrl: ApiEndpoint.AppById.replace(':id', id) as ApiEndpoint,
     }),
     deleteById: (id: string): ApiContractDelete => ({
         method: 'DELETE',
-        baseUrl: ApiEndpoint.DeleteAppById.replace(':id', id) as ApiEndpoint,
+        baseUrl: ApiEndpoint.AppById.replace(':id', id) as ApiEndpoint,
     }),
     create: (body: CreateAppBody): ApiContractPost => ({
         method: 'POST',
@@ -55,7 +55,7 @@ export const appsApiDeclaration = {
     }),
     edit: (body: EditAppBody): ApiContractPatch => ({
         method: 'PATCH',
-        baseUrl: ApiEndpoint.GetAppById.replace(':id', body.id) as ApiEndpoint,
+        baseUrl: ApiEndpoint.AppById.replace(':id', body.id) as ApiEndpoint,
         body: { ...body, id: undefined },
     }),
     refresh: (params: RefreshAppParams): ApiContractPatch => ({
@@ -101,6 +101,6 @@ export const accountsApiDeclaration = {
     logout: (): ApiContractPost => ({
         method: 'POST',
         baseUrl: ApiEndpoint.AccountsLogout,
-        body: ''
+        body: undefined
     })
 };
