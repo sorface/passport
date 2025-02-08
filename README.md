@@ -5,6 +5,14 @@
 
 Single Sign-On (SSO) и Single Logout (SLO) платформы.
 
+## Environment
+
+### Application Metadata
+
+| Environment                  | Описание          | Store    | Значение DEV/PROD       |
+|------------------------------|-------------------|----------|-------------------------|
+| APPLICATION_METADATA_VERSION | Версия приложения | pipeline | dev / <CURRENT_VERSION> |
+
 ## Настройка и запуск
 
 ### Конфигурация
