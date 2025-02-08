@@ -1,6 +1,12 @@
+application:
+  metadata:
+    version: ${APPLICATION_METADATA_VERSION}
+
 spring:
   application:
     name: sorface-passport
+  banner:
+    location: classpath:banner.txt
 
   config:
     import:
