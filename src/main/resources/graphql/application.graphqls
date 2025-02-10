@@ -1,0 +1,40 @@
+type ClientRedirectUrl {
+    url: String!
+}
+
+type ClientAuthenticationMethod {
+    method: String!
+}
+
+type ClientAuthenticationGrantType {
+    grantType: String!
+}
+type ClientScope {
+    scope: String!
+}
+
+type ClientSettings {
+    requireConcept: Boolean!
+    requireProofKey: Boolean!
+}
+
+type ClientTokenSetting {
+    accessTokenFormat: String!
+    idTokenSignatureAlgorithm: String!
+    accessTokenTimeToLive: Int!
+    refreshTokenTimeToLive: Int!
+    reuseRefreshTokens: Boolean!
+}
+
+type Application {
+    clientId: String!,
+    clientName: String!
+    redirectUris: [ClientRedirectUrl]
+    methods: [ClientAuthenticationMethod]
+    grantTypes: [ClientAuthenticationGrantType]
+    scopes: [ClientScope]
+    clientSetting: ClientSettings!
+    tokenSetting: ClientTokenSetting!
+    clientIdIssueAt: String!
+    clientSecretExpiresAt: String!
+}

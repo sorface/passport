@@ -1,0 +1,658 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 24073407-c1e7-49b2-b02a-0624870fbf4b
+      author: Павел Талайко
+
+      comment: Установка клинта по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_REGISTEREDCLIENT
+            columns:
+              - column:
+                  name: C_ID
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_CLIENTID
+                  value: "gateway"
+              - column:
+                  name: C_CLIENTSECRET
+                  value: "$2a$10$yEPS4Of73zBn1tdnHu0jke.iTQyCE5HMuR94dGWzRGyx4XdSFc39a"
+              - column:
+                  name: C_CLIENTNAME
+                  value: "Sorface Gateway Client"
+              - column:
+                  name: C_CLIENTIDISSUEDAT
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CLIENTSECRETEXPIRESAT
+                  value: "2102-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 1269c8f8-7454-4fbf-a3f0-83b032b0f187
+      author: Павел Талайко
+
+      comment: Установка доступных GrantType по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: ecfd4abc-a973-4342-bd31-a1dace68d142
+              - column:
+                  name: C_GRANTTYPE
+                  value: "authorization_code"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 16c7f4db-ef68-4e47-a29b-cf572b9b48ef
+              - column:
+                  name: C_GRANTTYPE
+                  value: "refresh_token"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 7bda3e21-873a-48b4-b852-c90043b35b45
+              - column:
+                  name: C_GRANTTYPE
+                  value: "client_credentials"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 4258aeba-80b2-4075-9241-92a0432a3b59
+              - column:
+                  name: C_GRANTTYPE
+                  value: "password"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 10b51d85-dd93-431a-a945-9c8a374fa80d
+              - column:
+                  name: C_GRANTTYPE
+                  value: "urn:ietf:params:oauth:grant-type:jwt-bearer"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 75027d0b-b007-4c24-88bb-7b4893c687b9
+              - column:
+                  name: C_GRANTTYPE
+                  value: "urn:ietf:params:oauth:grant-type:device_code"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 501ee69d-8ee3-41a2-90ea-508a59f86eff
+              - column:
+                  name: C_GRANTTYPE
+                  value: "urn:ietf:params:oauth:grant-type:token-exchange"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 5c642423-278e-4760-862a-6aac5e24455a
+      author: Павел Талайко
+
+      comment: Установка методов авторизации по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: de1673d3-121e-4b91-984f-48a8b6ee232b
+              - column:
+                  name: C_METHOD
+                  value: "client_secret_basic"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 358c7c27-5338-4415-9406-354f8cc063b4
+              - column:
+                  name: C_METHOD
+                  value: "client_secret_post"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: cd07d1da-1d3e-47e8-a9b0-4bdaa4c05607
+              - column:
+                  name: C_METHOD
+                  value: "client_secret_jwt"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: ccc95f02-d1ba-4027-b1f0-5f75502b4cbb
+              - column:
+                  name: C_METHOD
+                  value: "private_key_jwt"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 267554d4-5a0d-4b7c-8233-fd0672512516
+              - column:
+                  name: C_METHOD
+                  value: "none"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: e234b013-df25-495f-90f4-99218b3fcffa
+              - column:
+                  name: C_METHOD
+                  value: "tls_client_auth"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 659de857-05eb-4950-a08a-d9a543cfcbb6
+              - column:
+                  name: C_METHOD
+                  value: "self_signed_tls_client_auth"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 8f5af601-fa81-4435-9e3c-06026bab6a6e
+      author: Павел Талайко
+
+      comment: Установка методов авторизации по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 802e1dc6-267b-4994-a8ed-de089330b99d
+              - column:
+                  name: C_URL
+                  value: "http://localhost:9000/login/oauth2/code/passport"
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 106e82f1-e8e4-4d8d-9fee-8593840cf31f
+      author: Павел Талайко
+
+      comment: Установка scope по умолчанию
+
+      changes:
+
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: bf058656-e279-4875-bec4-aa457959a004
+              - column:
+                  name: C_SCOPE
+                  value: "openid"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: bc6b0ef3-2431-46e6-9560-76c874ae075c
+              - column:
+                  name: C_SCOPE
+                  value: "profile"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: ba649057-b693-45a0-a622-56352e6e1005
+              - column:
+                  name: C_SCOPE
+                  value: "email"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 962233b5-87b4-4840-b84a-c589ae0f7f83
+              - column:
+                  name: C_SCOPE
+                  value: "address"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+        - insert:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 06deb133-9428-4f14-8908-aa46dfbb616f
+              - column:
+                  name: C_SCOPE
+                  value: "phone"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 05168ffc-69df-4e62-8da5-46c3b2218311
+      author: Павел Талайко
+
+      comment: Установка настроек клиента по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_CLIENTSETTINGSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_REQUIRECONCEPT
+                  valueBoolean: 'false'
+              - column:
+                  name: C_REQUIREPROOFKEY
+                  valueBoolean: 'false'
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: 1c22bfc2-0da2-49c9-9852-21d9df6443e6
+      author: Павел Талайко
+
+      comment: Установка настроек токена клиента по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_CLIENTTOKENSETTINGSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_ACCESSTOKENFORMAT
+                  value: "self-contained"
+              - column:
+                  name: C_IDTOKENSIGNATUREALGORITHM
+                  value: "RS256"
+              - column:
+                  name: C_ACCESSTOKENTIMETOLIVE
+                  value: "360"
+              - column:
+                  name: C_REFRESHTOKENTIMETOLIVE
+                  value: "720"
+              - column:
+                  name: C_REUSEREFRESHTOKENS
+                  value: "true"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: ca204fe2-f29f-4cac-aa41-9dd005541fe2
+      author: Павел Талайко
+
+      comment: Установка Grant Types клиента по умолчанию
+
+      changes:
+        - insert:
+            tableName: LT_CLIENTGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONGRANTTYPE
+                  value: ecfd4abc-a973-4342-bd31-a1dace68d142
+        - insert:
+            tableName: LT_CLIENTGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONGRANTTYPE
+                  value: 16c7f4db-ef68-4e47-a29b-cf572b9b48ef
+  - changeSet:
+      id: 036aa820-becb-4d54-b7b3-849b8879aa15
+      author: Павел Талайко
+
+      comment: Установка методов аутентификации клиента по умолчанию
+
+      changes:
+        - insert:
+            tableName: LT_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONMETHOD
+                  value: de1673d3-121e-4b91-984f-48a8b6ee232b
+        - insert:
+            tableName: LT_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONMETHOD
+                  value: 358c7c27-5338-4415-9406-354f8cc063b4
+
+  - changeSet:
+      id: 31f848db-4f71-47b8-8d6c-56ed3569025f
+      author: Павел Талайко
+
+      comment: Установка методов аутентификации клиента по умолчанию
+
+      changes:
+        - insert:
+            tableName: LT_CLIENTSCOPESTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTCLIENTSCOPE
+                  value: bf058656-e279-4875-bec4-aa457959a004
+        - insert:
+            tableName: LT_CLIENTSCOPESTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTCLIENTSCOPE
+                  value: bc6b0ef3-2431-46e6-9560-76c874ae075c
+        - insert:
+            tableName: LT_CLIENTSCOPESTORE
+            columns:
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_FK_CLIENTCLIENTSCOPE
+                  value: ba649057-b693-45a0-a622-56352e6e1005
+

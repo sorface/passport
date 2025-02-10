@@ -1,0 +1,107 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 279bbc05-1641-4157-9036-8bb9f89700f0
+      author: Павел Талайко
+
+      comment: Установка пользователя по умолчанию
+
+      changes:
+        - insert:
+            tableName: T_USERSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_USERNAME
+                  value: "sorface"
+              - column:
+                  name: C_EMAIL
+                  value: "sorface@sorface.com"
+              - column:
+                  name: C_PASSWORD
+                  value: "$2a$10$HSwEQQ4sE.RcWb1YK7ZPhefqN6LpB.pBqgqNExrdoiGgsFdNBcR9q"
+              - column:
+                  name: C_BIRTHDAY
+                  value: "1990-01-01"
+              - column:
+                  name: C_FIRSTNAME
+                  value: "John"
+              - column:
+                  name: C_LASTNAME
+                  value: "Doe"
+              - column:
+                  name: C_MIDDLENAME
+                  value: "Smith"
+              - column:
+                  name: C_ISENABLED
+                  value: "true"
+              - column:
+                  name: C_CONFIRMED
+                  value: "true"
+              - column:
+                  name: C_PROVIDER_ID
+                  value: "INTERNAL"
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+
+  - changeSet:
+      id: 448edc7b-41d3-47fe-b880-57256bad4838
+
+      author: Павел Талайко
+
+      comment: Установка ролей по умолчанию
+
+      context: "development, production"
+
+      changes:
+        - insert:
+            tableName: T_ROLESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 2b79c34d-6ec8-454c-a57b-bb29fab42d77
+              - column:
+                  name: C_VALUE
+                  value: ROLE_USER
+        - insert:
+            tableName: T_ROLESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 3305371a-cbe6-4fd8-a6a3-d2af4e789a8d
+              - column:
+                  name: C_VALUE
+                  value: ROLE_ADMIN
+
+  - changeSet:
+      id: 603c44be-4f76-46d1-8f20-505528cde905
+      comment: Установка пользователю роли по умолчанию
+      author: Павел Талайко
+
+      context: "development, production"
+
+      changes:
+        - insert:
+            tableName: LT_USERROLESTORE
+            columns:
+              - column:
+                  name: C_FK_USER
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_FK_ROLE
+                  value: 2b79c34d-6ec8-454c-a57b-bb29fab42d77
+        - insert:
+            tableName: LT_USERROLESTORE
+            columns:
+              - column:
+                  name: C_FK_USER
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_FK_ROLE
+                  value: 3305371a-cbe6-4fd8-a6a3-d2af4e789a8d

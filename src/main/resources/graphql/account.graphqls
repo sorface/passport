@@ -1,0 +1,51 @@
+type AccountRole {
+    value: String!
+}
+
+type Account {
+    id: UUID!
+    username: String!
+    email: String!
+    roles: [AccountRole!]!
+    avatar: String
+    birthday: String
+    firstName: String
+    lastName: String
+    middleName: String
+    providerType: String
+    externalId: String
+}
+
+type AccountAuthenticated {
+    access: Boolean!
+}
+
+type AccountExists {
+    exists: Boolean!
+}
+
+type AccountUsername {
+    username: String!
+}
+
+input AccountRegistry {
+    username: String!
+    password: String!
+    email: String!
+    firstName: String
+    lastName: String
+}
+
+
+input PatchUpdateAccount {
+    id: UUID
+    firstName: String,
+    lastName: String,
+    middleName: String
+}
+
+
+input AccountUsernameUpdate {
+    id: UUID
+    username: String
+}

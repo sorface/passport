@@ -1,0 +1,189 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 6e136395-d78d-4548-8e28-95466cac15fb
+      author: Павел Талайко
+
+      comment: Создание таблицы T_USERSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_USERSTORE
+
+      changes:
+        - createTable:
+            tableName: T_USERSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_USERNAME
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: C_EMAIL
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: C_PASSWORD
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_AVATARURL
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_BIRTHDAY
+                  type: date
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_FIRSTNAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_LASTNAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_MIDDLENAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_ISENABLED
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CONFIRMED
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_PROVIDER_ID
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_EXTERNAL_ID
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: true
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: true
+
+  - changeSet:
+      id: 7ac1f428-2735-4a8f-94a7-806a5727021a
+      author: Павел Талайко
+
+      comment: Создание таблицы T_ROLESTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_ROLESTORE
+
+      changes:
+        - createTable:
+            tableName: T_ROLESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: UUID
+              - column:
+                  name: C_MODIFIEDBY
+                  type: UUID
+              - column:
+                  name: C_CREATEDDATE
+                  type: TIMESTAMP
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: TIMESTAMP
+              - column:
+                  name: C_VALUE
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+  - changeSet:
+      id: c74a8515-940f-46a0-9c89-8b66a7a447ef
+      comment: Создание таблицы LT_USER_ROLE_STORE
+      author: Pavel Talaika
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: LT_USERROLESTORE
+
+      changes:
+        - createTable:
+            tableName: LT_USERROLESTORE
+            columns:
+              - column:
+                  name: C_FK_USER
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_USERSTORE
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_USER_T_USERSTORE_C_ID
+              - column:
+                  name: C_FK_ROLE
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_ROLESTORE
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_ROLE_T_ROLESTORE_C_ID
+          addUniqueConstraint:
+            tableName: LT_USERROLESTORE
+            columnNames: C_FK_USER, C_FK_ROLE
+            constraintName: COMPLEX_LT_USERROLESTORE_KEY

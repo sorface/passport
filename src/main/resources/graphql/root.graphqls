@@ -1,0 +1,39 @@
+scalar Long
+scalar UUID
+
+directive @Pattern(regexp : String! =".*", message : String = "graphql.validation.Pattern.message") on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @NotBlank(message : String = "graphql.validation.NotBlank.message") on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+directive @Size(min : Int = 0, max : Int = 2147483647, message : String = "graphql.validation.Size.message") on ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION
+
+type Query {
+    # account query
+
+    accountGetAuthorized: Account
+    accountGetById(id: UUID) : Account
+    accountGetByUsername(
+        username: String @NotBlank(message: "graphql.validator.account.username.not.null.empty")
+    ) : Account
+    accountIsAuthenticated: AccountAuthenticated!
+    accountExistsByUsername(
+        username: String @NotBlank(message: "graphql.validator.account.username.not.null.empty")
+    ): AccountExists!
+
+    # application query
+
+    applicationGetAll: [Application]!
+    applicationGetByUser: [Application]!
+
+    # session query
+
+    sessionGetAllByUser: [Session]!
+    sessionGetAllByUsername(username: String): [UserSession]!
+}
+
+type Mutation {
+    # account mutation
+
+    accountUpdateDetails(account: PatchUpdateAccount) : Account!
+    accountUpdateUsernameById(accountUsernameUpdate: AccountUsernameUpdate): AccountUsername!
+    accountRegistry(request: AccountRegistry): Account!
+
+}

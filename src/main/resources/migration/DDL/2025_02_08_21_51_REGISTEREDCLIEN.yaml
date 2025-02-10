@@ -1,0 +1,597 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: e660a896-d92f-42dd-a417-eab075e1a4ca
+      author: Павел Талайко
+
+      comment: Создание таблицы T_REGISTEREDCLIENT
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_REGISTEREDCLIENT
+
+      changes:
+        - createTable:
+            tableName: T_REGISTEREDCLIENT
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_CLIENTID
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CLIENTSECRET
+                  type: varchar(255)
+              - column:
+                  name: C_CLIENTNAME
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CLIENTIDISSUEDAT
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CLIENTSECRETEXPIRESAT
+                  type: timestamp
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 19ae84e3-528d-4f7c-9652-ecb1ec2cbf09
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columns:
+              - column:
+                  name: C_GRANTTYPE
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+  - changeSet:
+      id: 56db1e3a-744d-48df-b15d-553a02a97b6c
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTAUTHENTICATIONMETHODSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_METHOD
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: d7a83954-cfa5-4cb0-83a7-b82cc17afa40
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTREDIRECTURLSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTREDIRECTURLSTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columns:
+              - column:
+                  name: C_URL
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+  - changeSet:
+      id: ed139ba2-2fc1-40d0-97b6-5521e27eb348
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTAUTHENTICATIONSCOPESTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_SCOPE
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 0f0a12d6-9195-48f8-9f82-9bbc111a0789
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTSETTINGSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTSETTINGSTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTSETTINGSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_REQUIRECONCEPT
+                  type: boolean
+              - column:
+                  name: C_REQUIREPROOFKEY
+                  type: boolean
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 44fb4364-18d6-4922-9611-3fba80694f2b
+      author: Павел Талайко
+
+      comment: Создание таблицы T_CLIENTTOKENSETTINGSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: T_CLIENTTOKENSETTINGSTORE
+
+      changes:
+        - createTable:
+            tableName: T_CLIENTTOKENSETTINGSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: C_ACCESSTOKENFORMAT
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_IDTOKENSIGNATUREALGORITHM
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_ACCESSTOKENTIMETOLIVE
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_REFRESHTOKENTIMETOLIVE
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_REUSEREFRESHTOKENS
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDDATE
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_CREATEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+              - column:
+                  name: C_MODIFIEDBY
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: c08d2df3-b359-482c-be36-90aca6b21f5c
+      author: Павел Талайко
+
+      comment: Создание таблицы LT_CLIENTAUTHENTICATIONMETHODSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: LT_CLIENTAUTHENTICATIONMETHODSTORE
+
+      changes:
+        - createTable:
+
+            tableName: LT_CLIENTAUTHENTICATIONMETHODSTORE
+
+            columns:
+
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_REGISTEREDCLIENT
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_CLIENTAUTHENTICATIONMETHODSTORE_C_ID
+
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONMETHOD
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_CLIENTAUTHENTICATIONMETHOD_C_ID
+
+          addUniqueConstraint:
+            tableName: LT_CLIENTAUTHENTICATIONMETHODSTORE
+            columnNames: C_FK_REGISTEREDCLIENT, C_FK_CLIENTAUTHENTICATIONMETHOD
+            constraintName: COMPLEX_LT_CLIENTAUTHENTICATIONMETHODSTORE_KEY
+
+  - changeSet:
+      id: 6c73890a-82c8-4627-898d-10a63bb660c4
+      author: Павел Талайко
+
+      comment: Создание таблицы LT_CLIENTGRANTTYPESTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: LT_CLIENTGRANTTYPESTORE
+
+      changes:
+        - createTable:
+
+            tableName: LT_CLIENTGRANTTYPESTORE
+
+            columns:
+
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_REGISTEREDCLIENT
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_CLIENTGRANTTYPESTORE_C_ID
+
+              - column:
+                  name: C_FK_CLIENTAUTHENTICATIONGRANTTYPE
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+                    referencedColumnNames: C_ID
+                    foreignKeyName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE_C_ID
+
+          addUniqueConstraint:
+            tableName: LT_CLIENTGRANTTYPESTORE
+            columnNames: C_FK_REGISTEREDCLIENT, C_FK_CLIENTAUTHENTICATIONGRANTTYPE
+            constraintName: COMPLEX_LT_CLIENTGRANTTYPESTORE_KEY
+
+  - changeSet:
+      id: 0e5b1708-d508-407a-8358-9d5e72f5b0be
+      author: Павел Талайко
+
+      comment: Создание таблицы LT_CLIENTSCOPESTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              tableName: LT_CLIENTSCOPESTORE
+
+      changes:
+        - createTable:
+            tableName: LT_CLIENTSCOPESTORE
+
+            columns:
+
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_REGISTEREDCLIENT
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_CLIENTSCOPESTORE_C_ID
+
+              - column:
+                  name: C_FK_CLIENTCLIENTSCOPE
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    referencedTableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+                    referencedColumnNames: C_ID
+                    foreignKeyName: C_FK_CLIENTCLIENTSCOPE_C_ID
+
+          addUniqueConstraint:
+            tableName: LT_CLIENTSCOPESTORE
+            columnNames: C_FK_REGISTEREDCLIENT, C_FK_CLIENTCLIENTSCOPE
+            constraintName: COMPLEX_LT_CLIENTSCOPESTORE_KEY
+
+  - changeSet:
+      id: 2919235c-a886-4790-a20a-d1180c3b66e8
+      author: Павел Талайко
+
+      comment: Создание связи T_CLIENTREDIRECTURLSTORE и T_REGISTEREDCLIENT
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            foreignKeyConstraintExists:
+              foreignKeyName: C_FK_REGISTEREDCLIENT_C_ID
+              foreignKeyTableName: T_CLIENTREDIRECTURLSTORE
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: T_CLIENTREDIRECTURLSTORE
+            baseColumnNames: C_FK_REGISTEREDCLIENT
+            referencedTableName: T_REGISTEREDCLIENT
+            referencedColumnNames: C_ID
+            constraintName: C_FK_CLIENTREDIRECTURLSTORE_C_ID
+
+  - changeSet:
+      id: 04853e06-ae0a-4eaa-a27d-f67260f103e6
+      author: Павел Талайко
+
+      comment: Создание связи T_CLIENTSETTINGSTORE и T_REGISTEREDCLIENT
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            foreignKeyConstraintExists:
+              foreignKeyName: C_FK_CLIENTREDIRECTURLSTORE_C_ID
+              foreignKeyTableName: T_CLIENTSETTINGSTORE
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: T_CLIENTSETTINGSTORE
+            baseColumnNames: C_ID
+            referencedTableName: T_REGISTEREDCLIENT
+            referencedColumnNames: C_ID
+            constraintName: C_FK_CLIENTSETTINGSTORE_REGISTEREDCLIEN_C_ID
+
+  - changeSet:
+      id: ac371c70-d692-46c6-9fc8-2a155c5c13b0
+      author: Павел Талайко
+
+      comment: Создание связи T_CLIENTTOKENSETTINGSTORE и T_REGISTEREDCLIENT
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            foreignKeyConstraintExists:
+              foreignKeyName: C_FK_CLIENTTOKENSETTINGSTORE_C_ID
+              foreignKeyTableName: T_CLIENTTOKENSETTINGSTORE
+
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: T_CLIENTTOKENSETTINGSTORE
+            baseColumnNames: C_ID
+            referencedTableName: T_REGISTEREDCLIENT
+            referencedColumnNames: C_ID
+            constraintName: C_FK_CLIENTTOKENSETTINGSTORE_C_ID
+
