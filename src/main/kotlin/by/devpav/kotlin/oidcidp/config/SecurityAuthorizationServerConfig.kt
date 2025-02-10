@@ -1,7 +1,7 @@
 package by.devpav.kotlin.oidcidp.config
 
 import by.devpav.kotlin.oidcidp.jose.Jwks
-import by.devpav.kotlin.oidcidp.service.oauth.OidcUserInfoService
+import by.devpav.kotlin.oidcidp.service.oauth.DefaultOidcUserInfoService
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -35,7 +35,7 @@ import java.util.function.Function
 class SecurityAuthorizationServerConfig {
 
     @Autowired
-    private lateinit var oidcUserInfoService: OidcUserInfoService
+    private lateinit var defaultOidcUserInfoService: DefaultOidcUserInfoService
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -46,7 +46,7 @@ class SecurityAuthorizationServerConfig {
             val authentication = context.getAuthentication<OidcUserInfoAuthenticationToken>()
             val principal = authentication.principal as JwtAuthenticationToken
 
-            oidcUserInfoService.loadUser(principal.name, context.accessToken.scopes)
+            defaultOidcUserInfoService.loadUser(principal.name, context.accessToken.scopes)
         }
 
         return http

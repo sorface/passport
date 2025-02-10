@@ -1,12 +1,12 @@
-package by.devpav.kotlin.oidcidp.api
+package by.devpav.kotlin.oidcidp.graphql.api
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.exceptions.GraphqlUserException
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrNull
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrThrow
 import by.devpav.kotlin.oidcidp.graphql.*
-import by.devpav.kotlin.oidcidp.service.AccountService
 import by.devpav.kotlin.oidcidp.records.I18Codes
+import by.devpav.kotlin.oidcidp.service.impl.DefaultAccountService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller
 import java.util.*
 
 @Controller
-class AccountGraphqlController(private val accountService: AccountService) {
+class AccountGraphqlController(private val defaultAccountService: DefaultAccountService) {
 
     @QueryMapping
     fun accountGetAuthorized(): UserModel? {
@@ -24,34 +24,31 @@ class AccountGraphqlController(private val accountService: AccountService) {
             GraphqlUserException(I18Codes.I18AuthenticationCodes.NOT_AUTHENTICATED)
         )
 
-        return accountService.findById(principalId)
+        return defaultAccountService.findById(principalId)
     }
 
     @QueryMapping
-    fun accountGetById(@Argument id: UUID): UserModel? = accountService.findById(id);
+    fun accountGetById(@Argument id: UUID): UserModel? = defaultAccountService.findById(id);
 
     @QueryMapping
-    fun accountGetByUsername(@Argument username: String): UserModel? = accountService.findByUsername(username)
+    fun accountGetByUsername(@Argument username: String): UserModel? = defaultAccountService.findByUsername(username)
 
     @QueryMapping
-    fun accountIsAuthenticated(): AccountAuthenticated =
-        AccountAuthenticated.builder()
-            .setAccess(SecurityContextHolder.getContext().getPrincipalIdOrNull() != null)
-            .build()
+    fun accountIsAuthenticated(): AccountAuthenticated = AccountAuthenticated
+        .builder()
+        .setAccess(SecurityContextHolder.getContext().getPrincipalIdOrNull() != null)
+        .build()
 
     @QueryMapping
-    fun accountExistsByUsername(@Argument username: String): AccountExists =
-        AccountExists.builder()
-            .setExists(accountService.isExistByUsername(username))
-            .build()
+    fun accountExistsByUsername(@Argument username: String): AccountExists = AccountExists.builder().setExists(defaultAccountService.isExistByUsername(username)).build()
 
     @MutationMapping
     @PreAuthorize("@advancedSecurityEvaluator.hasPrincipalId(#account.id) || hasRole('ROLE_ADMIN')")
-    fun accountUpdateDetails(@Argument account: PatchUpdateAccount): UserModel? = accountService.updateInformation(account)
+    fun accountUpdateDetails(@Argument account: PatchUpdateAccount): UserModel? = defaultAccountService.updateInformation(account)
 
     @MutationMapping
     @PreAuthorize("@advancedSecurityEvaluator.hasPrincipalId(#accountUsernameUpdate.id) || hasRole('ADMIN')")
     fun accountUpdateUsernameById(@Argument accountUsernameUpdate: AccountUsernameUpdate): AccountUsername =
-        accountService.updateUsername(accountUsernameUpdate.id, accountUsernameUpdate.username)
+        defaultAccountService.updateUsername(accountUsernameUpdate.id, accountUsernameUpdate.username)
 
 }

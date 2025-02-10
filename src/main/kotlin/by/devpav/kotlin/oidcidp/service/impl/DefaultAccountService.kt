@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.service
+package by.devpav.kotlin.oidcidp.service.impl
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
@@ -6,22 +6,23 @@ import by.devpav.kotlin.oidcidp.exceptions.GraphqlUserException
 import by.devpav.kotlin.oidcidp.graphql.AccountUsername
 import by.devpav.kotlin.oidcidp.graphql.PatchUpdateAccount
 import by.devpav.kotlin.oidcidp.records.I18Codes
+import by.devpav.kotlin.oidcidp.graphql.services.AccountService
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
 @Service
-class AccountService(private val userRepository: UserRepository) {
+class DefaultAccountService(private val userRepository: UserRepository) : AccountService {
 
-    fun findById(id: UUID): UserModel? = userRepository.findByIdOrNull(id)
+    override fun findById(id: UUID): UserModel? = userRepository.findByIdOrNull(id)
 
-    fun findByUsername(username: String): UserModel? = userRepository.findFirstByUsername(username)
+    override fun findByUsername(username: String): UserModel? = userRepository.findFirstByUsername(username)
 
-    fun isExistByUsername(username: String): Boolean = userRepository.existsByUsername(username)
+    override fun isExistByUsername(username: String): Boolean = userRepository.existsByUsername(username)
 
     @Transactional
-    fun updateUsername(id: UUID, username: String) : AccountUsername {
+    override fun updateUsername(id: UUID, username: String) : AccountUsername {
         val user = userRepository.findByIdOrNull(id)
 
         user ?: throw GraphqlUserException(I18Codes.I18UserCodes.NOT_FOUND_BY_EMAIL, mapOf("id" to id))
@@ -40,7 +41,7 @@ class AccountService(private val userRepository: UserRepository) {
     }
 
     @Transactional
-    fun updateInformation(account: PatchUpdateAccount): UserModel? {
+    override fun updateInformation(account: PatchUpdateAccount): UserModel? {
         val user = userRepository.findByIdOrNull(account.id)
 
         user ?: throw GraphqlUserException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, mapOf(Pair("id", account.id)))

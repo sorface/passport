@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.service
+package by.devpav.kotlin.oidcidp.service.impl
 
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
 import by.devpav.kotlin.oidcidp.records.SorfacePrincipal

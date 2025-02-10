@@ -15,12 +15,12 @@ class SorfacePrincipal(
     /**
      * user username
      */
-    private var username: String?,
+    private val username: String,
 
     /**
      * user password
      */
-    private var password: String?,
+    private var password: String,
 
     /**
      * user roles
@@ -31,8 +31,8 @@ class SorfacePrincipal(
 
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> = authorities.map { SimpleGrantedAuthority(it) }.toMutableSet()
 
-    override fun getPassword(): String? = password
+    override fun getPassword(): String = password
 
-    override fun getUsername(): String? = username
+    override fun getUsername(): String = username
 
 }
