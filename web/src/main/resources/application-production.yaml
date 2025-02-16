@@ -1,58 +1,20 @@
-# production
+# local.docker
 server:
   port: 8080
 
-sorface:
-  cookie:
-    session:
-      same-site: lax
-  cors:
-    options:
-      - pattern: /**
-        allowed-origins: ${CLIENT_SERVER_DOMAIN}
-        allowed-headers: "*"
-        allowed-methods: "*"
-        exposed-headers: "*"
-        allow-credentials: true
-        max-age: 3600
-  locale:
-    default-locale: ru_RU
-    cookie:
-      domain: ".sorface.com"
-      path: "/"
-      name: "lang"
-      http-only: false
-    change-locale-methods:
-      - POST
-    change-locale-parameter-name: "lang"
+spring.liquibase.contexts: production
 
-spring:
-  jpa:
-    show-sql: true
-    database: postgresql
-    properties:
-      hibernate:
-        format_sql: true
+springdoc.swagger-ui.enabled: true
 
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: "org.postgresql.Driver"
-    hikari:
-      connection-timeout: 30000
-      connection-test-query: select 1
-      maximum-pool-size: 35
-      minimum-idle: 10
-      initialization-fail-timeout: 1
-      leak-detection-threshold: 0
-      pool-name: "HikariPool-Default"
-      register-mbeans: true
+logging.level:
+  org:
+    springframework:
+      security:
+        web: DEBUG
+      session:
+        events: DEBUG
+      web:
+        servlet: ERROR
+        cors: TRACE
 
-  liquibase:
-    contexts: production
-
-logging:
-  level:
-    root: info
-    org.springframework.security.web: info
+  root: error

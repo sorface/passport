@@ -3,253 +3,147 @@
 [![Java CI with Maven](https://github.com/sorface/sso-server/actions/workflows/maven.yml/badge.svg)](https://github.com/sorface/sso-server/actions/workflows/maven.yml)
 ![jacoco](.github/badges/jacoco.svg)
 
-Single Sign-On (SSO) и Single Logout (SLO) платформы.
+## Infrastructure
+
+* Postgresql
+* Redis
+* Kotlin
+
+##  Stack
+
+* Kotlin (v 1.9.23) (основной язык)
+  * coroutines (многопоточность)
+* Spring (framework)
+  * web (взаимодействие по HTTP)
+  * data-jpa (postgresql driver)
+  * data-redis (redis)
+  * security (базовая защита приложения)
+  * oauth2-authorization-server (сервер авторизации)
+  * oauth2-client (клиент авторизации)
+  * oauth2-resource-server (потребитель авторизации)
+  * session-data-redis (управление сессиями в Redis)
+  * mail (отправка почтовых писем)
+  * thymeleaf (шаблонизатор писем)
+  * sleuth (управление метаданными исполнения)
+  * actuator (мониторинг приложения)
+* Liquibase (миграция баз данных: схем и данных)
 
 ## Environment
 
 ### Application Metadata
 
-| Environment                  | Описание          | Store    | Значение DEV/PROD       |
-|------------------------------|-------------------|----------|-------------------------|
-| APPLICATION_METADATA_VERSION | Версия приложения | pipeline | dev / <CURRENT_VERSION> |
+| Environment                  | Описание          | Store    | Значение DEV ~ PROD                 |
+|------------------------------|-------------------|----------|-------------------------------------|
+| APPLICATION_METADATA_VERSION | Версия приложения | pipeline | `1.0.0` ~ `<BUILD_CURRENT_VERSION>` |
 
-## Настройка и запуск
+### Spring
 
-### Конфигурация
+| Environment            | Описание           | Store     | Значение DEV/PROD            |
+|------------------------|--------------------|-----------|------------------------------|
+| SPRING_PROFILES_ACTIVE | Профиль приложения | ConfigMap | `development` ~ `production` |
 
-Для управления конфигурацией проекта в docker:
+### Cors
 
-- [.docker.passport.sorface.backend.development.env](docker/.docker.passport.sorface.backend.development.env) # конфигурация development (без клиента)
-- [.docker.passport.sorface.backend.production.env](docker/.docker.passport.sorface.backend.production.env) # конфигурация production (с клиентом)
-- [.docker.redis.env](docker/.docker.redis.env) # конфигурация redis
-- [.docker.pgsql.env](docker/.docker.pgsql.env) # конфигурация PostgreSQL
+| Environment                   | Описание              | Store     | Значение DEV/PROD                                                                                                                                         |
+|-------------------------------|-----------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| PASSPORT_CORS_ALLOWED-ORIGINS | Разрешенные источники | ConfigMap | `http://localhost:9020;http://localhost:9030;http://localhost:8080` ~ `https://id.sorface.com,https://interview.sorface.com,https://passport.sorface.com` |
 
-Измените на свои значения:
+### Redis
 
-```properties
-# spring envs
-#- профиль spring 
-SPRING_PROFILES_ACTIVE=docker
-# database envs. 
-# Указываются такие же значения как и в файле конфигурации docker/.docker.pgsql.env
-DATABASE_URL=jdbc:postgresql://postgresql:5432/sso
-DATABASE_USERNAME=user
-DATABASE_PASSWORD=user
-# mail envs.
-# mail:
-#  username: ${MAIL_NOTIFICATOR_USERNAME}
-#  password: ${MAIL_NOTIFICATOR_PASSWORD}
-#  port: 465
-#  host: smtp.yandex.ru 
-#  properties:
-#   mail.transport.protocol: smtp
-#   mail.smtp.auth: true
-#   mail.smtp.starttls.enable: true
-#   mail.smtp.ssl.enable: true
-# по умолчанию используется smtp.yandex.ru, но вы можете это изменить в (src/main/resources/application.yml)
-MAIL_NOTIFICATOR_USERNAME=***************
-MAIL_NOTIFICATOR_PASSWORD=***************
-# github envs
-# ознакомиться и создать токены доступа можно по ссылке https://github.com/settings/developers
-OAUTH_CLIENT_GITHUB_ID=***************
-OAUTH_CLIENT_GITHUB_SECRET=***************
-# google envs. Не поддерживается платформой в России.
-OAUTH_CLIENT_GOOGLE_ID=****************
-OAUTH_CLIENT_GOOGLE_SECRET=****************
-# yandex envs
-# ознакомиться с документацией и создать токены доступа можно по ссылке https://yandex.ru/dev/id/doc/ru/register-client
-OAUTH_CLIENT_YANDEX_ID=****************
-OAUTH_CLIENT_YANDEX_SECRET=****************
-OAUTH_CLIENT_YANDEX_REDIRECT_URL=http://localhost:8080/login/oauth2/code/yandex
-# twitch envs
-# ознакомиться с документацией и создать токены доступа можно по ссылке https://dev.twitch.tv/console/apps
-OAUTH_CLIENT_TWITCH_ID=****************
-OAUTH_CLIENT_TWITCH_SECRET=****************
-OAUTH_CLIENT_TWITCH_REDIRECT_URL=http://localhost:8080/login/oauth2/code/twitch
-# oauth2 envs
-OAUTH_SERVER_ISSUER_URL=http://localhost:8080
-# client frontend url
-CLIENT_SERVER_DOMAIN=http://localhost:8080
-# redis envs
-# Указываются такие же значения как и в файле конфигурации docker/.docker.pgsql.env
-REDIS_HOST=redis
-REDIS_USERNAME=default
-REDIS_PASSWORD=testpassword
-```
+| Environment    | Описание               | Store | Значение DEV ~ PROD  |
+|----------------|------------------------|-------|----------------------|
+| REDIS_HOST     | Хост Redis             | Vault | `localhost` ~ ...    |
+| REDIS_USERNAME | Имя пользователя Redis | Vault | `default` ~ ...      |
+| REDIS_PASSWORD | Пароль Redis           | Vault | `testpassword` ~ ... |
 
-### Запуск
+### Database
 
-Перейдите в корневую папки проекта [/docker](docker)
+| Environment                | Описание                  | Store | Значение DEV ~ PROD                                 |
+|----------------------------|---------------------------|-------|-----------------------------------------------------|
+| DATABASE_URL               | URL database              | Vault | `jdbc:postgresql://localhost:5432/passport` ~ `...` |
+| DATABASE_USERNAME          | Имя пользователя database | Vault | `user` ~ ...                                        |
+| DATABASE_PASSWORD          | Пароль database           | Vault | `user` ~ ...                                        |
+| DATABASE_DRIVER_CLASS_NAME | Драйвер класс database    | Vault | `org.postgresql.Driver` ~ `org.postgresql.Driver`   |
 
-Для запуска БЕЗ клиента:
+### Mail
 
-```shell
-docker-compose -f development.yaml up -d
-```
+| Environment               | Описание            | Store | Значение DEV ~ PROD |
+|---------------------------|---------------------|-------|---------------------|
+| MAIL_NOTIFICATOR_USERNAME | Имя mail-клиент     | Vault | `...` ~ ...         |
+| MAIL_NOTIFICATOR_PASSWORD | Пароль mail-клиента | Vault | `...` ~ ...         |
 
-Вывод в консоль:
+### OAuth2
 
-```shell
-sh-3.2$ docker-compose -f development.yaml up -d
+| Environment                | Описание                          | Store | Значение DEV ~ PROD |
+|----------------------------|-----------------------------------|-------|---------------------|
+| OAUTH_CLIENT_GITHUB_ID     | Идентификатор приложения в GitHub | Vault | `...` ~ `...`       |
+| OAUTH_CLIENT_GITHUB_SECRET | Секрет приложения в GitHub        | Vault | `...` ~ `...`       |
+| OAUTH_CLIENT_YANDEX_ID     | Идентификатор приложения в Yandex | Vault | `...` ~ `...`       |
+| OAUTH_CLIENT_YANDEX_SECRET | Секрет приложения в Yandex        | Vault | `...` ~ `...`       |
+| OAUTH_CLIENT_TWITCH_ID     | Идентификатор приложения в Twitch | Vault | `...` ~ `...`       |
+| OAUTH_CLIENT_TWITCH_SECRET | Секрет приложения в Twitch        | Vault | `...` ~ `...`       |
 
-[+] Running 4/5
- ⠧ Network docker_default            Created                                                                                                                                                                                                                                                              0.7s 
- ✔ Container redis                   Started                                                                                                                                                                                                                                                              0.4s 
- ✔ Container postgres                Started                                                                                                                                                                                                                                                              0.4s 
- ✔ Container passport.sorface        Started 
-```
+| Environment                      | Описание                      | Store     | Значение DEV ~ PROD                                                                          |
+|----------------------------------|-------------------------------|-----------|----------------------------------------------------------------------------------------------|
+| OAUTH_CLIENT_YANDEX_REDIRECT_URL | URL webhook приложения Yandex | ConfigMap | `http://localhost:8080/login/oauth2/code/yandex` ~ `http://*******/login/oauth2/code/yandex` |
+| OAUTH_CLIENT_TWITCH_REDIRECT_URL | URL webhook приложения Twitch | ConfigMap | `http://localhost:8080/login/oauth2/code/twitch` ~ `http://*******/login/oauth2/code/twitch` |
 
-Для запуска с клиентом:
+| Environment                    | Описание                            | Store     | Значение DEV ~ PROD                     |
+|--------------------------------|-------------------------------------|-----------|-----------------------------------------|
+| SPRING_SESSION_REDIS_NAMESPACE | Название namespace сессий для Redis | ConfigMap | `passport:session` ~ `passport:session` |
+| SPRING_SESSION_TIMEOUT         | Время жизни сессии в Redis          | ConfigMap | `5d` ~ `5d`                             |
 
-```shell
-docker-compose -f production.yaml up -d
-```
+| Environment                                  | Описание                                          | Store     | Значение DEV ~ PROD   |
+|----------------------------------------------|---------------------------------------------------|-----------|-----------------------|
+| PASSPORT_OAUTH_TOKEN_ACCESS_CRON             | CRON для настройки access_token                   | ConfigMap | `minutes` ~ `minutes` |
+| PASSPORT_OAUTH_TOKEN_ACCESS_TTL              | Значение для access_token относительно CRON       | ConfigMap | `5` ~ `5`             |
+| PASSPORT_OAUTH_TOKEN_REFRESH_CRON            | CRON для настройки refresh_token                  | ConfigMap | `days` ~ `days`       |
+| PASSPORT_OAUTH_TOKEN_REFRESH_TTL             | Значение для refresh_token относительно CRON      | ConfigMap | `5` ~ `5`             |
+| PASSPORT_OAUTH_TOKEN_AUTHORIZATION_CODE_CRON | CRON для настройки authorization_code             | ConfigMap | `minutes` ~ `minutes` |
+| PASSPORT_OAUTH_TOKEN_AUTHORIZATION_CODE_TTL  | Значение для authorization_code относительно CRON | ConfigMap | `5` ~ `5`             |
 
-Вывод в консоль:
+### Cookie
 
-```shell
-sh-3.2$ docker-compose -f production.yaml up -d
-[+] Running 4/5
- ⠧ Network docker_default               Created                                                                                                                                                                                                                                                              0.7s 
- ✔ Container redis                      Started                                                                                                                                                                                                                                                              0.4s 
- ✔ Container postgres                   Started                                                                                                                                                                                                                                                              0.4s 
- ✔ Container passport.sorface           Started                                                                                                                                                                                                                                                              0.5s 
- ✔ Container passport.sorface.frontend  Started   
-```
+| Environment                                | Описание                                  | Store     | Значение DEV ~ PROD             |
+|--------------------------------------------|-------------------------------------------|-----------|---------------------------------|
+| PASSPORT_ACCOUNT_REGISTRY_COOKIE_DOMAIN    | Domain для cookie аккаунта регистрации    | ConfigMap | localhost ~ sorface.com         |
+| PASSPORT_ACCOUNT_REGISTRY_COOKIE_NAME      | Название cookie аккаунта регистрации      | ConfigMap | account_tmp_id ~ account_tmp_id |
+| PASSPORT_ACCOUNT_REGISTRY_COOKIE_PATH      | Путь для cookie аккаунта регистрации      | ConfigMap | `/` ~ `/`                       |
+| PASSPORT_ACCOUNT_REGISTRY_COOKIE_HTTP_ONLY | Cookie только в HTTP                      | ConfigMap | `true` ~ `true`                 |
+| PASSPORT_ACCOUNT_REGISTRY_COOKIE_SECURE    | Отправка cookie с чувствительными данными | ConfigMap | `true` ~ `true`                 |
 
-Перейди по ссылке из браузера:
+| Environment                    | Описание                              | Store     | Значение DEV ~ PROD             |
+|--------------------------------|---------------------------------------|-----------|---------------------------------|
+| PASSPORT_CSRF_COOKIE_DOMAIN    | Domain для cookie CSRF                | ConfigMap | localhost ~ sorface.com         |
+| PASSPORT_CSRF_COOKIE_NAME      | Название cookie CSRF                  | ConfigMap | account_tmp_id ~ account_tmp_id |
+| PASSPORT_CSRF_COOKIE_PATH      | Путь для cookie CSRF                  | ConfigMap | `/` ~ `/`                       |
+| PASSPORT_CSRF_COOKIE_HTTP_ONLY | Cookie CSRF только в HTTP             | ConfigMap | `true` ~ `true`                 |
+| PASSPORT_CSRF_COOKIE_SECURE    | Cookie CSRF с чувствительными данными | ConfigMap | `true` ~ `true`                 |
 
-```url
-http://localhost:8080/account
-```
+| Environment                              | Описание                              | Store     | Значение DEV ~ PROD                             |
+|------------------------------------------|---------------------------------------|-----------|-------------------------------------------------|
+| PASSPORT_SESSION_COOKIE_DOMAIN_PATTERN   | Domain для cookie session             | ConfigMap | `^.+?\.(\w+\.[a-z]+)$` ~ `^.+?\.(\w+\.[a-z]+)$` |
+| PASSPORT_SESSION_COOKIE_DOMAIN_NAME      | Название cookie session               | ConfigMap | pspt_sid ~ pspt_sid                             |
+| PASSPORT_SESSION_COOKIE_DOMAIN_PATH      | Путь для cookie session               | ConfigMap | `/` ~ `/`                                       |
+| PASSPORT_SESSION_COOKIE_DOMAIN_HTTP_ONLY | Cookie CSRF только в HTTP             | ConfigMap | `true` ~ `true`                                 |
+| PASSPORT_SESSION_COOKIE_DOMAIN_SAME_SITE | Cookie CSRF с чувствительными данными | ConfigMap | `lax` ~ `lax`                                   |
 
-### Возможные схемы входа OAuth 2.0
+### Business
 
-- yandex
-- github
-- twitch
-- email
+| Environment              | Описание                          | Store     | Значение DEV ~ PROD             |
+|--------------------------|-----------------------------------|-----------|---------------------------------|
+| PASSPORT_FRONTEND_DOMAIN | URL на приложение клиент паспорта | ConfigMap | `http://localhost:9020` ~ `...` |
+| PROFILE_FRONTEND_URL     | URL на приложение клиент профиля  | ConfigMap | `http://localhost:9020` ~ `...` |
 
-Ознакомиться с конфигурацией можно в файле [application.yml](web%2Fsrc%2Fmain%2Fresources%2Fapplication.yml)
+| Environment                                         | Описание                                   | Store     | Значение DEV ~ PROD |
+|-----------------------------------------------------|--------------------------------------------|-----------|---------------------|
+| PASSPORT_ACCOUNT_REGISTRY_OTP_LIVE_TO_CACHE_SECONDS | Время жизни регистрационного OTP в Redis   | ConfigMap | `1m` ~ `1m`         |
+| PASSPORT_ACCOUNT_REGISTRY_LIVE_TO_CACHE_SECONDS     | Время жизни регистрационных данных в Redis | ConfigMap | `10m` ~ `10m`       |
 
-## OAuth2
-
-Запрос аутентификации пользователя
-
-```http request
-GET http://localhost:8080/oauth2/authorize?
-    client_id=************@sorface.oauth.client
-    &scope=scope.read
-    &response_type=code
-    &redirect_uri=http%3A%2F%2Flocalhost%3A5043%2Foauth2%2Fsorface
-    &
-    state=CfDJ8Ivqng5udLJLqh1hbKpDiIsX2uiv8TgWsiV12hMtpTAZpHQc8xL0oSq6jErcYOMVQo0-wGR8rZdbc4A4vM5qiQZQcs2nujEZT-UqPl0E7f4nwzUjTDQC-L3x6g7JKR2BhiQKfw2_la6PxGRj4YsLHMYVctdXE7IqQEimF7sBSS7HkYMVleV3jEloVq21Za8IdinwlXii_kQNxcpnglI0wCxgbDxuG7ItIoWtZ0FP2JHe
-```
-
-```http request
-GET http://localhost:5043/oauth2/sorface?code=XQSuU0_hxT1nomJq5IusEBW2Tv5-BPuMZycz-
-```
-
-```http request
-POST http://localhost:8080/token?
-    grant_type=authorization_code
-    &client_id=************@sorface.oauth.client
-    &client_secret=************
-    &redirect_uri=https://www.oauth.com/playground/authorization-code.html
-    &code=lbKAPTprbOBQ2Gfr0Xv6UTymRMBrC_-AONl2nwE0xrQx_Dyt
-```
-
-### Запрос данных по токену и принципалу
-
-```http request
-POST http://localhost:8080/oauth2/introspect
-
-Authorization: Basic ************************ # clientId:secretId in base64
-Content-Type: application/json
-
-{
-    "token": "************************" # access token
-}
-```
-
-```json
-{
-  "active": true,
-  "sub": "developerdevpav",
-  "aud": [
-    "GDChSngolAhWxgZgjyeBPDwOCKUbfKQKXtCAiNtFprAVFwhhymPrinY@sorface.oauth.client"
-  ],
-  "nbf": "2024-03-30T00:05:18.089765Z",
-  "scopes": [
-    "scope.read"
-  ],
-  "iss": "http://localhost:8080",
-  "exp": "2024-03-30T00:35:18.089765Z",
-  "iat": "2024-03-30T00:05:18.089765Z",
-  "jti": "893112ae-29e6-4983-a05a-3e1b961a8efa",
-  "clientId": "GDChSngolAhWxgZgjyeBPDwOCKUbfKQKXtCAiNtFprAVFwhhymPrinY@sorface.oauth.client",
-  "tokenType": "Bearer",
-  "principal": {
-    "id": "50ad8927-0acc-4dcd-860b-2abdbad20394",
-    "firstName": null,
-    "lastName": null,
-    "middleName": null,
-    "birthday": null,
-    "avatarUrl": "https://avatars.com/****.jpeg",
-    "username": "developerdevpav",
-    "email": "***************@yandex.ru",
-    "authorities": []
-  }
-}
-```
-
-## OAuth2 создание приложений-клиентов пользователя
-
-Пользователю доступно создание приложение-клинтов (доступно только для пользователей с ролью ADMIN)
-
-Для создания клиента необходимо быть авторизированных пользователем.
-
-Выполнить следующий запрос:
-
-```http request
-POST http://localhost:8080/api/applications
-Cookie: JSESSIONID=************************
-Content-Type: application/json
-
-{
-	"name": "myapp",
-	"redirectionUrls": [
-		"http://localhost:8080/callback"
-	]
-}
-```
-
-Ответ:
-
-```json
-
-{
-  "id": "2d5db191-1edf-47aa-bb04-777123db0092", // идентификатор приложения
-  "clientId": "YexwrISIWiVMJNvGsfHmXbHnpeVBdbqypUoHaVueIcFieUrArURowJk@sorface.oauth.client", // clientId приложения
-  "clientSecret": "uwnwqCUzpynvRmPGbOytdDKZNjyOREoUeqjuapqNeCtNhMgfjklArfe", // clientSecret приложения (выдается только на время получения) дальше будет недоступен
-  "clientName": "myapp", // название приложения
-  "issueTime": "2024-03-31T12:13:27.273255", // дата запроса приложения
-  "expiresAt": "2025-01-25T12:13:27.273296", // дата завершения действия clientSecret
-  "redirectUrls": [ // OAuth Redirect URL кода будет перенаправлен запрос после аутентификации пользователя
-    "http://localhost:8080/callback"
-  ]
-}
-```
-
-# Диаграммы
-
-### Регистрация пользователя через OTP
-
-![alt text](/diagrams/registry_user.png)
 
 ## Locale i18
 
 Доступен выбор двух вариантов языков приложения
 
-* Русский
-* Английский
+* Русский (ru-RU)
+* Английский (en-EN)

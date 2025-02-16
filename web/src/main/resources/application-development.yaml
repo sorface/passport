@@ -1,51 +1,20 @@
-# development
+# local.docker
 server:
   port: 8080
 
-sorface:
-  cookie:
-    session:
-      same-site: none
-  cors:
-    options:
-      - pattern: /**
-        allowed-origins: ${CLIENT_SERVER_DOMAIN}, http://localhost:3000, http://127.0.0.1:3000
-        allowed-headers: "*"
-        allowed-methods: "*"
-        exposed-headers: "*"
-        allow-credentials: true
-        max-age: 3600
-  locale:
-    default-locale: ru_RU
-    cookie:
-      domain: "localhost"
-      path: "/"
-      name: "lang"
-      http-only: false
-    change-locale-methods:
-      - POST
-    change-locale-parameter-name: "lang"
+spring.liquibase.contexts: development
 
-spring:
-  jpa:
-    show-sql: true
-    database: h2
-    database-platform: org.hibernate.dialect.H2Dialect
+springdoc.swagger-ui.enabled: true
 
-  datasource:
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
-    driver-class-name: org.h2.Driver
+logging.level:
+  org:
+    springframework:
+      security:
+        web: DEBUG
+      session:
+        events: DEBUG
+      web:
+        servlet: ERROR
+        cors: TRACE
 
-  liquibase:
-    contexts: development
-
-logging:
-  level:
-    root: debug
-
-springdoc:
-  swagger-ui:
-    enabled: true
-
+  root: error
