@@ -56,7 +56,7 @@ passport.csrf.cookie:
 
 passport.cors.options:
   - pattern: '/**'
-    allowed-origins: ${PASSPORT_CORS_ALLOWED-ORIGINS}
+    allowed-origins: ${PASSPORT_CORS_ALLOWED_ORIGINS}
     allowed-headers: "*"
     allowed-methods: "*"
     exposed-headers: "*"
