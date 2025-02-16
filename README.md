@@ -34,7 +34,7 @@
 
 | Environment                  | Описание          | Store     | Значение DEV ~ PROD                 | Тип данных |
 |------------------------------|-------------------|-----------|-------------------------------------|------------|
-| APPLICATION_METADATA_VERSION | Версия приложения | pipeline  | `1.0.0` ~ `<BUILD_CURRENT_VERSION>` | string     |
+| APPLICATION_METADATA_VERSION | Версия приложения | ConfigMap | `1.0.0` ~ `<BUILD_CURRENT_VERSION>` | string     |
 | APPLICATION_TARGET_PORT      | Порт запуска      | ConfigMap | `9000`' ~ `...`                     | integer    |
 
 ### Spring
@@ -47,7 +47,7 @@
 
 | Environment                   | Описание              | Store     | Значение DEV/PROD                                                                                                                                         | Тип данных |
 |-------------------------------|-----------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
-| PASSPORT_CORS_ALLOWED-ORIGINS | Разрешенные источники | ConfigMap | `http://localhost:9020;http://localhost:9030;http://localhost:8080` ~ `https://id.sorface.com,https://interview.sorface.com,https://passport.sorface.com` | string     |
+| PASSPORT_CORS_ALLOWED-ORIGINS | Разрешенные источники | ConfigMap | `http://localhost:9020;http://localhost:9030;http://localhost:8080` ~ `https://id.sorface.com;https://interview.sorface.com;https://passport.sorface.com` | string     |
 
 ### Redis
 
