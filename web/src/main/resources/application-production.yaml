@@ -1,7 +1,3 @@
-# local.docker
-server:
-  port: 8080
-
 spring.liquibase.contexts: production
 
 springdoc.swagger-ui.enabled: true
