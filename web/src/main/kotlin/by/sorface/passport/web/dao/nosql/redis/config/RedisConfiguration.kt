@@ -21,7 +21,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsent
 
-
 @Configuration
 @EnableRedisRepositories(
     enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP,
