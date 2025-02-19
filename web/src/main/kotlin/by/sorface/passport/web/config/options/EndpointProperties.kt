@@ -10,5 +10,6 @@ data class EndpointProperties(
     var uriPageFailure: String? = null,
     var uriPageNotFound: String? = null,
     var uriApiLogin: String? = null,
-    var uriApiLogout: String? = null
+    var uriApiLogout: String? = null,
+    var issuer: String? = null
 )
