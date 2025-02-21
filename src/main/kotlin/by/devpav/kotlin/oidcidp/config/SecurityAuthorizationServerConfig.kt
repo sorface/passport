@@ -70,7 +70,11 @@ class SecurityAuthorizationServerConfig {
     }
 
     @Bean
-    fun authorizationServerSettings(): AuthorizationServerSettings = AuthorizationServerSettings.builder().build()
+    fun authorizationServerSettings(oidcAuthorizationProperties: OidcAuthorizationProperties): AuthorizationServerSettings {
+        return AuthorizationServerSettings.builder()
+            .issuer(oidcAuthorizationProperties.url)
+            .build()
+    }
 
     @Bean
     fun jwkSource(): JWKSource<SecurityContext> {

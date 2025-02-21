@@ -1,5 +1,6 @@
 package by.devpav.kotlin.oidcidp.config
 
+import by.devpav.kotlin.oidcidp.config.JwtClaims.USER_ROLES_CLAIM_NAME
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.Authentication
@@ -16,9 +17,9 @@ class IdTokenCustomizerConfig {
     fun tokenCustomizer(): OAuth2TokenCustomizer<JwtEncodingContext> {
         return OAuth2TokenCustomizer { context ->
             when {
-                OidcParameterNames.ID_TOKEN == context.tokenType.value -> {
+                (OidcParameterNames.ID_TOKEN == context.tokenType.value) -> {
                     context.claims.claims { claims ->
-                        claims["roles"] = context.getPrincipal<Authentication>().authorities
+                        claims[USER_ROLES_CLAIM_NAME] = context.getPrincipal<Authentication>().authorities
                             .stream()
                             .map { obj: GrantedAuthority -> obj.authority }
                             .collect(Collectors.toSet())

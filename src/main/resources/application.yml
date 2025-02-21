@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: oidc-idp
@@ -40,6 +43,10 @@ spring:
     graphiql:
       enabled: false
       path: /graphiql
+
+oidc:
+  idp:
+    url: http://localhost:${server.port}
 
 logging:
   level:
