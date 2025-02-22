@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class UserConverter {
 
-    public fun convert(userModel: UserModel) : ProfileRecord {
+    fun convert(userModel: UserModel) : ProfileRecord {
         return ProfileRecord(
             userModel.id,
             userModel.username,

@@ -25,7 +25,7 @@ class AccountController(private val accountFacade: AccountFacade) {
 
     @PreAuthorize("@advancedSecurityEvaluator.hasPrincipalId(#id) or hasAuthority('ADMIN')")
     @PatchMapping("/{id}/username")
-    fun updateUsername(@PathVariable("id") id: UUID, @RequestBody @Valid request: AccountUsernamePatchUpdate): ProfileRecord =
+    fun updateUsername(@PathVariable("id") id: UUID, @RequestBody @Valid request: AccountUsernameUpdate): ProfileRecord =
         accountFacade.updateUsername(id, request)
 
     @GetMapping("/{username}/exists")

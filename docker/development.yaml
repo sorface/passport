@@ -1,0 +1,48 @@
+version: '3.9'
+name: sandbox-idp-development
+
+
+services:
+  redis:
+    container_name: "redis"
+
+    build:
+      context: .
+      dockerfile: redis/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    env_file:
+      - .docker.redis.env
+    hostname: redis.net
+
+  postgresql:
+    container_name: "postgresql"
+
+    build:
+      context: postgresql
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    env_file:
+      - .docker.pgsql.env
+
+  idp:
+    container_name: "idp"
+
+    build:
+      context: ../
+      dockerfile: docker/kotlin/Dockerfile
+      args:
+        ACTIVE_PROFILE: sandbox
+
+    restart: no
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - redis
+      - postgresql
+    env_file:
+      - .docker.idp.development.env

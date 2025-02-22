@@ -35,7 +35,7 @@ class SecurityDevelopmentConfig {
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = true)
 @EnableWebSecurity(debug = true)
-@Profile("production")
+@Profile("production", "sandbox")
 class SecurityProductionConfig {
 
     @Bean

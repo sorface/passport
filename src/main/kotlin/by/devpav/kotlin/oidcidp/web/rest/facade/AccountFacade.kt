@@ -46,6 +46,6 @@ interface AccountFacade {
      * @param request Объект AccountUsernamePatchUpdate, содержащий новое имя пользователя.
      * @return Объект ProfileRecord, содержащий обновленную информацию о профиле пользователя.
      */
-    fun updateUsername(id: UUID, request: AccountUsernamePatchUpdate): ProfileRecord
+    fun updateUsername(id: UUID, request: AccountUsernameUpdate): ProfileRecord
 
 }

@@ -66,7 +66,8 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
 
     override fun isExistsByUsername(username: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsername(username))
 
-    override fun updateUsername(id: UUID, request: AccountUsernamePatchUpdate): ProfileRecord {
+    @Transactional
+    override fun updateUsername(id: UUID, request: AccountUsernameUpdate): ProfileRecord {
         val user = userRepository.findByIdOrNull(id)
             ?: throw I18RestException(
                 message = "User not found with id $id",
@@ -80,7 +81,6 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 throw I18RestException(
                     message = "User already exists with login $it",
                     i18Code = I18Codes.I18UserCodes.ALREADY_EXISTS_WITH_THIS_LOGIN,
-                    i18Args = hashMapOf(Pair("id", id)),
                     httpStatus = HttpStatus.BAD_REQUEST
                 )
             }

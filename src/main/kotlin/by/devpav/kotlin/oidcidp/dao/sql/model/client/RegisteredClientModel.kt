@@ -17,11 +17,11 @@ class RegisteredClientModel : BaseModel() {
     @Column(name = "C_CLIENTNAME", nullable = false)
     var clientName: String? = null
 
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER)
+    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, targetEntity = ClientRedirectUrlModel::class)
     @JoinColumn(name = "C_FK_REGISTEREDCLIENT")
-    var redirectUris: Set<by.devpav.kotlin.oidcidp.dao.sql.model.client.ClientRedirectUrlModel> = setOf()
+    var redirectUris: Set<ClientRedirectUrlModel> = setOf()
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = ClientAuthenticationMethodModel::class)
     @JoinTable(
         name = "LT_CLIENTAUTHENTICATIONMETHODSTORE",
         joinColumns = [JoinColumn(name = "C_FK_REGISTEREDCLIENT")],
@@ -29,9 +29,9 @@ class RegisteredClientModel : BaseModel() {
             JoinColumn(name = "C_FK_CLIENTAUTHENTICATIONMETHOD")
         ]
     )
-    var methods: Set<by.devpav.kotlin.oidcidp.dao.sql.model.client.ClientAuthenticationMethodModel> = setOf()
+    var methods: Set<ClientAuthenticationMethodModel> = setOf()
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = ClientAuthenticationGrantTypeModel::class)
     @JoinTable(
         name = "LT_CLIENTGRANTTYPESTORE",
         joinColumns = [JoinColumn(name = "C_FK_REGISTEREDCLIENT")],
@@ -41,7 +41,7 @@ class RegisteredClientModel : BaseModel() {
     )
     var grantTypes: Set<ClientAuthenticationGrantTypeModel> = setOf()
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = ClientScopeModel::class)
     @JoinTable(
         name = "LT_CLIENTSCOPESTORE",
         joinColumns = [JoinColumn(name = "C_FK_REGISTEREDCLIENT")],

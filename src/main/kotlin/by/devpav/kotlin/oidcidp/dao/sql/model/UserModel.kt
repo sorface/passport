@@ -33,7 +33,7 @@ class UserModel : BaseModel() {
     @Column(name = "C_MIDDLENAME", nullable = true)
     var middleName: String? = null
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.EAGER, targetEntity = RoleModel::class)
     @JoinTable(
         name = "LT_USERROLESTORE",
         joinColumns = [JoinColumn(name = "C_FK_USER")],
