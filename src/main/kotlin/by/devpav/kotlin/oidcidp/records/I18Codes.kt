@@ -20,6 +20,7 @@ class I18Codes {
 
     object I18SessionCodes {
         const val DELETE_ACTIVE_SESSION_ERROR: String = "session.delete_active_session_error"
+        const val UNKNOWN_SESSION_ID: String = "session.unknown_session"
     }
 
     object I18CsrfCodes {
