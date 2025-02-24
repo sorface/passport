@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config.entrypoints
+package by.devpav.kotlin.oidcidp.config.security.entrypoints
 
 import by.devpav.kotlin.oidcidp.extencions.useErrorJsonStream
 import by.devpav.kotlin.oidcidp.records.I18Codes

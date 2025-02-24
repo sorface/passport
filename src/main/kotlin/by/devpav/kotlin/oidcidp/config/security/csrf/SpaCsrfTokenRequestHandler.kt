@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config.csrf
+package by.devpav.kotlin.oidcidp.config.security.csrf
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

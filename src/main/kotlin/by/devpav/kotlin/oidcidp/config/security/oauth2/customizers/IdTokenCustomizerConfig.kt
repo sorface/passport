@@ -1,6 +1,6 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.config.security.oauth2.customizers
 
-import by.devpav.kotlin.oidcidp.config.JwtClaims.USER_ROLES_CLAIM_NAME
+import by.devpav.kotlin.oidcidp.config.security.constants.JwtClaims.USER_ROLES_CLAIM_NAME
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.Authentication
@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer
-import java.util.stream.Collectors
 
 @Configuration(proxyBeanMethods = false)
 class IdTokenCustomizerConfig {

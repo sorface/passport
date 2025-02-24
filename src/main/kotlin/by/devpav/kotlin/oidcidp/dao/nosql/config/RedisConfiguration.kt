@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.dao.nosql.config
 
 import by.devpav.kotlin.oidcidp.dao.nosql.converters.OAuth2AuthorizationBytesReadingConverter
 import by.devpav.kotlin.oidcidp.dao.nosql.converters.OAuth2AuthorizationBytesWritingConverter

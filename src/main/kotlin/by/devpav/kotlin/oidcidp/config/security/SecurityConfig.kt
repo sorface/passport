@@ -1,9 +1,9 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.config.security
 
-import by.devpav.kotlin.oidcidp.config.csrf.CsrfCookieFilter
-import by.devpav.kotlin.oidcidp.config.csrf.SpaCsrfTokenRequestHandler
-import by.devpav.kotlin.oidcidp.config.csrf.properties.CsrfCookieProperties
-import by.devpav.kotlin.oidcidp.config.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
+import by.devpav.kotlin.oidcidp.config.security.csrf.CsrfCookieFilter
+import by.devpav.kotlin.oidcidp.config.security.csrf.SpaCsrfTokenRequestHandler
+import by.devpav.kotlin.oidcidp.config.security.csrf.properties.CsrfCookieProperties
+import by.devpav.kotlin.oidcidp.config.security.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

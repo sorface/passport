@@ -1,5 +1,6 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.config.security.oauth2
 
+import by.devpav.kotlin.oidcidp.config.security.oauth2.properties.OidcAuthorizationProperties
 import by.devpav.kotlin.oidcidp.jose.Jwks
 import by.devpav.kotlin.oidcidp.service.oauth.DefaultOidcUserInfoService
 import com.nimbusds.jose.jwk.JWKSelector

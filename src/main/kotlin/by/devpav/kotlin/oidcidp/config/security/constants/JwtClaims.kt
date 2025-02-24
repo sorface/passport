@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.config.security.constants
 
 /**
  * Объект, содержащий константы для настроек JWT Claims

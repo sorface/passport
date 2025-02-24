@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config
+package by.devpav.kotlin.oidcidp.config.security.oauth2.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

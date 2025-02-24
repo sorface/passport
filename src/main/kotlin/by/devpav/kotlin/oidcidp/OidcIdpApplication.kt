@@ -1,7 +1,7 @@
 package by.devpav.kotlin.oidcidp
 
-import by.devpav.kotlin.oidcidp.config.OidcAuthorizationProperties
-import by.devpav.kotlin.oidcidp.config.csrf.properties.CsrfCookieProperties
+import by.devpav.kotlin.oidcidp.config.security.oauth2.properties.OidcAuthorizationProperties
+import by.devpav.kotlin.oidcidp.config.security.csrf.properties.CsrfCookieProperties
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication

@@ -1,10 +1,8 @@
 package by.devpav.kotlin.oidcidp.config
 
-import by.devpav.kotlin.oidcidp.config.JwtClaims.USER_ROLES_CLAIM_NAME
+import by.devpav.kotlin.oidcidp.config.security.constants.JwtClaims.USER_ROLES_CLAIM_NAME
+import by.devpav.kotlin.oidcidp.config.security.oauth2.customizers.IdTokenCustomizerConfig
 import io.mockk.*
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

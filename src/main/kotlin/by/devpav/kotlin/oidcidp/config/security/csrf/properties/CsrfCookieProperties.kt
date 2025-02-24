@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.config.csrf.properties
+package by.devpav.kotlin.oidcidp.config.security.csrf.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 
