@@ -45,7 +45,9 @@ class SecurityDevelopmentConfig {
 
 }
 
-
+/**
+ * Конфигурация безопасности для production и песочницы
+ */
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = true)
 @EnableWebSecurity(debug = true)
@@ -58,6 +60,12 @@ class SecurityProductionConfig {
     @Autowired
     private lateinit var csrfCookieProperties: CsrfCookieProperties
 
+    /**
+     * Создает цепочку фильтров безопасности по умолчанию
+     *
+     * @param http Объект HttpSecurity для настройки безопасности.
+     * @return Объект SecurityFilterChain, представляющий цепочку фильтров безопасности.
+     */
     @Bean
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -73,6 +81,11 @@ class SecurityProductionConfig {
         return http.build()
     }
 
+    /**
+     * Настройка конфигурации CSRF
+     *
+     * @param csrfConfigurer Объект CsrfConfigurer для настройки CSRF.
+     */
     private fun csrfConfigurer(csrfConfigurer: CsrfConfigurer<HttpSecurity>) {
         val cookieCsrfTokenRepository = getCookieCsrfTokenRepository(csrfCookieProperties)
         val csrfAuthenticationStrategy = CsrfAuthenticationStrategy(cookieCsrfTokenRepository)
@@ -88,6 +101,12 @@ class SecurityProductionConfig {
             .sessionAuthenticationStrategy(csrfAuthenticationStrategy)
     }
 
+    /**
+     * Создает репозиторий CSRF-токенов на основе свойств CSRF.
+     *
+     * @param csrfCookieProperties Объект CsrfCookieProperties, содержащий свойства CSRF.
+     * @return Объект CookieCsrfTokenRepository, представляющий репозиторий CSRF-токенов.
+     */
     private fun getCookieCsrfTokenRepository(csrfCookieProperties: CsrfCookieProperties): CookieCsrfTokenRepository {
         val cookieCsrfTokenRepository = CookieCsrfTokenRepository()
 
@@ -103,6 +122,11 @@ class SecurityProductionConfig {
         return cookieCsrfTokenRepository
     }
 
+    /**
+     * Создает обработчик запросов CSRF для SPA
+     *
+     * @return Объект CsrfTokenRequestHandler, представляющий обработчик запросов CSRF для SPA.
+     */
     @Bean
     fun spaCsrfTokenRequestHandler(): CsrfTokenRequestHandler {
         return SpaCsrfTokenRequestHandler(XorCsrfTokenRequestAttributeHandler())
