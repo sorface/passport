@@ -1,8 +1,9 @@
-package by.sorface.passport.web.api.advices
+package by.devpav.kotlin.oidcidp.web.rest.controller.advices
 
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.service.I18Service
 import by.devpav.kotlin.oidcidp.web.rest.controller.AccountController
+import by.devpav.kotlin.oidcidp.web.rest.controller.AccountSessionController
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
 import by.devpav.kotlin.oidcidp.web.rest.model.errors.RestError
 import by.devpav.kotlin.oidcidp.web.rest.model.errors.RestValidateError
@@ -19,7 +20,8 @@ import java.util.*
 
 @RestControllerAdvice(
     basePackageClasses = [
-        AccountController::class
+        AccountController::class,
+        AccountSessionController::class
     ]
 )
 class ExceptionAdvice(private val i18Service: I18Service) {
@@ -44,7 +46,7 @@ class ExceptionAdvice(private val i18Service: I18Service) {
     @ExceptionHandler(MethodArgumentNotValidException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun handleValidateException(ex: MethodArgumentNotValidException): RestValidateError {
-        val errors = ex.bindingResult.allErrors.stream()
+        val errors = ex.bindingResult.allErrors
             .map { error: ObjectError ->
                 RestValidateError.ValidateError().apply {
                     this.field = (error as FieldError).field
@@ -65,6 +67,19 @@ class ExceptionAdvice(private val i18Service: I18Service) {
         logger.error(ex.message, ex)
 
         return RestValidateError(i18Message, errors)
+    }
+
+    @ExceptionHandler(value = [Exception::class])
+    fun handleException(ex: Exception): ResponseEntity<RestError> {
+        val message = i18Service.getI18MessageOrDefault(I18Codes.I18GlobalCodes.UNKNOWN_ERROR)
+
+        val httpStatus = HttpStatus.INTERNAL_SERVER_ERROR
+
+        val error = RestError(message = message, code = httpStatus.value())
+
+        logger.error(message, ex)
+
+        return ResponseEntity.status(httpStatus).body(error)
     }
 
 }

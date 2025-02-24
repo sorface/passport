@@ -1,6 +1,6 @@
 package by.devpav.kotlin.oidcidp.web.rest.controller
 
-import by.sorface.passport.web.facade.session.AccountSessionFacade
+import by.devpav.kotlin.oidcidp.web.rest.facade.AccountSessionFacade
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountCleanupSessionRequest
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountContextSession
 import jakarta.validation.Valid
@@ -13,15 +13,23 @@ import org.springframework.web.bind.annotation.*
 class AccountSessionController(private val accountSessionFacade: AccountSessionFacade) {
 
     @GetMapping("/{username}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    fun findByUsername(@PathVariable @Valid username: @NotBlank String): AccountContextSession? = accountSessionFacade.findByUsername(username)
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    fun getAllByUsername(@PathVariable @Valid username: @NotBlank String): AccountContextSession =
+        accountSessionFacade.getAllByUsername(username)
+
+    @DeleteMapping("/{username}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    fun deleteMultipleByUsername(@PathVariable username: String, @RequestBody accountCleanupSessionRequest: AccountCleanupSessionRequest): AccountContextSession =
+        accountSessionFacade.deleteMultipleByUsername(username, accountCleanupSessionRequest)
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    fun getActiveSessions(): AccountContextSession? = accountSessionFacade.getActive()
+    fun getAll(): AccountContextSession =
+        accountSessionFacade.getAll()
 
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
-    fun deleteCurrent(@RequestBody accountCleanupSessionRequest: AccountCleanupSessionRequest?): AccountContextSession? = accountSessionFacade.deleteSessions(accountCleanupSessionRequest!!)
+    fun deleteMultiple(@RequestBody accountCleanupSessionRequest: AccountCleanupSessionRequest): AccountContextSession =
+        accountSessionFacade.deleteMultiple(accountCleanupSessionRequest)
 
 }

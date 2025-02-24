@@ -7,6 +7,7 @@ import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
 import by.devpav.kotlin.oidcidp.web.rest.mapper.UserConverter
 import by.devpav.kotlin.oidcidp.web.rest.model.*
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -18,17 +19,25 @@ import java.util.*
 @Service
 class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFacade {
 
+    private final val logger = LoggerFactory.getLogger(AccountFacade::class.java)
+
     @Autowired
     private lateinit var userConverter: UserConverter
 
     override fun isAuthenticated(): AccountAuthenticated {
+        logger.info("get current authorized user from security context")
+
         val principal = SecurityContextHolder.getContext().getPrincipal()
+
+        logger.info("user authenticated status in system is ${principal != null}")
 
         return AccountAuthenticated(principal != null)
     }
 
     @Transactional(readOnly = true)
     override fun getCurrentAuthorized(): ProfileRecord {
+        logger.info("get current authorized user from security context")
+
         val principalId = SecurityContextHolder.getContext().getPrincipalIdOrThrow(
             I18RestException(
                 message = "User isn't authenticated",
@@ -36,6 +45,8 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 httpStatus = HttpStatus.UNAUTHORIZED
             )
         )
+
+        logger.info("get current authorized user by user id: $principalId")
 
         val userModel = userRepository.findByIdOrNull(principalId)
             ?: throw I18RestException(
@@ -45,11 +56,15 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 httpStatus = HttpStatus.BAD_REQUEST
             )
 
+        logger.info("user found with by id $principalId")
+
         return userConverter.convert(userModel)
     }
 
     @Transactional
     override fun update(id: UUID, request: AccountPatchUpdate): ProfileRecord {
+        logger.info("get user by id: $id")
+
         val user = userRepository.findByIdOrNull(id)
             ?: throw I18RestException(
                 message = "User not found with id $id",
@@ -58,16 +73,32 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 httpStatus = HttpStatus.BAD_REQUEST
             )
 
-        request.firstname?.let { user.firstName = it }
-        request.lastname?.let { user.lastName = it }
+        request.firstname?.let {
+            logger.debug("update user firstname with id {}. From firstname {} to {}", id, user.firstName, it)
 
-        return userRepository.save(user).let { userConverter.convert(it) }
+            user.firstName = it
+        }
+        request.lastname?.let {
+            logger.debug("update user lastname with id {}. From lastname {} to {}", id, user.lastName, it)
+
+            user.lastName = it
+        }
+
+        logger.info("save user information with user id: $id")
+
+        return userRepository.save(user).let {
+            logger.debug("convert user information with id {}", id)
+
+            userConverter.convert(it)
+        }
     }
 
     override fun isExistsByUsername(username: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsername(username))
 
     @Transactional
     override fun updateUsername(id: UUID, request: AccountUsernameUpdate): ProfileRecord {
+        logger.info("get user [id -> $id] from database")
+
         val user = userRepository.findByIdOrNull(id)
             ?: throw I18RestException(
                 message = "User not found with id $id",
@@ -76,7 +107,11 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 httpStatus = HttpStatus.BAD_REQUEST
             )
 
+        logger.info("user [id -> $id] found in database")
+
         request.username.let {
+            logger.info("check exists username [username -> $it, id -> $id] in database")
+
             if (userRepository.existsByUsername(it)) {
                 throw I18RestException(
                     message = "User already exists with login $it",
@@ -85,11 +120,17 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
                 )
             }
 
+            logger.info("change username [from -> ${user.username}, to -> $it, user id -> $id] in database")
+
             user.username = it
         }
 
+        logger.info("update user [id -> $id] information in database")
+
         return userRepository.save(user)
             .let {
+                logger.info("convert user [id -> {}] information", id)
+
                 userConverter.convert(it)
             }
     }

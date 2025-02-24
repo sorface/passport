@@ -128,9 +128,9 @@ spring:
       max-idle: 10
 
   datasource:
-    url: "*****"
-    username: "username"
-    password: "password"
+    url: jdbc:postgresql://localhost:5432/idp
+    username: user
+    password: user
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -147,7 +147,6 @@ spring:
     change-log: migration/master.yaml
     enabled: true
 
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+logging:
+  level:
+    by.devpav.kotlin.oidcidp: debug

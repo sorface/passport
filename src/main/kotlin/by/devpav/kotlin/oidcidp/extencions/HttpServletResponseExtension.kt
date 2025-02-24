@@ -1,6 +1,7 @@
 package by.devpav.kotlin.oidcidp.extencions
 
 import by.devpav.kotlin.oidcidp.records.OperationError
+import by.devpav.kotlin.oidcidp.web.rest.model.errors.RestError
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
@@ -22,4 +23,10 @@ fun <T> HttpServletResponse.useJsonStream(status: HttpStatus, obj: T) {
     this.contentType = MediaType.APPLICATION_JSON_VALUE
     this.status = status.value()
     this.outputStream.use { servletOutputStream -> ObjectMapper().writeValue(servletOutputStream, obj) }
+}
+
+fun HttpServletResponse.useErrorJsonStream(error: RestError) {
+    this.contentType = MediaType.APPLICATION_JSON_VALUE
+    this.status = error.code
+    this.outputStream.use { servletOutputStream -> ObjectMapper().writeValue(servletOutputStream, error) }
 }

@@ -2,12 +2,10 @@ package by.devpav.kotlin.oidcidp.web.rest.facade
 
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalUsername
 import by.devpav.kotlin.oidcidp.records.I18Codes
-import by.devpav.kotlin.oidcidp.records.SorfacePrincipal
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
 import by.devpav.kotlin.oidcidp.web.rest.mapper.UserSessionConverter
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountCleanupSessionRequest
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountContextSession
-import by.sorface.passport.web.facade.session.AccountSessionFacade
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.context.SecurityContextHolder
@@ -22,39 +20,40 @@ class DefaultAccountSessionFacade(private val sessionRepository: FindByIndexName
     @Autowired
     private lateinit var userSessionConverter: UserSessionConverter
 
-    override fun findByUsername(username: String): AccountContextSession {
-        val sessions = sessionRepository.findByPrincipalName(username)
+    override fun getAll(): AccountContextSession {
+        val username = SecurityContextHolder.getContext().getPrincipalUsername() ?: throw I18RestException(
+            message = "User isn't authenticated",
+            i18Code = I18Codes.I18AuthenticationCodes.NOT_AUTHENTICATED,
+            httpStatus = HttpStatus.UNAUTHORIZED
+        )
 
-        val sessionId = RequestContextHolder.currentRequestAttributes().sessionId
-
-        val userSessions = sessions
-            .map { entry: Map.Entry<String, Session> -> entry.value }
-            .map { session: Session -> userSessionConverter.convert(sessionId, session) }
-            .toList()
-
-        return AccountContextSession(userSessions)
+        return getAllByUsername(username)
     }
 
-    override fun getActive(): AccountContextSession {
-        val authentication = SecurityContextHolder.getContext().authentication
-
-        val principal = authentication.principal as SorfacePrincipal
-
+    override fun getAllByUsername(username: String): AccountContextSession {
         val sessionId = RequestContextHolder.currentRequestAttributes().sessionId
 
-        val userSessions = sessionRepository.findByPrincipalName(principal.username)
+        val userSessions = sessionRepository.findByPrincipalName(username)
             .map { entry: Map.Entry<String, Session> -> entry.value }
             .map { session: Session -> userSessionConverter.convert(sessionId, session) }
 
         return AccountContextSession(userSessions)
     }
 
-    override fun deleteSessions(accountCleanupSessionRequest: AccountCleanupSessionRequest): AccountContextSession {
-        val principalUsername = SecurityContextHolder.getContext().getPrincipalUsername()
+    override fun deleteMultiple(accountCleanupSessionRequest: AccountCleanupSessionRequest): AccountContextSession {
+        val username = SecurityContextHolder.getContext().getPrincipalUsername() ?: throw I18RestException(
+            message = "User isn't authenticated",
+            i18Code = I18Codes.I18AuthenticationCodes.NOT_AUTHENTICATED,
+            httpStatus = HttpStatus.UNAUTHORIZED
+        )
 
+        return deleteMultipleByUsername(username, accountCleanupSessionRequest)
+    }
+
+    override fun deleteMultipleByUsername(username: String, accountCleanupSessionRequest: AccountCleanupSessionRequest): AccountContextSession {
         val deletedSessions = HashSet(accountCleanupSessionRequest.sessions)
 
-        val sessions = sessionRepository.findByPrincipalName(principalUsername).values
+        val sessions = sessionRepository.findByPrincipalName(username).values
 
         val unknownSessions = deletedSessions
             .filter { sessionId -> sessions.stream().anyMatch { session: Session -> sessionId == session.id } }
@@ -78,5 +77,4 @@ class DefaultAccountSessionFacade(private val sessionRepository: FindByIndexName
 
         return AccountContextSession(userSessions)
     }
-
 }

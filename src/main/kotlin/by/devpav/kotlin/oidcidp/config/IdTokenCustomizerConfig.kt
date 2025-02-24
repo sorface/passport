@@ -19,10 +19,9 @@ class IdTokenCustomizerConfig {
             when {
                 (OidcParameterNames.ID_TOKEN == context.tokenType.value) -> {
                     context.claims.claims { claims ->
-                        claims[USER_ROLES_CLAIM_NAME] = context.getPrincipal<Authentication>().authorities
-                            .stream()
-                            .map { obj: GrantedAuthority -> obj.authority }
-                            .collect(Collectors.toSet())
+                        val userRoles = context.getPrincipal<Authentication>().authorities.map { obj: GrantedAuthority -> obj.authority }.toSet()
+
+                        claims[USER_ROLES_CLAIM_NAME] = userRoles
                     }
                 }
             }

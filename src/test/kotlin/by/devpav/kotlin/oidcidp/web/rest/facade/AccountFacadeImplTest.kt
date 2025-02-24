@@ -308,6 +308,7 @@ class AccountFacadeImplTest {
         every { userConverter.convert(userModel) } returns profile
 
         every { userModel.username = any() } answers {}
+        every { userModel.username } returns "current_username"
 
         every { request.username } returns requestedUsername
 
