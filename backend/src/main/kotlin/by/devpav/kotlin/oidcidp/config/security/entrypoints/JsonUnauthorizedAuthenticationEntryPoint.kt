@@ -43,6 +43,6 @@ class JsonUnauthorizedAuthenticationEntryPoint(private val i18Service: I18Servic
     private fun buildError(status: HttpStatus, message: String): RestError {
         val i18Message = i18Service.getI18MessageOrDefault(message, defaultCode = I18Codes.I18GlobalCodes.ACCESS_DENIED)
 
-        return RestError(i18Message,status.value())
+        return RestError(i18Message, status.value())
     }
 }

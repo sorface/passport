@@ -41,7 +41,7 @@ interface AccountService {
      * @param username Новое имя пользователя.
      * @return AccountUsername с обновленным именем пользователя.
      */
-    fun updateUsername(id: UUID, username: String) : AccountUsername
+    fun updateUsername(id: UUID, username: String): AccountUsername
 
     /**
      * Метод для обновления информации о пользователе.

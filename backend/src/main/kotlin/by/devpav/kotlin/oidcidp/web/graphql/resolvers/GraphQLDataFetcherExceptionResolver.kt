@@ -53,9 +53,11 @@ class GraphQLDataFetcherExceptionResolver : DataFetcherExceptionResolverAdapter(
             is AuthorizationDeniedException -> {
                 getLocalMessageOrNull(I18Codes.I18AuthenticationCodes.NOT_AUTHENTICATED, env.locale)
             }
+
             is AccessDeniedException -> {
                 getLocalMessageOrNull(I18Codes.I18GlobalCodes.ACCESS_DENIED, env.locale)
             }
+
             is GraphqlException -> {
                 getLocalMessageOrNull(ex.i18Code, env.locale)
             }

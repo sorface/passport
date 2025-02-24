@@ -1,7 +1,9 @@
 package by.devpav.kotlin.oidcidp.dao.sql.model.client
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.BaseModel
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 /**
  * Класс ClientAuthenticationGrantTypeModel представляет собой модель для хранения информации о типах аутентификации клиента.

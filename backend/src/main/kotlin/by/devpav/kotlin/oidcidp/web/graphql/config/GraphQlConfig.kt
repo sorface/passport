@@ -19,9 +19,10 @@ class GraphQlConfig {
             .build()
 
         val validationSchemaWiring = ValidationSchemaWiring(validationRules)
-        return RuntimeWiringConfigurer { builder: RuntimeWiring.Builder -> builder.directiveWiring(validationSchemaWiring)
-            .scalar(ExtendedScalars.GraphQLLong)
-            .scalar(ExtendedScalars.UUID)
+        return RuntimeWiringConfigurer { builder: RuntimeWiring.Builder ->
+            builder.directiveWiring(validationSchemaWiring)
+                .scalar(ExtendedScalars.GraphQLLong)
+                .scalar(ExtendedScalars.UUID)
         }
     }
 

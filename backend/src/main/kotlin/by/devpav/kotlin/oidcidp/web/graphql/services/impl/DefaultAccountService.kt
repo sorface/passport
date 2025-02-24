@@ -22,7 +22,7 @@ class DefaultAccountService(private val userRepository: UserRepository) : Accoun
     override fun isExistByUsername(username: String): Boolean = userRepository.existsByUsername(username)
 
     @Transactional
-    override fun updateUsername(id: UUID, username: String) : AccountUsername {
+    override fun updateUsername(id: UUID, username: String): AccountUsername {
         val user = userRepository.findByIdOrNull(id)
 
         user ?: throw GraphqlUserException(I18Codes.I18UserCodes.NOT_FOUND_BY_ID, mapOf("id" to id))

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component
 @Component
 class UserConverter {
 
-    fun convert(userModel: UserModel) : ProfileRecord {
+    fun convert(userModel: UserModel): ProfileRecord {
         return ProfileRecord(
             userModel.id,
             userModel.username,
@@ -27,7 +27,7 @@ class UserConverter {
 @Component
 class UserSessionConverter {
 
-    fun convert(activeId: String, session: Session) : AccountSession {
+    fun convert(activeId: String, session: Session): AccountSession {
         return AccountSession()
             .apply {
                 id = session.id

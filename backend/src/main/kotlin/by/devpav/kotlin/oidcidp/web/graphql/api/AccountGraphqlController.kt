@@ -1,12 +1,11 @@
 package by.devpav.kotlin.oidcidp.web.graphql.api
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
-import by.devpav.kotlin.oidcidp.exceptions.GraphqlUserException
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrNull
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrThrow
 import by.devpav.kotlin.oidcidp.graphql.*
-import by.devpav.kotlin.oidcidp.web.graphql.services.impl.DefaultAccountService
 import by.devpav.kotlin.oidcidp.records.I18Codes
+import by.devpav.kotlin.oidcidp.web.graphql.services.impl.DefaultAccountService
 import org.springframework.graphql.data.method.annotation.Argument
 import org.springframework.graphql.data.method.annotation.MutationMapping
 import org.springframework.graphql.data.method.annotation.QueryMapping
@@ -29,7 +28,7 @@ class AccountGraphqlController(private val defaultAccountService: DefaultAccount
     }
 
     @QueryMapping
-    fun accountGetById(@Argument id: UUID): UserModel? = defaultAccountService.findById(id);
+    fun accountGetById(@Argument id: UUID): UserModel? = defaultAccountService.findById(id)
 
     @QueryMapping
     fun accountGetByUsername(@Argument username: String): UserModel? = defaultAccountService.findByUsername(username)

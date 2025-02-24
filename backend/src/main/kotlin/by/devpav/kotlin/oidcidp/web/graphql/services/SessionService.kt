@@ -13,6 +13,6 @@ interface SessionService {
      * @param username Имя пользователя.
      * @return Список сессий пользователя.
      */
-    fun getAllByUsername(username: String) : List<Session>
+    fun getAllByUsername(username: String): List<Session>
 
 }

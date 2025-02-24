@@ -26,9 +26,9 @@ class HtmlIndexFilter : OncePerRequestFilter() {
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         if (request.isHtmlRequest() && request.isNotAPI() && request.isNotOAuth2API()) {
             val mutateRequestToIndexPage = mutateRequestToIndexPage(request)
-            filterChain.doFilter(mutateRequestToIndexPage, response);
+            filterChain.doFilter(mutateRequestToIndexPage, response)
         } else {
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(request, response)
         }
     }
 

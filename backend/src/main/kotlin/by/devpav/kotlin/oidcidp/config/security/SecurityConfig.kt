@@ -87,7 +87,7 @@ class SecurityProductionConfig {
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()
-                    .requestMatchers(HttpMethod.POST,idpEndpointProperties.loginPath).anonymous()
+                    .requestMatchers(HttpMethod.POST, idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
             }

@@ -1,7 +1,7 @@
 package by.devpav.kotlin.oidcidp.web.graphql.services
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.client.RegisteredClientModel
-import java.util.UUID
+import java.util.*
 
 /**
  * Интерфейс сервиса для работы с приложениями.
@@ -13,7 +13,7 @@ interface ApplicationService {
      *
      * @return Список зарегистрированных клиентов.
      */
-    fun getAll() : List<RegisteredClientModel>
+    fun getAll(): List<RegisteredClientModel>
 
     /**
      * Метод для получения всех зарегистрированных клиентов по идентификатору пользователя.
@@ -21,6 +21,6 @@ interface ApplicationService {
      * @param id Идентификатор пользователя.
      * @return Список зарегистрированных клиентов, связанных с пользователем.
      */
-    fun getAllByUser(id: UUID) : List<RegisteredClientModel>
+    fun getAllByUser(id: UUID): List<RegisteredClientModel>
 
 }

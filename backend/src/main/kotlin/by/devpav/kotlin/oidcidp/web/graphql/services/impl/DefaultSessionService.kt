@@ -13,7 +13,7 @@ class DefaultSessionService(private val sessionRepository: FindByIndexNameSessio
     override fun getAllByUsername(username: String): List<Session> =
         sessionRepository.findByPrincipalName(username)
             .mapNotNull { entry -> entry.value }
-            .map { session ->  buildUserSession(RequestContextHolder.currentRequestAttributes().sessionId, session) }
+            .map { session -> buildUserSession(RequestContextHolder.currentRequestAttributes().sessionId, session) }
             .toList()
 
     private fun <T : org.springframework.session.Session> buildUserSession(activeId: String, session: T): Session {

@@ -16,7 +16,7 @@ class SessionGraphqlController(private val sessionService: SessionService) {
 
     @QueryMapping
     @PreAuthorize("isAuthenticated()")
-    fun sessionGetAllByUser() : List<Session> {
+    fun sessionGetAllByUser(): List<Session> {
         val principal = SecurityContextHolder.getContext().getPrincipalOrThrow(
             GraphqlUserException(I18Codes.I18GlobalCodes.ACCESS_DENIED)
         )
@@ -26,6 +26,6 @@ class SessionGraphqlController(private val sessionService: SessionService) {
 
     @QueryMapping
     @PreAuthorize("hasRole('ADMIN')")
-    fun sessionGetAllByUsername(@Argument username: String) : List<Session> = sessionService.getAllByUsername(username)
+    fun sessionGetAllByUsername(@Argument username: String): List<Session> = sessionService.getAllByUsername(username)
 
 }

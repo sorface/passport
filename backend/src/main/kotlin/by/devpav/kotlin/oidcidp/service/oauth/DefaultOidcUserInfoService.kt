@@ -32,6 +32,7 @@ class DefaultOidcUserInfoService(private val userRepository: UserRepository) : O
                     .birthdate("${user.birthday}")
                     .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
             }
+
             scopes.contains(OidcScopes.EMAIL) -> {
                 builder.email(user.email)
                     .emailVerified(user.confirm)

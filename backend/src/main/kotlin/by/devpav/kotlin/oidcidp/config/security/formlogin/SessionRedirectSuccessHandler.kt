@@ -1,13 +1,11 @@
 package by.devpav.kotlin.oidcidp.config.security.formlogin
 
 import by.devpav.kotlin.oidcidp.config.security.constants.SessionAttributes
-import by.devpav.kotlin.oidcidp.extencions.useJsonStream
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler

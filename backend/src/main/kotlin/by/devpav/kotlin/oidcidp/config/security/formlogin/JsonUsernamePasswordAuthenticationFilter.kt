@@ -20,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
 
     companion object {
-        private val logger: Logger = LoggerFactory.getLogger(JsonUsernamePasswordAuthenticationFilter::class.java)
+        private val log: Logger = LoggerFactory.getLogger(JsonUsernamePasswordAuthenticationFilter::class.java)
     }
 
     private val mapper = ObjectMapper()
@@ -48,7 +48,7 @@ class JsonUsernamePasswordAuthenticationFilter : UsernamePasswordAuthenticationF
         try {
             val accountCredentials: AccountCredentials = mapper.readValue(request.reader, AccountCredentials::class.java)
 
-            logger.info("authentication user by username [${accountCredentials.username}] and password [*****]")
+            log.info("authentication user by username [${accountCredentials.username}] and password [*****]")
 
             authentication = UsernamePasswordAuthenticationToken(accountCredentials.username, accountCredentials.password)
         } catch (e: java.lang.Exception) {
