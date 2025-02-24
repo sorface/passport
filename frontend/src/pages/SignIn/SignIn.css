@@ -1,0 +1,90 @@
+.page-sign .form-additional-content {
+    padding-top: 0rem;
+}
+
+.page-sign h2 {
+    margin: 0rem;
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    color: var(--dark);
+    font-weight: bold;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
+.signin-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-bottom: 1rem;
+}
+
+.signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    padding: 0rem;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 150%;
+}
+
+.signin-link {
+    margin-bottom: 0.5rem;
+    text-decoration: none !important;
+    cursor: pointer;
+}
+
+.signin-logo {
+    width: 2rem;
+    height: 2rem;
+    padding-right: 1rem;
+}
+
+.signUp-link {
+    margin-top: 1rem;
+}
+
+.signin-emailSplit-container {
+    display: flex;
+    height: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+.signin-emailSplit-container .signin-emailSplit {
+    flex: 1;
+    height: 1px;
+    background-color: var(--light-active);
+}
+
+.signin-emailSplit-container .signin-emailSplitCaption {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 150%;
+    color: var(--grey3);
+    margin-left: 0.625rem;
+    margin-right: 0.625rem;
+}
+
+.page-sign-header {
+    position: fixed;
+    top: 83px;
+    left: 89px;
+    display: flex;
+    align-items: center;
+}
+
+.page-sign-header h1 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 150%;
+    color: var(--dark);
+    margin-left: 0.5rem;
+}

@@ -19,7 +19,12 @@ target/
 *.iml
 *.ipr
 
-.run
+backend/.run
+frontend/node_modules
+frontend/node
+frontend/target
+backend/target
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/

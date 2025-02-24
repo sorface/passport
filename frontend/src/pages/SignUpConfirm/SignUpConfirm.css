@@ -1,0 +1,67 @@
+.sign-up-confirm .form {
+    width: fit-content;
+    padding: 3.5rem;
+}
+
+.sign-up-confirm h2 {
+    margin: 0;
+    padding: 0;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.sign-up-confirm .sign-up-confirm-enter-message {
+    padding-bottom: 1.75rem;
+    font-size: 0.95rem;
+}
+
+.sign-up-confirm .sign-up-confirm-otp-container {
+    display: flex;
+}
+
+.sign-up-confirm .sign-up-confirm-otp-container-wrapper {
+    margin-bottom: 1.75rem;
+}
+
+.sign-up-confirm-otp-container .otp-input {
+    margin-right: 1rem;
+}
+
+.sign-up-confirm-otp-container .otp-input:last-child {
+    margin-right: 0;
+}
+
+.sign-up-confirm .sign-up-confirm-otp-info-messages {
+    display: flex;
+    justify-content: center;
+}
+
+.sign-up-confirm .sign-up-confirm-otp-info-error {
+    color: var(--error);
+    padding-top: 0.75rem;
+    font-size: 0.95rem;
+}
+
+.sign-up-confirm .sign-up-confirm-otp-receive-message {
+    font-size: 0.85rem;
+    white-space: pre-wrap;
+}
+
+.sign-up-confirm .otp-resend {
+    font-size: 0.85rem;
+}
+
+.sign-up-confirm .sign-up-confirm-timer-wrapper {
+    display: flex;
+    width: 2.75rem;
+    padding-left: 0.5rem;
+    font-size: 0.85rem;
+    align-items: flex-end;
+}
+
+.sign-up-confirm .sign-up-confirm-time-expired {
+    padding-left: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--error);
+}

@@ -1,0 +1,5 @@
+.otp-resend .otp-resend-button {
+    cursor: pointer;
+    color: var(--link);
+    margin-left: 0.15rem;
+}

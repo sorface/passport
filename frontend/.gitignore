@@ -1,0 +1,15 @@
+# configuration idea
+.run
+
+# submodules client frontend profile
+.node/
+build/
+node_modules
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+*.db
+out/

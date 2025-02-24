@@ -1,0 +1,15 @@
+.signup h2 {
+    margin: 0rem;
+    margin-bottom: 2rem;
+    font-size: 1.25rem;
+    color: var(--dark);
+    font-weight: bold;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 150%;
+}
+
+.signup .signup-back {
+    text-align: left;
+    padding-bottom: 1.25rem;
+}
