@@ -102,7 +102,8 @@ const createFetchRequestInit = (apiContract: ApiContract): RequestInit => {
     const defaultRequestInit: RequestInit = {
         credentials: 'include',
         method: apiContract.method,
-        // redirect: 'manual',
+        // redirect: 'follow',
+        mode: 'cors'
     };
 
     if (apiContract.method === 'GET') {
@@ -156,9 +157,14 @@ export const useApiMethod = <ResponseData, RequestData = AnyObject>(apiContractC
                 createFetchUrl(apiContract, additionalUrlParams),
                 createFetchRequestInit(apiContract),
             );
-            if (response.status === HttpCodes.HTTP_FOUND) {
-                window.location.href = response.headers.get('location') || '';
+
+            console.log('response useApiMethod', response)
+
+            if (response.redirected) {
+                console.log('response location useApiMethod', response)
+                window.location.href = response.url || '';
             }
+
             dispatch({
                 name: 'setCode',
                 payload: response.status,

@@ -1,6 +1,7 @@
 package by.devpav.kotlin.oidcidp.config.security.oauth2
 
 import by.devpav.kotlin.oidcidp.config.security.oauth2.properties.OidcAuthorizationProperties
+import by.devpav.kotlin.oidcidp.config.web.properties.IdpEndpointProperties
 import by.devpav.kotlin.oidcidp.jose.Jwks
 import by.devpav.kotlin.oidcidp.service.oauth.DefaultOidcUserInfoService
 import com.nimbusds.jose.jwk.JWKSelector
@@ -41,6 +42,9 @@ class SecurityAuthorizationServerConfig {
     @Autowired
     private lateinit var defaultOidcUserInfoService: DefaultOidcUserInfoService
 
+    @Autowired
+    private lateinit var idpEndpointProperties: IdpEndpointProperties
+
     /**
      * Настройка цепочки фильтров безопасности сервера авторизации.
      *
@@ -74,7 +78,7 @@ class SecurityAuthorizationServerConfig {
             .csrf { csrf: CsrfConfigurer<HttpSecurity?> -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.endpointsMatcher) }
             .oauth2ResourceServer { it.jwt {} }
             .exceptionHandling { exceptions: ExceptionHandlingConfigurer<HttpSecurity?> ->
-                exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login"))
+                exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint(idpEndpointProperties.loginPage))
             }
             .build()
     }

@@ -2,6 +2,7 @@ package by.devpav.kotlin.oidcidp.config.web
 
 import by.devpav.kotlin.oidcidp.extencions.isHtmlRequest
 import by.devpav.kotlin.oidcidp.extencions.isNotAPI
+import by.devpav.kotlin.oidcidp.extencions.isNotOAuth2API
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletRequestWrapper
@@ -23,7 +24,7 @@ class HtmlIndexFilter : OncePerRequestFilter() {
      * @param filterChain цепочка фильтров.
      */
     override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-        if (request.isHtmlRequest() && request.isNotAPI()) {
+        if (request.isHtmlRequest() && request.isNotAPI() && request.isNotOAuth2API()) {
             val mutateRequestToIndexPage = mutateRequestToIndexPage(request)
             filterChain.doFilter(mutateRequestToIndexPage, response);
         } else {

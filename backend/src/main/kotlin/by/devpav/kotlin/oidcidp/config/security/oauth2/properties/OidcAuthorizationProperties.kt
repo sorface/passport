@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 /**
  * Настройка OIDC IdP сервиса
  */
-@ConfigurationProperties(prefix = "oidc.idp")
+@ConfigurationProperties(prefix = "idp.oidc")
 class OidcAuthorizationProperties {
 
     /**

@@ -14,8 +14,18 @@ fun HttpServletRequest.isAPI(contextPath: String = ""): Boolean {
     return this.requestURI.startsWith("$contextPath/api")
 }
 
+fun HttpServletRequest.isOAuth2API(contextPath: String = ""): Boolean {
+    return setOf("/oauth2", "/connect/register", "/userinfo", "/connect/logout").any {
+        this.requestURI.startsWith("$contextPath$it")
+    }
+}
+
 fun HttpServletRequest.isNotAPI(contextPath: String = ""): Boolean {
     return !this.isAPI(contextPath)
+}
+
+fun HttpServletRequest.isNotOAuth2API(contextPath: String = ""): Boolean {
+    return !this.isOAuth2API(contextPath)
 }
 
 fun HttpServletRequest.toIndexPage(): HttpServletRequestWrapper {

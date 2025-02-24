@@ -8,10 +8,10 @@ spring:
   data.redis:
     client-type: jedis
     database: 5
-    host: production
+    host: localhost
     port: 6379
-    username: '************'
-    password: '************'
+    username: default
+    password: testpassword
     jedis.pool:
       max-active: 100
       max-idle: 15
@@ -50,9 +50,21 @@ spring:
       enabled: false
       path: /graphiql
 
-oidc:
-  idp:
+idp:
+  csrf.cookie:
+    domain: 'localhost'
+    path: '/'
+    name: 'x_csrf_token'
+    http-only: false
+    secure: false
+
+  oidc:
     url: http://localhost:${server.port}
+
+  endpoint:
+    login-path: '/api/login'
+    frontend:
+      account-page: 'http://localhost:9030/account'
 
 logging:
   level:
@@ -68,17 +80,6 @@ spring:
   graphql:
     graphiql:
       enabled: true
-
-  data.redis:
-    client-type: jedis
-    database: 5
-    host: localhost
-    port: 6379
-    username: default
-    password: testpassword
-    jedis.pool:
-      max-active: 60
-      max-idle: 10
 
   datasource:
     url: "jdbc:h2:mem:idp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;"
@@ -116,17 +117,6 @@ spring:
     graphiql:
       enabled: true
 
-  data.redis:
-    client-type: jedis
-    database: 5
-    host: localhost
-    port: 6379
-    username: default
-    password: testpassword
-    jedis.pool:
-      max-active: 60
-      max-idle: 10
-
   datasource:
     url: jdbc:postgresql://localhost:5432/idp
     username: user
@@ -146,13 +136,6 @@ spring:
     contexts: development
     change-log: migration/master.yaml
     enabled: true
-
-idp.csrf.cookie:
-  domain: 'localhost'
-  path: '/'
-  name: 'x_csrf_token'
-  http-only: false
-  secure: false
 
 logging:
   level:

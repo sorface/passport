@@ -6,6 +6,7 @@ import by.devpav.kotlin.oidcidp.config.security.csrf.properties.CsrfCookieProper
 import by.devpav.kotlin.oidcidp.config.security.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
 import by.devpav.kotlin.oidcidp.config.security.formlogin.JsonFormLoginFailureHandler
 import by.devpav.kotlin.oidcidp.config.security.formlogin.SessionRedirectSuccessHandler
+import by.devpav.kotlin.oidcidp.config.web.properties.IdpEndpointProperties
 import by.devpav.kotlin.oidcidp.extencions.jsonLogin
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -18,12 +19,14 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.csrf.CsrfAuthenticationStrategy
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @EnableMethodSecurity
@@ -69,6 +72,9 @@ class SecurityProductionConfig {
     @Autowired
     private lateinit var jsonFormLoginFailureHandler: JsonFormLoginFailureHandler
 
+    @Autowired
+    private lateinit var idpEndpointProperties: IdpEndpointProperties
+
     /**
      * Создает цепочку фильтров безопасности по умолчанию
      *
@@ -81,16 +87,22 @@ class SecurityProductionConfig {
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()
-                    .requestMatchers(HttpMethod.POST,"/api/login").anonymous()
+                    .requestMatchers(HttpMethod.POST,idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
+            }
+            .requestCache { httpSecurityRequestCacheConfigurer: RequestCacheConfigurer<HttpSecurity?> ->
+                val httpSessionRequestCache = HttpSessionRequestCache()
+
+                httpSessionRequestCache.setRequestMatcher(AntPathRequestMatcher("/oauth2/**"))
+                httpSecurityRequestCacheConfigurer.requestCache(httpSessionRequestCache)
             }
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA
             .cors { cors -> cors.disable() }
             .jsonLogin { jsonLoginSpec ->
-                jsonLoginSpec.loginPage("/")
-                jsonLoginSpec.loginProcessingUrl("/api/login")
+                jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
+                jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)
                 jsonLoginSpec.successHandler(sessionRedirectSuccessHandler)
                 jsonLoginSpec.failureHandler(jsonFormLoginFailureHandler)
             }

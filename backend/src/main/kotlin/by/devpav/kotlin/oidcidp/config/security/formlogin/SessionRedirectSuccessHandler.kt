@@ -57,19 +57,18 @@ class SessionRedirectSuccessHandler : AbstractAuthenticationTargetUrlRequestHand
         if (savedRequest == null) {
             LOGGER.info("saved request is NULL for session [id -> {}]", request.requestedSessionId)
 
-            response.useJsonStream<Map<String, String>>(HttpStatus.OK, mapOf())
+            super.handle(request, response, authentication)
 
             return
         }
 
         LOGGER.info("found saved request [url -> {}]. session [id -> {}]", savedRequest.redirectUrl, request.requestedSessionId)
 
-        val targetUrlParameter = targetUrlParameter
-
         LOGGER.info("target url parameter [{}], session [id -> {}]", targetUrlParameter, request.requestedSessionId)
 
         if (isAlwaysUseDefaultTargetUrl || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-            response.useJsonStream<Map<String, String>>(HttpStatus.OK, mapOf())
+            super.handle(request, response, authentication)
+
             return
         }
 
