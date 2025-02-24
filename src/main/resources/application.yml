@@ -147,6 +147,13 @@ spring:
     change-log: migration/master.yaml
     enabled: true
 
+idp.csrf.cookie:
+  domain: 'localhost'
+  path: '/'
+  name: 'x_csrf_token'
+  http-only: false
+  secure: false
+
 logging:
   level:
     by.devpav.kotlin.oidcidp: debug
