@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.service.oauth
+package by.devpav.kotlin.oidcidp.service.oauth.jdbc
 
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
 import by.devpav.kotlin.oidcidp.exceptions.GraphqlServerException

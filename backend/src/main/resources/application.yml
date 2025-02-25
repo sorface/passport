@@ -50,6 +50,47 @@ spring:
       enabled: false
       path: /graphiql
 
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-name: github
+            client-id: ${OAUTH_CLIENT_GITHUB_ID}
+            client-secret: ${OAUTH_CLIENT_GITHUB_SECRET}
+
+          yandex:
+            client-name: yandex
+            client-id: ${OAUTH_CLIENT_YANDEX_ID}
+            client-secret: ${OAUTH_CLIENT_YANDEX_SECRET}
+            authorization-grant-type: authorization_code
+            provider: yandex
+            redirect-uri: ${OAUTH_CLIENT_YANDEX_REDIRECT_URL}
+
+          twitch:
+            client-name: twitch
+            client-id: ${OAUTH_CLIENT_TWITCH_ID}
+            client-secret: ${OAUTH_CLIENT_TWITCH_SECRET}
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope:
+              - user:read:email
+            provider: twitch
+            redirect-uri: ${OAUTH_CLIENT_TWITCH_REDIRECT_URL}
+
+        provider:
+          yandex:
+            authorization-uri: https://oauth.yandex.ru/authorize
+            token-uri: https://oauth.yandex.ru/token
+            user-name-attribute: default_email
+            userInfoUri: https://login.yandex.ru/info
+          twitch:
+            authorization-uri: https://id.twitch.tv/oauth2/authorize
+            token-uri: https://id.twitch.tv/oauth2/token
+            userInfoUri: https://api.twitch.tv/helix/users/
+            user-info-authentication-method: GET
+            user-name-attribute: data
+
 idp:
   csrf.cookie:
     domain: 'localhost'

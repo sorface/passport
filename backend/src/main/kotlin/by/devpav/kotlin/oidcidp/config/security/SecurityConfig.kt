@@ -8,6 +8,7 @@ import by.devpav.kotlin.oidcidp.config.security.formlogin.JsonFormLoginFailureHa
 import by.devpav.kotlin.oidcidp.config.security.formlogin.SessionRedirectSuccessHandler
 import by.devpav.kotlin.oidcidp.config.web.properties.IdpEndpointProperties
 import by.devpav.kotlin.oidcidp.extencions.jsonLogin
+import by.devpav.kotlin.oidcidp.service.OAuth2UserDatabaseStrategy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -75,6 +76,9 @@ class SecurityProductionConfig {
     @Autowired
     private lateinit var idpEndpointProperties: IdpEndpointProperties
 
+    @Autowired
+    private lateinit var oAuth2UserDatabaseStrategy: OAuth2UserDatabaseStrategy
+
     /**
      * Создает цепочку фильтров безопасности по умолчанию
      *
@@ -84,6 +88,14 @@ class SecurityProductionConfig {
     @Bean
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .oauth2Login { oauth2LoginSpec ->
+                oauth2LoginSpec.userInfoEndpoint { userInfoEndpointSpec ->
+                    userInfoEndpointSpec.userService(oAuth2UserDatabaseStrategy)
+                }
+                oauth2LoginSpec.loginPage(idpEndpointProperties.loginPage)
+                oauth2LoginSpec.successHandler(sessionRedirectSuccessHandler)
+                oauth2LoginSpec.failureHandler(jsonFormLoginFailureHandler)
+            }
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()

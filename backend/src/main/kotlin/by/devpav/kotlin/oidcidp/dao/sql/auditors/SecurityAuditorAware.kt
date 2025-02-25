@@ -2,6 +2,7 @@ package by.devpav.kotlin.oidcidp.dao.sql.auditors
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
+import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrNull
 import by.devpav.kotlin.oidcidp.records.SorfacePrincipal
 import org.springframework.data.domain.AuditorAware
 import org.springframework.security.core.context.SecurityContextHolder
@@ -24,7 +25,7 @@ class SecurityAuditorAware(private val userRepository: UserRepository) : Auditor
      * @return объект UserModel или пустой Optional, если аудитор не найден.
      */
     override fun getCurrentAuditor(): Optional<UserModel> {
-        val principalId = (SecurityContextHolder.getContext().authentication.principal as SorfacePrincipal).id
+        val principalId = SecurityContextHolder.getContext().getPrincipalIdOrNull()
 
         principalId ?: return Optional.empty()
 
