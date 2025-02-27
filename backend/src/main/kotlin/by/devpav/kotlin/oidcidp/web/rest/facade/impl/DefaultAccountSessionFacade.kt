@@ -1,8 +1,9 @@
-package by.devpav.kotlin.oidcidp.web.rest.facade
+package by.devpav.kotlin.oidcidp.web.rest.facade.impl
 
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalUsername
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
+import by.devpav.kotlin.oidcidp.web.rest.facade.AccountSessionFacade
 import by.devpav.kotlin.oidcidp.web.rest.mapper.UserSessionConverter
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountCleanupSessionRequest
 import by.devpav.kotlin.oidcidp.web.rest.model.sessions.AccountContextSession
@@ -15,7 +16,8 @@ import org.springframework.stereotype.Service
 import org.springframework.web.context.request.RequestContextHolder
 
 @Service
-class DefaultAccountSessionFacade(private val sessionRepository: FindByIndexNameSessionRepository<out Session>) : AccountSessionFacade {
+class DefaultAccountSessionFacade(private val sessionRepository: FindByIndexNameSessionRepository<out Session>) :
+    AccountSessionFacade {
 
     @Autowired
     private lateinit var userSessionConverter: UserSessionConverter

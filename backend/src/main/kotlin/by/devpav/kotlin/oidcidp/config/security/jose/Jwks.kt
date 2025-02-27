@@ -1,6 +1,6 @@
-package by.devpav.kotlin.oidcidp.jose
+package by.devpav.kotlin.oidcidp.config.security.jose
 
-import by.devpav.kotlin.oidcidp.jose.KeyGeneratorUtils.generateRsaKey
+import by.devpav.kotlin.oidcidp.config.security.jose.KeyGeneratorUtils.generateRsaKey
 import com.nimbusds.jose.jwk.RSAKey
 import java.security.interfaces.RSAPrivateKey
 import java.security.interfaces.RSAPublicKey

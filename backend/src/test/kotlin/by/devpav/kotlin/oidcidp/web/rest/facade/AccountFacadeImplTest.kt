@@ -5,10 +5,11 @@ import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.records.SorfacePrincipal
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
+import by.devpav.kotlin.oidcidp.web.rest.facade.impl.AccountFacadeImpl
 import by.devpav.kotlin.oidcidp.web.rest.mapper.UserConverter
-import by.devpav.kotlin.oidcidp.web.rest.model.AccountPatchUpdate
-import by.devpav.kotlin.oidcidp.web.rest.model.AccountUsernameUpdate
-import by.devpav.kotlin.oidcidp.web.rest.model.ProfileRecord
+import by.devpav.kotlin.oidcidp.web.rest.model.accounts.AccountPatchUpdate
+import by.devpav.kotlin.oidcidp.web.rest.model.accounts.AccountUsernameUpdate
+import by.devpav.kotlin.oidcidp.web.rest.model.accounts.Account
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -112,7 +113,7 @@ class AccountFacadeImplTest {
         val stubPrincipalId = UUID.fromString("e74cf6d6-3b22-47b6-adfe-5a23c1a4c08c")
         val sorfacePrincipal = mockk<SorfacePrincipal>()
         val userModelMock = mockk<UserModel>()
-        val profile = mockk<ProfileRecord>()
+        val profile = mockk<Account>()
 
         every { authentication.isAuthenticated } returns true
         every { authentication.principal } returns sorfacePrincipal
@@ -158,7 +159,7 @@ class AccountFacadeImplTest {
         val userId = UUID.fromString("e74cf6d6-3b22-47b6-adfe-5a23c1a4c08c")
         val user = spyk<UserModel>()
         val updateAccountRequest = spyk<AccountPatchUpdate>()
-        val profile = mockk<ProfileRecord>()
+        val profile = mockk<Account>()
 
         every { userRepository.findByIdOrNull(userId) } returns user
         every { updateAccountRequest.firstname } returns "test"
@@ -191,7 +192,7 @@ class AccountFacadeImplTest {
         val userId = UUID.fromString("e74cf6d6-3b22-47b6-adfe-5a23c1a4c08c")
         val user = spyk<UserModel>()
         val updateAccountRequest = spyk<AccountPatchUpdate>()
-        val profile = mockk<ProfileRecord>()
+        val profile = mockk<Account>()
 
         every { userRepository.findByIdOrNull(userId) } returns user
         every { updateAccountRequest.firstname } returns null
@@ -300,7 +301,7 @@ class AccountFacadeImplTest {
 
         val userId = UUID.fromString("e74cf6d6-3b22-47b6-adfe-5a23c1a4c08c")
         val userModel = mockk<UserModel>()
-        val profile = mockk<ProfileRecord>()
+        val profile = mockk<Account>()
 
         every { userRepository.findByIdOrNull(userId) } returns userModel
         every { userRepository.existsByUsername(requestedUsername) } returns false

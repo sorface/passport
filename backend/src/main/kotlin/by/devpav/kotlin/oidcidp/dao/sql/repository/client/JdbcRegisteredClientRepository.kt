@@ -11,8 +11,10 @@ interface JdbcRegisteredClientRepository : BaseRepository<RegisteredClientModel>
 
     fun findByClientId(id: String?): RegisteredClientModel?
 
-    @Query("select o from RegisteredClientModel o where o.id = ?1 and o.createdBy.id = ?2")
-    fun findByIdAndCreatedById(oauth2ClientId: UUID?, userId: UUID?): RegisteredClientModel?
+    @Query("select o from RegisteredClientModel o where o.clientId = ?1 and o.createdBy.id = ?2")
+    fun findByClientIdAndCreatedById(clientId: UUID?, userId: UUID?): RegisteredClientModel?
+
+    fun findFirstByIdAndCreatedBy_Id(id: UUID, createdById: UUID): RegisteredClientModel?
 
     @Query("select o from RegisteredClientModel o where o.createdBy.id = ?1")
     fun findAllByCreatedById(userId: UUID?): List<RegisteredClientModel>

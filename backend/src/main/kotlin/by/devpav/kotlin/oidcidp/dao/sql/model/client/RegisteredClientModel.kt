@@ -37,8 +37,12 @@ class RegisteredClientModel : BaseModel() {
      * Это поле представляет отношение "один ко многим" с ClientRedirectUrlModel.
      * Загрузка связанных данных выполняется немедленно.
      */
-    @OneToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.EAGER, targetEntity = ClientRedirectUrlModel::class)
-    @JoinColumn(name = "C_FK_REGISTEREDCLIENT")
+    @OneToMany(
+        mappedBy = "registeredClient",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.EAGER,
+        targetEntity = ClientRedirectUrlModel::class
+    )
     var redirectUris: Set<ClientRedirectUrlModel> = setOf()
 
     /**

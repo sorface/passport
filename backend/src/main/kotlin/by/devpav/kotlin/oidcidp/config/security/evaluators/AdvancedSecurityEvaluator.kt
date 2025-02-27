@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.evaluators
+package by.devpav.kotlin.oidcidp.config.security.evaluators
 
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrNull
 import org.springframework.security.core.context.SecurityContextHolder

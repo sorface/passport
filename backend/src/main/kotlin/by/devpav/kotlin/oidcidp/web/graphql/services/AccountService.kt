@@ -1,8 +1,8 @@
 package by.devpav.kotlin.oidcidp.web.graphql.services
 
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
-import by.devpav.kotlin.oidcidp.graphql.AccountUsername
-import by.devpav.kotlin.oidcidp.graphql.PatchUpdateAccount
+import by.devpav.kotlin.oidcidp.graphql.model.AccountUsername
+import by.devpav.kotlin.oidcidp.graphql.model.PatchUpdateAccount
 import java.util.*
 
 /**

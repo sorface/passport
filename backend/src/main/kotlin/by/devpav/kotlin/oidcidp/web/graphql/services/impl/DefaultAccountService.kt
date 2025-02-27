@@ -3,8 +3,8 @@ package by.devpav.kotlin.oidcidp.web.graphql.services.impl
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
 import by.devpav.kotlin.oidcidp.exceptions.GraphqlUserException
-import by.devpav.kotlin.oidcidp.graphql.AccountUsername
-import by.devpav.kotlin.oidcidp.graphql.PatchUpdateAccount
+import by.devpav.kotlin.oidcidp.graphql.model.AccountUsername
+import by.devpav.kotlin.oidcidp.graphql.model.PatchUpdateAccount
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.graphql.services.AccountService
 import org.springframework.data.repository.findByIdOrNull

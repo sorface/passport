@@ -4,6 +4,7 @@ import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrNull
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrThrow
 import by.devpav.kotlin.oidcidp.graphql.*
+import by.devpav.kotlin.oidcidp.graphql.model.*
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.graphql.services.impl.DefaultAccountService
 import org.springframework.graphql.data.method.annotation.Argument

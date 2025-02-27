@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.web.rest.model
+package by.devpav.kotlin.oidcidp.web.rest.model.accounts
 
 import jakarta.validation.constraints.NotNull
 

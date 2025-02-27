@@ -1,10 +1,10 @@
-package by.devpav.kotlin.oidcidp.web.rest.model
+package by.devpav.kotlin.oidcidp.web.rest.model.accounts
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.util.*
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-data class ProfileRecord(
+data class Account(
     val id: UUID?,
     val nickname: String?,
     val email: String?,

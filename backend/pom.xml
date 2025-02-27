@@ -188,7 +188,7 @@
                         <rootDir>${project.basedir}/src/main/resources/graphql</rootDir>
                     </graphqlSchemas>
                     <outputDir>${project.build.directory}/generated-sources/graphql</outputDir>
-                    <packageName>by.devpav.kotlin.oidcidp.graphql</packageName>
+                    <packageName>by.devpav.kotlin.oidcidp.graphql.model</packageName>
                     <modelValidationAnnotation>@jakarta.validation.constraints.NotNull</modelValidationAnnotation>
                     <generateToString>true</generateToString>
                     <customTypesMapping>

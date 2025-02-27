@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8082
 
 spring:
   application:
@@ -9,7 +9,7 @@ spring:
     client-type: jedis
     database: 5
     host: localhost
-    port: 6379
+    port: 6380
     username: default
     password: testpassword
     jedis.pool:
@@ -159,7 +159,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/idp
+    url: jdbc:postgresql://localhost:5444/idp
     username: user
     password: user
     driver-class-name: org.postgresql.Driver
@@ -181,4 +181,4 @@ spring:
 logging:
   level:
     by.devpav.kotlin.oidcidp: debug
-    root: trace
+    root: warn

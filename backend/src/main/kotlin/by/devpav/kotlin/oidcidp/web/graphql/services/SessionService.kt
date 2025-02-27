@@ -1,6 +1,6 @@
 package by.devpav.kotlin.oidcidp.web.graphql.services
 
-import by.devpav.kotlin.oidcidp.graphql.Session
+import by.devpav.kotlin.oidcidp.graphql.model.Session
 
 /**
  * Интерфейс сервиса для работы с сессиями.

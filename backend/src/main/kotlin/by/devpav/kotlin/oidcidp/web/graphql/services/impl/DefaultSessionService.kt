@@ -1,7 +1,7 @@
 package by.devpav.kotlin.oidcidp.web.graphql.services.impl
 
-import by.devpav.kotlin.oidcidp.graphql.Session
-import by.devpav.kotlin.oidcidp.graphql.UserSession
+import by.devpav.kotlin.oidcidp.graphql.model.Session
+import by.devpav.kotlin.oidcidp.graphql.model.UserSession
 import by.devpav.kotlin.oidcidp.web.graphql.services.SessionService
 import org.springframework.session.FindByIndexNameSessionRepository
 import org.springframework.stereotype.Service

@@ -1,6 +1,6 @@
 package by.devpav.kotlin.oidcidp.web.rest.facade
 
-import by.devpav.kotlin.oidcidp.web.rest.model.*
+import by.devpav.kotlin.oidcidp.web.rest.model.accounts.*
 import java.util.*
 
 /**
@@ -20,7 +20,7 @@ interface AccountFacade {
      *
      * @return Объект ProfileRecord, содержащий информацию о профиле пользователя.
      */
-    fun getCurrentAuthorized(): ProfileRecord
+    fun getCurrentAuthorized(): Account
 
     /**
      * Обновляет информацию об аккаунте пользователя.
@@ -29,7 +29,7 @@ interface AccountFacade {
      * @param request Объект AccountPatchUpdate, содержащий информацию для обновления.
      * @return Объект ProfileRecord, содержащий обновленную информацию о профиле пользователя.
      */
-    fun update(id: UUID, request: AccountPatchUpdate): ProfileRecord
+    fun update(id: UUID, request: AccountPatchUpdate): Account
 
     /**
      * Проверяет, существует ли пользователь с указанным именем пользователя
@@ -46,6 +46,6 @@ interface AccountFacade {
      * @param request Объект AccountUsernamePatchUpdate, содержащий новое имя пользователя.
      * @return Объект ProfileRecord, содержащий обновленную информацию о профиле пользователя.
      */
-    fun updateUsername(id: UUID, request: AccountUsernameUpdate): ProfileRecord
+    fun updateUsername(id: UUID, request: AccountUsernameUpdate): Account
 
 }

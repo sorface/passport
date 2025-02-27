@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.jose
+package by.devpav.kotlin.oidcidp.config.security.jose
 
 import java.security.KeyPair
 import java.security.KeyPairGenerator

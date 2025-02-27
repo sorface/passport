@@ -2,7 +2,7 @@ package by.devpav.kotlin.oidcidp.web.graphql.api
 
 import by.devpav.kotlin.oidcidp.exceptions.GraphqlUserException
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalOrThrow
-import by.devpav.kotlin.oidcidp.graphql.Session
+import by.devpav.kotlin.oidcidp.graphql.model.Session
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.graphql.services.SessionService
 import org.springframework.graphql.data.method.annotation.Argument

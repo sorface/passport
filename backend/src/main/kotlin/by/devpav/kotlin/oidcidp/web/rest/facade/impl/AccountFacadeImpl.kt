@@ -1,12 +1,13 @@
-package by.devpav.kotlin.oidcidp.web.rest.facade
+package by.devpav.kotlin.oidcidp.web.rest.facade.impl
 
 import by.devpav.kotlin.oidcidp.dao.sql.repository.user.UserRepository
 import by.devpav.kotlin.oidcidp.extencions.getPrincipal
 import by.devpav.kotlin.oidcidp.extencions.getPrincipalIdOrThrow
 import by.devpav.kotlin.oidcidp.records.I18Codes
 import by.devpav.kotlin.oidcidp.web.rest.exceptions.I18RestException
+import by.devpav.kotlin.oidcidp.web.rest.facade.AccountFacade
 import by.devpav.kotlin.oidcidp.web.rest.mapper.UserConverter
-import by.devpav.kotlin.oidcidp.web.rest.model.*
+import by.devpav.kotlin.oidcidp.web.rest.model.accounts.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -35,7 +36,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
     }
 
     @Transactional(readOnly = true)
-    override fun getCurrentAuthorized(): ProfileRecord {
+    override fun getCurrentAuthorized(): Account {
         logger.info("get current authorized user from security context")
 
         val principalId = SecurityContextHolder.getContext().getPrincipalIdOrThrow(
@@ -62,7 +63,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
     }
 
     @Transactional
-    override fun update(id: UUID, request: AccountPatchUpdate): ProfileRecord {
+    override fun update(id: UUID, request: AccountPatchUpdate): Account {
         logger.info("get user by id: $id")
 
         val user = userRepository.findByIdOrNull(id)
@@ -96,7 +97,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
     override fun isExistsByUsername(username: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsername(username))
 
     @Transactional
-    override fun updateUsername(id: UUID, request: AccountUsernameUpdate): ProfileRecord {
+    override fun updateUsername(id: UUID, request: AccountUsernameUpdate): Account {
         logger.info("get user [id -> $id] from database")
 
         val user = userRepository.findByIdOrNull(id)
