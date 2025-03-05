@@ -2,6 +2,7 @@ package by.devpav.kotlin.oidcidp.dao.nosql.model
 
 import org.springframework.data.redis.core.RedisHash
 import org.springframework.data.redis.core.index.Indexed
+import java.time.Instant
 
 /**
  * Класс, представляющий временную регистрацию пользователя.
@@ -17,4 +18,5 @@ import org.springframework.data.redis.core.index.Indexed
 class TmpRegistration(var email: String, var username: String, var password: String, @Indexed var otp: String) : BasicRedisEntity() {
     var firstName: String? = null
     var lastName: String? = null
+    var otpExpTime: Instant = Instant.now()
 }

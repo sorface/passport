@@ -1,6 +1,8 @@
-package by.devpav.kotlin.oidcidp.web.rest.model.accounts
+package by.devpav.kotlin.oidcidp.web.rest.model.accounts.registration
 
 data class AccountRegistration(
+    @Transient
+    var registrationId: String? = null,
     val username: String,
     val password: String,
     val email: String,

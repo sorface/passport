@@ -1,5 +1,6 @@
 package by.devpav.kotlin.oidcidp.extencions
 
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletRequestWrapper
 import org.springframework.http.HttpHeaders
@@ -34,4 +35,12 @@ fun HttpServletRequest.toIndexPage(): HttpServletRequestWrapper {
             return "$contextPath/index.html"
         }
     }
+}
+
+fun HttpServletRequest.findCookieByName(name: String): Cookie? {
+    return this.cookies.find { it.name == name }
+}
+
+fun HttpServletRequest.findCookieValueByName(name: String): String? {
+    return this.findCookieByName(name)?.value
 }
