@@ -17,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 private const val REGISTRATION_COOKIE_NAME = "registrationId"
+private const val OTP_EXP_TIME_COOKIE_NAME = "otp_exp_time"
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -34,7 +35,7 @@ class RegistryAccountController(
 
         accountRegistrationResult.apply {
             response.addCookie(accountRegistrationCookieBuilder.buildId(this.registrationId))
-            response.addCookie(accountRegistrationCookieBuilder.buildOtpExpiredAt(this.otpExpTime))
+            response.addCookie(accountRegistrationCookieBuilder.buildOtpExpiredAt(this.otpExpiredTime))
         }
 
         return accountRegistrationResult
@@ -48,21 +49,32 @@ class RegistryAccountController(
                 i18Code = I18Codes.I18AccountRegistryCodes.ACCOUNT_DATA_NOT_FOUND
             )
 
-        val confirmation = accountRegistryFacade.confirmByOtp(registrationCookie.value, confirmAccount.otp)
+        val confirmation = accountRegistryFacade.confirmByOtp(registrationCookie.value, confirmAccount.code)
 
         if (confirmation) {
-            response.addCookie(
-                registrationCookie.apply {
-                    maxAge = -1
+            val dropRegistrationCookie = registrationCookie.apply {
+                maxAge = 0
+            }
+
+            response.addCookie(dropRegistrationCookie)
+
+            val dropOtpExpTimeCookie = request.findCookieByName(OTP_EXP_TIME_COOKIE_NAME)
+
+            if (dropOtpExpTimeCookie != null) {
+                dropOtpExpTimeCookie.apply {
+                    maxAge = 0
                 }
-            )
+
+                response.addCookie(dropOtpExpTimeCookie)
+            }
+
         }
 
         return confirmation
     }
 
     @PutMapping(value = ["/otp"])
-    fun updateOtp(request: HttpServletRequest): AccountOtpRefresh {
+    fun updateOtp(request: HttpServletRequest, response: HttpServletResponse): AccountOtpRefresh {
         val registrationId = request.findCookieValueByName(REGISTRATION_COOKIE_NAME)
             ?: throw I18RestException(
                 message = "Cookie with name [registrationId] is not present in the request",
@@ -70,6 +82,8 @@ class RegistryAccountController(
             )
 
         val refreshOtp = accountRegistryFacade.refreshOtp(registrationId)
+
+        response.addCookie(accountRegistrationCookieBuilder.buildOtpExpiredAt(refreshOtp.otpExpTime))
 
         return refreshOtp
     }

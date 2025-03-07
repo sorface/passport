@@ -4,5 +4,5 @@ import java.time.Instant
 
 data class AccountRegistrationResult(
     var registrationId: String,
-    var otpExpTime: Instant
+    var otpExpiredTime: Instant
 )
