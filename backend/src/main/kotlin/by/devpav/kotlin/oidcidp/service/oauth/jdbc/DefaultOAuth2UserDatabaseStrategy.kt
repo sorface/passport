@@ -1,6 +1,6 @@
 package by.devpav.kotlin.oidcidp.service.oauth.jdbc
 
-import by.devpav.kotlin.oidcidp.service.OAuth2UserDatabaseStrategy
+import by.devpav.kotlin.oidcidp.service.oauth.OAuth2UserDatabaseStrategy
 import by.devpav.kotlin.oidcidp.config.security.oauth2.enums.OAuth2ProviderType
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest

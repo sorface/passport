@@ -7,26 +7,26 @@ import java.time.Instant
 @Component
 class AccountRegistrationCookieBuilderImpl : AccountRegistrationCookieBuilder {
 
-    override fun buildId(registrationId: String): Cookie {
+    override fun buildId(registrationId: String, maxAge: Int): Cookie {
         // TODO: вынести в переменные окружения
 
         val cookie = Cookie("registrationId", registrationId)
 
         cookie.path = "/"
-        cookie.maxAge = 600
+        cookie.maxAge = maxAge
         cookie.domain = "localhost"
         cookie.isHttpOnly = true
 
         return cookie;
     }
 
-    override fun buildOtpExpiredAt(timestamp: Instant): Cookie {
+    override fun buildOtpExpiredAt(timestamp: Instant, maxAge: Int): Cookie {
         // TODO: вынести в переменные окружения
 
         val cookie = Cookie("otp_exp_time", timestamp.toEpochMilli().toString())
 
         cookie.path = "/"
-        cookie.maxAge = 120
+        cookie.maxAge = maxAge
         cookie.domain = "localhost"
         cookie.isHttpOnly = false
 

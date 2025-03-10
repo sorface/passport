@@ -10,13 +10,13 @@ interface AccountRegistrationCookieBuilder {
      *
      * @param registrationId идентификатор временного аккаунта
      */
-    fun buildId(registrationId: String): Cookie
+    fun buildId(registrationId: String, maxAge: Int = 600): Cookie
 
     /**
      * Создание cookie для хранения предельного времени действия одноразового пароля (OTP)
      *
      * @param timestamp время, до которого будет действовать OTP
      */
-    fun buildOtpExpiredAt(timestamp: Instant): Cookie
+    fun buildOtpExpiredAt(timestamp: Instant, maxAge: Int = 120): Cookie
 
 }

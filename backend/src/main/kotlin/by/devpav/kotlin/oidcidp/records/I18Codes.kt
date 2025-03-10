@@ -54,6 +54,7 @@ class I18Codes {
 
     object I18AccountRegistryCodes {
         const val ACCOUNT_DATA_NOT_FOUND: String = "account.registry.data_not_found"
+        const val ACCOUNT_DATA_NOT_FOUND_BY_ID: String = "account.registry.data_not_found_by_id"
     }
 
     object I18ClientCodes {

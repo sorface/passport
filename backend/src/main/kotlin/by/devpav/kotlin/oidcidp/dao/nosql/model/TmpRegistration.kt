@@ -15,7 +15,13 @@ import java.time.Instant
  * @property lastName фамилия пользователя
  */
 @RedisHash(value = "passport.registration:tmp", timeToLive = 600)
-class TmpRegistration(var email: String, var username: String, var password: String, @Indexed var otp: String) : BasicRedisEntity() {
+class TmpRegistration() : BasicRedisEntity() {
+    lateinit var email: String
+    lateinit var username: String
+    lateinit var password: String
+    @Indexed
+    lateinit var otp: String
+
     var firstName: String? = null
     var lastName: String? = null
     var otpExpTime: Instant = Instant.now()

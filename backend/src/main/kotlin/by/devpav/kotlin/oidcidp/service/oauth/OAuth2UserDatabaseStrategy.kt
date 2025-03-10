@@ -1,4 +1,4 @@
-package by.devpav.kotlin.oidcidp.service
+package by.devpav.kotlin.oidcidp.service.oauth
 
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService

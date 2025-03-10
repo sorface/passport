@@ -7,7 +7,15 @@ import by.devpav.kotlin.oidcidp.web.rest.model.accounts.registration.AccountRegi
 /**
  * Интерфейс для работы с регистрацией аккаунтов.
  */
-interface AccountRegistryFacade {
+interface RegistrationFacade {
+
+    /**
+     * Получает информацию о регистрации аккаунта по идентификатору.
+     *
+     * @param registrationId идентификатор регистрации
+     * @return объект регистрации аккаунта
+     */
+    fun get(registrationId: String): AccountRegistration
 
     /**
      * Регистрирует новый аккаунт.
@@ -15,7 +23,7 @@ interface AccountRegistryFacade {
      * @param account объект регистрации аккаунта
      * @return результат регистрации аккаунта
      */
-    fun registry(account: AccountRegistration): AccountRegistrationResult
+    fun create(account: AccountRegistration): AccountRegistrationResult
 
     /**
      * Подтверждает регистрацию аккаунта по одноразовому коду.
@@ -24,7 +32,7 @@ interface AccountRegistryFacade {
      * @param otpCode одноразовый код
      * @return true, если подтверждение прошло успешно, иначе false
      */
-    fun confirmByOtp(registrationId: String, otpCode: String): Boolean
+    fun confirm(registrationId: String, otpCode: String)
 
     /**
      * Обновляет одноразовый код для регистрации аккаунта.

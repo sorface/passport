@@ -1,4 +1,4 @@
-import {FunctionComponent} from 'react';
+import {FunctionComponent, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Captions, otpExpiredTimeLocalStorageKey, pathnames} from '../../constants';
 import {Field, Form} from '../../components/Form/Form';
@@ -9,6 +9,7 @@ import {accountsApiDeclaration, SignUpBody, SignUpResponse} from '../../apiDecla
 import {convertFormDataToObject} from '../../utils/convertFormDataToObject';
 
 import './SignUp.css';
+import {useApiMethod} from "../../hooks/useApiMethod";
 
 const fields: Field[] = [
     {
@@ -44,6 +45,13 @@ const fields: Field[] = [
 export const SignUp: FunctionComponent = () => {
     const navigate = useNavigate();
     const {apiMethodState, fetchData} = useApiMethodCsrf<SignUpResponse, SignUpBody>(accountsApiDeclaration.signup);
+
+    const {
+        apiMethodState: registrationDataMethodState,
+        fetchData: registrationGetFetch
+    } = useApiMethod<SignUpBody, undefined>(accountsApiDeclaration.registrationData);
+
+    const {process: {}, data: registrationData } = registrationDataMethodState;
     const {process: {error}, data} = apiMethodState;
 
     if (data) {

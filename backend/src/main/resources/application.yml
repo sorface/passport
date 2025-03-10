@@ -16,6 +16,7 @@ spring:
       max-active: 100
       max-idle: 15
 
+
   datasource:
     url: "*****"
     username: "username"
@@ -44,6 +45,17 @@ spring:
     contexts: production
     change-log: migration/master.yaml
     enabled: true
+
+  mail:
+    username: 'welcome@sorface.com'
+    password: 'nphnsnxgcimstkxj'
+    port: 465
+    host: smtp.yandex.ru
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.ssl.enable: true
 
   graphql:
     graphiql:

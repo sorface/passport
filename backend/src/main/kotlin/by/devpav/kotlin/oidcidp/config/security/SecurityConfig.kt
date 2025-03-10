@@ -8,7 +8,7 @@ import by.devpav.kotlin.oidcidp.config.security.formlogin.JsonFormLoginFailureHa
 import by.devpav.kotlin.oidcidp.config.security.formlogin.SessionRedirectSuccessHandler
 import by.devpav.kotlin.oidcidp.config.web.properties.IdpEndpointProperties
 import by.devpav.kotlin.oidcidp.extencions.jsonLogin
-import by.devpav.kotlin.oidcidp.service.OAuth2UserDatabaseStrategy
+import by.devpav.kotlin.oidcidp.service.oauth.OAuth2UserDatabaseStrategy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -99,9 +99,10 @@ class SecurityProductionConfig {
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
                     .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/accounts/signup").anonymous()
-                    .requestMatchers(HttpMethod.POST, "/api/accounts/otp").anonymous()
-                    .requestMatchers(HttpMethod.POST, "/api/accounts/confirm").anonymous()
+                    .requestMatchers(HttpMethod.GET, "/api/registrations").anonymous()
+                    .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
+                    .requestMatchers(HttpMethod.PUT, "/api/registrations/otp").anonymous()
+                    .requestMatchers(HttpMethod.POST, "/api/registrations/confirm").anonymous()
                     .requestMatchers(HttpMethod.POST, idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()

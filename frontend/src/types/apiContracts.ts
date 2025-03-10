@@ -4,14 +4,15 @@ export enum ApiEndpoint {
     GetAppById = '/api/applications/:id',
     DeleteAppById = '/api/applications/:id',
     RefreshApp = '/api/applications/:clientId/refresh',
-    AccountsSignup = '/api/accounts/signup',
+    AccountsSignup = '/api/registrations',
+    RegistrationGet = '/api/registrations',
     AccountsSignin = '/api/login',
     AccountsCurrent = '/api/accounts/current',
-    AccountsConfirm = '/api/accounts/confirm',
+    AccountsConfirm = '/api/registrations/confirm',
     AccountsEdit = '/api/accounts/:id',
     AccountsLogout = '/api/accounts/logout',
     CurrentSession = '/api/sessions',
-    OtpResend = '/api/accounts/otp',
+    OtpResend = '/api/registrations/otp',
 }
 
 export interface ApiContractGet {

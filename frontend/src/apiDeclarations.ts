@@ -104,6 +104,10 @@ export const accountsApiDeclaration = {
         baseUrl: ApiEndpoint.AccountsSignup,
         body,
     }),
+    registrationData: (): ApiContractGet => ({
+        method: 'GET',
+        baseUrl: ApiEndpoint.RegistrationGet
+    }),
     current: (): ApiContractGet => ({
         method: 'GET',
         baseUrl: ApiEndpoint.AccountsCurrent,
