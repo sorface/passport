@@ -96,6 +96,8 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
 
     override fun isExistsByUsername(username: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsername(username))
 
+    override fun isExistsByUsernameOrEmail(login: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsernameOrEmail(login, login))
+
     @Transactional
     override fun updateUsername(id: UUID, request: AccountUsernameUpdate): Account {
         logger.info("get user [id -> $id] from database")

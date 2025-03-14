@@ -103,6 +103,7 @@ class SecurityProductionConfig {
                     .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.PUT, "/api/registrations/otp").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations/confirm").anonymous()
+                    .requestMatchers(HttpMethod.GET, "/api/accounts/login/{login}/exists").permitAll()
                     .requestMatchers(HttpMethod.POST, idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()

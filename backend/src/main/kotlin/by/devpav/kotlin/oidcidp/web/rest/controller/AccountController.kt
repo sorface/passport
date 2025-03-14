@@ -28,8 +28,12 @@ class AccountController(private val accountFacade: AccountFacade) {
     fun updateUsername(@PathVariable("id") id: UUID, @RequestBody @Valid request: AccountUsernameUpdate): Account =
         accountFacade.updateUsername(id, request)
 
-    @GetMapping("/{username}/exists")
+    @GetMapping("/username/{username}/exists")
     fun isExistsUsername(@PathVariable("username") @NotNull username: String?): AccountExistsResponse =
         accountFacade.isExistsByUsername(username!!)
+
+    @GetMapping("/login/{login}/exists")
+    fun isExistsByUsernameOrEmail(@PathVariable("login") @NotNull username: String): AccountExistsResponse =
+        accountFacade.isExistsByUsernameOrEmail(username)
 
 }

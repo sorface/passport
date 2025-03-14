@@ -40,6 +40,14 @@ interface AccountFacade {
     fun isExistsByUsername(username: String): AccountExistsResponse
 
     /**
+     * Проверяет, существует ли пользователь с указанным именем пользователя или email
+     *
+     * @param login имя пользователя или email
+     * @return Объект AccountExistsResponse, содержащий информацию о существовании пользователя.
+     */
+    fun isExistsByUsernameOrEmail(login: String): AccountExistsResponse
+
+    /**
      * Обновляет имя пользователя аккаунта.
      *
      * @param id Идентификатор аккаунта.

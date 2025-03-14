@@ -3,6 +3,7 @@ package by.devpav.kotlin.oidcidp.dao.sql.repository.user
 import by.devpav.kotlin.oidcidp.dao.sql.model.UserModel
 import by.devpav.kotlin.oidcidp.dao.sql.model.enums.ProviderType
 import by.devpav.kotlin.oidcidp.dao.sql.repository.BaseRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
 
@@ -33,6 +34,15 @@ interface UserRepository : BaseRepository<UserModel> {
      * @return пользователь
      */
     fun findFirstByUsernameIgnoreCaseOrEmailIgnoreCase(username: String?, email: String?): UserModel?
+
+    /**
+     * Проверка существования пользователя в БД по логину или электронной почте
+     *
+     * @param username логин пользователя
+     * @param email    email пользователя
+     * @return пользователь
+     */
+    fun existsByUsernameOrEmail(username: String?, email: String?): Boolean
 
     /**
      * Поиск пользователя по провайдеру и идентификатору внешней системы
