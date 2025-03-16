@@ -6,7 +6,7 @@ import by.sorface.idp.records.I18Codes
 import by.sorface.idp.web.rest.exceptions.I18RestException
 import by.sorface.idp.web.rest.facade.RegistrationFacade
 import by.sorface.idp.web.rest.facade.impl.RegistrationFacadeImpl
-import by.sorface.idp.web.rest.mapper.AccountRegistrationCookieBuilder
+import by.sorface.idp.service.AccountCookieManager
 import by.sorface.idp.web.rest.model.accounts.registration.AccountOtpConfirm
 import by.sorface.idp.web.rest.model.accounts.registration.AccountOtpRefresh
 import by.sorface.idp.web.rest.model.accounts.registration.AccountRegistration
@@ -28,7 +28,7 @@ private const val OTP_EXP_TIME_COOKIE_NAME = "otp_exp_time"
 @PreAuthorize("isAnonymous()")
 class RegistryAccountController(
     private val registrationFacade: RegistrationFacade,
-    private val accountRegistrationCookieBuilder: AccountRegistrationCookieBuilder
+    private val accountCookieManager: AccountCookieManager
 ) {
 
     private val logger = LoggerFactory.getLogger(RegistrationFacadeImpl::class.java)
@@ -37,7 +37,7 @@ class RegistryAccountController(
     fun getRegistrationTmp(request: HttpServletRequest): ResponseEntity<AccountRegistration> {
         val registrationId = request.findCookieValueByName(REGISTRATION_COOKIE_NAME)
 
-        registrationId ?: return ResponseEntity.ok().build()
+        registrationId ?: return ResponseEntity.noContent().build()
 
         logger.info("getting account registration information for registrationId: $registrationId")
 
@@ -61,11 +61,15 @@ class RegistryAccountController(
         accountRegistrationResult.apply {
             logger.debug("setting a cookie with the registration id [registration id -> ${this.registrationId}]")
 
-            response.addCookie(accountRegistrationCookieBuilder.buildId(this.registrationId))
+            val registrationIdCookie = accountCookieManager.createRegistrationId(this.registrationId)
+
+            response.addCookie(registrationIdCookie)
 
             logger.debug("setting a cookie with the otp exp time [otp exp time -> {} registration id -> {}]", otpExpiredTime, this.registrationId)
 
-            response.addCookie(accountRegistrationCookieBuilder.buildOtpExpiredAt(this.otpExpiredTime))
+            val otpExpiredAtCookie = accountCookieManager.createOtpExpiredAt(this.otpExpiredTime)
+
+            response.addCookie(otpExpiredAtCookie)
         }
 
         return accountRegistrationResult
@@ -128,11 +132,11 @@ class RegistryAccountController(
 
         logger.info("refresh otp request processed successfully for registration [id -> $registrationId]")
 
-        val otpExpiredCookie = accountRegistrationCookieBuilder.buildOtpExpiredAt(refreshOtp.otpExpTime)
+        val otpExpiredAtCookie = accountCookieManager.createOtpExpiredAt(refreshOtp.otpExpTime)
 
-        logger.debug("setting a cookie with the new otp exp time [otp exp time -> {}, registration id -> {}]", otpExpiredCookie.value, registrationId)
+        logger.debug("setting a cookie with the new otp exp time [otp exp time -> {}, registration id -> {}]", otpExpiredAtCookie.value, registrationId)
 
-        response.addCookie(otpExpiredCookie)
+        response.addCookie(otpExpiredAtCookie)
 
         return refreshOtp
     }

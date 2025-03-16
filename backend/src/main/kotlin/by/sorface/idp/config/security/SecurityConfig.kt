@@ -2,11 +2,12 @@ package by.sorface.idp.config.security
 
 import by.sorface.idp.config.security.csrf.CsrfCookieFilter
 import by.sorface.idp.config.security.csrf.SpaCsrfTokenRequestHandler
-import by.sorface.idp.config.security.csrf.properties.CsrfCookieProperties
 import by.sorface.idp.config.security.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
 import by.sorface.idp.config.security.formlogin.JsonFormLoginFailureHandler
 import by.sorface.idp.config.security.formlogin.SessionRedirectSuccessHandler
+import by.sorface.idp.config.web.properties.CsrfCookieProperties
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
+import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.extencions.jsonLogin
 import by.sorface.idp.service.oauth.OAuth2UserDatabaseStrategy
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,6 +30,8 @@ import org.springframework.security.web.csrf.CsrfTokenRequestHandler
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.session.web.http.CookieSerializer
+import org.springframework.session.web.http.DefaultCookieSerializer
 
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = false)
@@ -150,6 +153,24 @@ class SecurityProductionConfig {
             .sessionAuthenticationStrategy(csrfAuthenticationStrategy)
     }
 
+    @Configuration
+    class CookieConfiguration {
+        @Bean
+        fun sessionCookieSerializer(sessionCookieProperties: SessionCookieProperties): CookieSerializer {
+            return sessionCookieProperties.run {
+                val serializer = DefaultCookieSerializer()
+
+                serializer.setCookieName(this.name)
+                serializer.setCookiePath(this.path)
+                serializer.setDomainNamePattern(this.domainPattern)
+                serializer.setUseHttpOnlyCookie(this.httpOnly)
+                serializer.setSameSite(sessionCookieProperties.sameSite.name)
+
+                serializer
+            }
+        }
+    }
+
     /**
      * Создает репозиторий CSRF-токенов на основе свойств CSRF.
      *
@@ -159,8 +180,8 @@ class SecurityProductionConfig {
     private fun getCookieCsrfTokenRepository(csrfCookieProperties: CsrfCookieProperties): CookieCsrfTokenRepository {
         val cookieCsrfTokenRepository = CookieCsrfTokenRepository()
 
-        cookieCsrfTokenRepository.cookiePath = csrfCookieProperties.path
         cookieCsrfTokenRepository.setCookieName(csrfCookieProperties.name)
+        cookieCsrfTokenRepository.cookiePath = csrfCookieProperties.path
 
         cookieCsrfTokenRepository.setCookieCustomizer { cookieBuilder: ResponseCookieBuilder ->
             cookieBuilder.httpOnly(csrfCookieProperties.httpOnly)
