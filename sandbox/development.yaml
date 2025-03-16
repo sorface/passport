@@ -27,22 +27,25 @@ services:
     env_file:
       - .docker.pgsql.env
 
-#  idp:
-#    container_name: "idp"
-#
-#    build:
-#      context: ../
-#      dockerfile: /kotlin/Dockerfile
-#      args:
-#        ACTIVE_PROFILE: sandbox
-#
-#    restart: no
-#
-#    ports:
-#      - "8080:8080"
-#
-#    depends_on:
-#      - redis
-#      - postgresql
-#    env_file:
-#      - .docker.idp.development.env
+  idp:
+    container_name: "idp"
+
+    build:
+      context: ../
+      dockerfile: sandbox/kotlin/Dockerfile
+      args:
+        ACTIVE_PROFILE: sandbox,frontend
+        REACT_APP_BUILD_HASH: sandbox-1.0.0
+        REACT_APP_PROFILE_PAGE: http://localhost:9030/account
+        REACT_APP_BACKEND_URL: http://localhost:8080
+
+    restart: no
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - redis
+      - postgresql
+    env_file:
+      - .docker.idp.development.env
