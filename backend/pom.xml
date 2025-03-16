@@ -4,15 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>by.devpav.kotlin</groupId>
-        <artifactId>oidc-idp</artifactId>
+        <groupId>by.sorface.idp</groupId>
+        <artifactId>sorface-passport-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>backend</artifactId>
+    <artifactId>sorface-passport-backend</artifactId>
 
-    <name>backend</name>
-    <description>backend</description>
+    <name>sorface-passport-backend</name>
+
+    <description>
+        Поставщик удостоверений (IdP). Это служба, которая создаёт, управляет и проверяет личность пользователей в сети. Она позволяет пользователям получать доступ к
+        нескольким приложениям с помощью одного набора учётных данных. IdP аутентифицирует пользователей и выдаёт токены аутентификации для проверки их личности при
+        доступе к различным системам.
+    </description>
 
     <properties>
         <java.version>21</java.version>
@@ -20,18 +25,39 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>by.devpav.kotlin</groupId>
-            <artifactId>frontend</artifactId>
-        </dependency>
-
+        <!--SPRING STARTER DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!--SPRING GRAPHQL DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-graphql</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>graphql-java-extended-validation</artifactId>
+            <version>22.0</version>
+        </dependency>
+
+        <!--SPRING THYMELEAF DEPENDENCIES-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <!--SPRING MAIN DEPENDENCIES-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!--SPRING SECURITY DEPENDENCIES-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -42,20 +68,7 @@
             <artifactId>spring-security-oauth2-client</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
-        <!-- data -->
+        <!--SPRING DATA DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -70,19 +83,17 @@
             <version>${jedis.version}</version>
         </dependency>
 
+        <!--SPRING ANOTHER DEPENDENCIES-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-reflect</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib</artifactId>
-        </dependency>
 
+        <!--SPRING TEST DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -101,24 +112,31 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.graphql-java</groupId>
-            <artifactId>graphql-java-extended-validation</artifactId>
-            <version>22.0</version>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <!--KOTLIN DEPENDENCIES-->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+        </dependency>
+
+        <!--LIQUIBASE MIGRATION DATA-->
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
 
+        <!--MODULES-->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
+            <groupId>by.sorface.idp</groupId>
+            <artifactId>sorface-passport-frontend</artifactId>
         </dependency>
     </dependencies>
 
@@ -130,6 +148,13 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -196,8 +221,9 @@
                         <includePattern>.*\.graphqls?</includePattern>
                         <rootDir>${project.basedir}/src/main/resources/graphql</rootDir>
                     </graphqlSchemas>
+                    <modelNamePrefix>GQ</modelNamePrefix>
                     <outputDir>${project.build.directory}/generated-sources/graphql</outputDir>
-                    <packageName>by.devpav.kotlin.oidcidp.graphql.model</packageName>
+                    <packageName>by.sorface.idp.graphql.model</packageName>
                     <modelValidationAnnotation>@jakarta.validation.constraints.NotNull</modelValidationAnnotation>
                     <generateToString>true</generateToString>
                     <customTypesMapping>

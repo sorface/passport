@@ -10,11 +10,11 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>by.devpav.kotlin</groupId>
-    <artifactId>oidc-idp</artifactId>
+    <groupId>by.sorface.idp</groupId>
+    <artifactId>sorface-passport-parent</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
-    <name>oidc-idp</name>
+    <name>sorface-passport-root</name>
 
     <description>oidc-idp</description>
 
@@ -33,8 +33,8 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>by.devpav.kotlin</groupId>
-                <artifactId>frontend</artifactId>
+                <groupId>by.sorface.idp</groupId>
+                <artifactId>sorface-passport-frontend</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

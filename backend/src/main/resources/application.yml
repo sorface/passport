@@ -192,5 +192,5 @@ spring:
 
 logging:
   level:
-    by.devpav.kotlin.oidcidp: debug
+    by.sorface.idp: debug
     root: warn
