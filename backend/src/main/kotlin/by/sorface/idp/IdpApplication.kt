@@ -19,8 +19,8 @@ import org.springframework.scheduling.annotation.EnableAsync
     IdpFrontendEndpointProperties::class
 )
 @SpringBootApplication
-class OidcIdpApplication
+class IdpApplication
 
 fun main(args: Array<String>) {
-    runApplication<OidcIdpApplication>(*args)
+    runApplication<IdpApplication>(*args)
 }
