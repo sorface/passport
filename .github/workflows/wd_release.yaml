@@ -36,6 +36,8 @@ jobs:
 
     uses: sorface/passport/.github/workflows/wc_passport.yaml@master
 
+    needs: [ release-branch ]
+
     with:
       branch: ${{ needs.release-branch.outputs.branch }}
       version: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
