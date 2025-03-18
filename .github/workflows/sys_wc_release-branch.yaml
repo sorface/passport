@@ -1,0 +1,58 @@
+name: sys_wc release branch
+run-name: Сreate release branch [ ${{ github.event.inputs.repository }} ${{ github.event.inputs.tag }}]
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+        description: 'Название репозитория создания ветки'
+      main-branch:
+        required: false
+        default: 'master'
+        type: string
+        description: 'Название главной ветки репозитория'
+      tag:
+        required: true
+        type: string
+        description: 'Проставляемый тег в главное ветки'
+    outputs:
+      branch:
+        value: ${{ jobs.branch-create.outputs.branch }}
+        description: "Название созданной ветки"
+
+jobs:
+  branch-create:
+    name: Pipeline. Формирование и создание релизной ветки
+    runs-on: ubuntu-latest
+
+    outputs:
+      branch: ${{ steps.create_release_branch.outputs.branch_name }}
+
+    steps:
+      - name: Загрузка исходного кода
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_TOKEN }}
+          submodules: 'true'
+
+      - name: Создание релиизной ветки
+        id: create_release_branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          RELEASE_NAME:  ${{format('release/{0}', inputs.tag)}}
+          TAG_RELEASE:  ${{ inputs.tag }}
+          MAIN_BRANCH: ${{ inputs.main-branch }}
+        run: |
+          git config user.name "git-action[bot]"
+          git config user.email "git-action[bot]"
+          
+          git checkout -b $RELEASE_NAME
+          git push -u origin $RELEASE_NAME
+          
+          git checkout $MAIN_BRANCH
+          git tag -a $TAG_RELEASE -m "release from the branch $RELEASE_NAME"
+          git push origin $TAG_RELEASE
+          
+          echo "branch_name=$RELEASE_NAME" >> $GITHUB_OUTPUT

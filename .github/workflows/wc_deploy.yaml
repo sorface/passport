@@ -1,0 +1,75 @@
+name: be_wc idp sorface
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+        description: "Исходная ветка"
+      version:
+        required: true
+        type: string
+        description: "Версия установки"
+      yc-image-repository-id:
+        required: true
+        type: string
+        description: 'Название репозитория в Yandex Cloud'
+      yc-image-package-name:
+        required: true
+        type: string
+        description: 'Название image пакета в Yandex Cloud'
+
+    secrets:
+      YC_ACCOUNT:
+        required: true
+      GIT_TOKEN:
+        required: true
+
+jobs:
+  build-microservice:
+    name: Сборка и установка Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Загрузка исходников Sorface IdP
+
+        uses: actions/checkout@v4
+        with:
+          repository: sorface/passport
+          ref: ${{ inputs.branch }}
+          submodules: 'true'
+          path: "passport"
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Загрузка исходников Docker
+        uses: actions/checkout@v4
+        with:
+          repository: sorface/deploy
+          submodules: 'true'
+          path: "docker"
+          token: ${{ secrets.GIT_TOKEN }}
+
+      - name: Установка JDK 21 Temurin
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Сборка maven
+        run: mvn clean package --file passport/pom.xml -P production
+
+      - name: Yandex Cloud CR "Login" Action for GitHub Actions
+        uses: yc-actions/yc-cr-login@v2
+        with:
+          yc-sa-json-credentials: ${{ secrets.YC_ACCOUNT }}
+
+      - name: Установка Docker Image
+        env:
+          CR_REGISTRY: ${{ inputs.yc-image-repository-id }}
+          CR_REPO: ${{ inputs.yc-image-package-name }}
+          IMAGE_TAG: ${{ inputs.version }}
+        run: |
+          docker build -f docker/BE/passport/Dockerfile -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG passport/web/target/.
+          docker push cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG

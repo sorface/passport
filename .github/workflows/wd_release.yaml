@@ -1,0 +1,46 @@
+name: be_wd passport
+run-name: passport [${{ format('{0}-{1}', github.event.inputs.branch,  github.event.inputs.version) }}]
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        required: true
+        description: Branch
+        type: string
+      version:
+        required: true
+        description: Version
+        type: string
+
+    secrets:
+      YC_ACCOUNT:
+        required: true
+      GIT_TOKEN:
+        required: true
+
+jobs:
+
+  release-branch:
+    name: Формирование и создание релизной ветки
+    uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
+
+    with:
+      repository: frontend.web.passport
+      main-branch: master
+      tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
+
+    secrets: inherit
+
+  passport:
+    name: Загрузка исходного кода, сборка и формирование Docker Image
+
+    uses: sorface/passport/.github/workflows/wc_passport.yaml@master
+
+    with:
+      branch: ${{ github.event.inputs.branch }}
+      version: ${{ github.event.inputs.version }}
+      yc-image-repository-id: 'crpmbctb3d161aoorvrk'
+      yc-image-package-name: 'be_passport'
+
+    secrets: inherit
