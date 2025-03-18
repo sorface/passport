@@ -1,14 +1,13 @@
-package by.sorface.passport.web.utils.json
+package by.sorface.idp.utils.json
 
-import by.sorface.passport.web.utils.json.mask.MaskerFields
-import by.sorface.passport.web.utils.json.mask.MaskerFields.Companion.findByFieldName
+import by.sorface.idp.utils.json.mask.MaskerFields
+import by.sorface.idp.utils.json.mask.MaskerFields.Companion.findByFieldName
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import java.util.*
-import java.util.function.Supplier
 
 object Json {
 

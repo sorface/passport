@@ -4,7 +4,6 @@ import by.sorface.idp.web.rest.facade.AccountSessionFacade
 import by.sorface.idp.web.rest.model.sessions.AccountCleanupSessionRequest
 import by.sorface.idp.web.rest.model.sessions.AccountContextSession
 import by.sorface.idp.web.rest.model.sessions.AccountSession
-import by.sorface.idp.web.rest.controller.AccountSessionController
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
@@ -37,7 +36,7 @@ class AccountSessionControllerTest {
         verify(exactly = 1) { accountSessionFacade.getAllByUsername(eq(username)) }
 
         Assertions.assertEquals(1, accountContextSession.sessions.size)
-        Assertions.assertNotNull( accountContextSession.sessions.find { it.id == "session-id" } )
+        Assertions.assertNotNull(accountContextSession.sessions.find { it.id == "session-id" })
     }
 
 
@@ -57,7 +56,7 @@ class AccountSessionControllerTest {
         verify(exactly = 1) { accountSessionFacade.deleteMultipleByUsername(eq(username), accountCleanupSessionRequest) }
 
         Assertions.assertEquals(1, accountContextSessionResult.sessions.size)
-        Assertions.assertNotNull( accountContextSessionResult.sessions.find { it.id == "session-id" } )
+        Assertions.assertNotNull(accountContextSessionResult.sessions.find { it.id == "session-id" })
     }
 
     @Test
@@ -74,7 +73,7 @@ class AccountSessionControllerTest {
         verify(exactly = 1) { accountSessionFacade.getAll() }
 
         Assertions.assertEquals(1, accountContextSessionResult.sessions.size)
-        Assertions.assertNotNull( accountContextSessionResult.sessions.find { it.id == "session-id" } )
+        Assertions.assertNotNull(accountContextSessionResult.sessions.find { it.id == "session-id" })
     }
 
     @Test
@@ -92,7 +91,7 @@ class AccountSessionControllerTest {
         verify(exactly = 1) { accountSessionFacade.deleteMultiple(accountCleanupSessionRequest) }
 
         Assertions.assertEquals(1, accountContextSessionResult.sessions.size)
-        Assertions.assertNotNull( accountContextSessionResult.sessions.find { it.id == "session-id" } )
+        Assertions.assertNotNull(accountContextSessionResult.sessions.find { it.id == "session-id" })
     }
 
 }

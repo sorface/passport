@@ -7,7 +7,7 @@ import by.sorface.idp.service.I18Service
 import by.sorface.idp.web.rest.facade.impl.AccountRegistrationConfirmEvent
 import by.sorface.idp.web.rest.facade.impl.AccountRegistrationEvent
 import by.sorface.idp.web.rest.facade.impl.AccountRegistrationRefreshOtpEvent
-import by.sorface.passport.web.utils.json.mask.MaskerFields
+import by.sorface.idp.utils.json.mask.MaskerFields
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.event.EventListener

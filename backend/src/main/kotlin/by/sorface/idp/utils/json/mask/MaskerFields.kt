@@ -1,4 +1,4 @@
-package by.sorface.passport.web.utils.json.mask
+package by.sorface.idp.utils.json.mask
 
 import java.util.*
 import kotlin.math.min

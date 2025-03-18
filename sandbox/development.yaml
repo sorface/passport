@@ -1,10 +1,9 @@
 version: '3.9'
 name: sandbox-idp-development
 
-
 services:
   redis:
-    container_name: "sessionstore"
+    container_name: "nosql"
 
     build:
       context: .

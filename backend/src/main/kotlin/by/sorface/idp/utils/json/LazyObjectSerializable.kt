@@ -1,4 +1,4 @@
-package by.sorface.passport.web.utils.json
+package by.sorface.idp.utils.json
 
 import java.util.function.Supplier
 

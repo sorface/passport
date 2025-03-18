@@ -2,7 +2,6 @@ package by.sorface.idp.web.rest.mapper
 
 import by.sorface.idp.dao.sql.model.RoleModel
 import by.sorface.idp.dao.sql.model.UserModel
-import by.sorface.idp.web.rest.mapper.UserConverter
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions

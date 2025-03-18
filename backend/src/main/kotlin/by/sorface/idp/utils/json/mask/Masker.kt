@@ -1,4 +1,4 @@
-package by.sorface.passport.web.utils.json.mask
+package by.sorface.idp.utils.json.mask
 
 interface Masker {
     fun mask(value: String?): String?

@@ -7,9 +7,9 @@ import by.sorface.idp.records.SorfacePrincipal
 import by.sorface.idp.web.rest.exceptions.I18RestException
 import by.sorface.idp.web.rest.facade.impl.AccountFacadeImpl
 import by.sorface.idp.web.rest.mapper.UserConverter
+import by.sorface.idp.web.rest.model.accounts.Account
 import by.sorface.idp.web.rest.model.accounts.AccountPatchUpdate
 import by.sorface.idp.web.rest.model.accounts.AccountUsernameUpdate
-import by.sorface.idp.web.rest.model.accounts.Account
 import io.mockk.*
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK

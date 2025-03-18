@@ -22,14 +22,14 @@ class IdTokenCustomizerConfigTest {
 
     @Test
     fun `set token claims (roles)`() {
-        val roles = listOf(SimpleGrantedAuthority("ROLE_USER"), SimpleGrantedAuthority("ROLE_ADMIN"));
+        val roles = listOf(SimpleGrantedAuthority("ROLE_USER"), SimpleGrantedAuthority("ROLE_ADMIN"))
 
         val jwtEncodingContext = mockk<JwtEncodingContext>(relaxed = true)
         val oAuth2TokenType = mockk<OAuth2TokenType>()
         val jwtClaims = mockk<Builder>()
         val authentication = mockk<Authentication>()
 
-        every {  oAuth2TokenType.value } returns OidcParameterNames.ID_TOKEN
+        every { oAuth2TokenType.value } returns OidcParameterNames.ID_TOKEN
 
         every { jwtEncodingContext.tokenType } returns oAuth2TokenType
         every { jwtEncodingContext.claims } returns jwtClaims

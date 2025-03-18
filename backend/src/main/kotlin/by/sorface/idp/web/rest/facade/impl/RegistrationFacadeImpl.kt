@@ -9,12 +9,12 @@ import by.sorface.idp.dao.sql.repository.user.RoleRepository
 import by.sorface.idp.dao.sql.repository.user.UserRepository
 import by.sorface.idp.records.I18Codes
 import by.sorface.idp.utils.OtpUtils
+import by.sorface.idp.utils.json.mask.MaskerFields
 import by.sorface.idp.web.rest.exceptions.I18RestException
 import by.sorface.idp.web.rest.facade.RegistrationFacade
 import by.sorface.idp.web.rest.model.accounts.registration.AccountOtpRefresh
 import by.sorface.idp.web.rest.model.accounts.registration.AccountRegistration
 import by.sorface.idp.web.rest.model.accounts.registration.AccountRegistrationResult
-import by.sorface.passport.web.utils.json.mask.MaskerFields
 import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.i18n.LocaleContextHolder
@@ -113,7 +113,7 @@ class RegistrationFacadeImpl(
 
                 applicationEventPublisher.publishEvent(event)
 
-                return@let savedAccount;
+                return@let savedAccount
             }
             .let { AccountRegistrationResult(it.id, it.otpExpTime) }
     }

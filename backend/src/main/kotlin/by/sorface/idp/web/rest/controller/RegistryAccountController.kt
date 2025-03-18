@@ -11,7 +11,7 @@ import by.sorface.idp.web.rest.model.accounts.registration.AccountOtpConfirm
 import by.sorface.idp.web.rest.model.accounts.registration.AccountOtpRefresh
 import by.sorface.idp.web.rest.model.accounts.registration.AccountRegistration
 import by.sorface.idp.web.rest.model.accounts.registration.AccountRegistrationResult
-import by.sorface.passport.web.utils.json.mask.MaskerFields
+import by.sorface.idp.utils.json.mask.MaskerFields
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid

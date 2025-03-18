@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: "jdbc:h2:mem:idp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;MODE=PostgreSQL;"
+    username: "username"
+    password: "password"
+    driver-class-name: org.h2.Driver
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+  liquibase:
+    contexts:
+      - development
+    change-log: migration/master.yaml
+    enabled: true
+
+  h2:
+    console:
+      enabled: false
+
+  data:
+    redis:
+      port: 6380
+
+logging:
+  level:
+    by.sorface.idp: debug
+    root: warn
