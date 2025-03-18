@@ -4,27 +4,32 @@ run-name: sorface idp [${{ format('{0}-{1}', github.event.inputs.branch,  github
 on:
   workflow_dispatch:
     inputs:
-      branch:
+      release-type:
+        type: choice
         required: true
-        description: Branch
-        type: string
+        description: 'Тип релиза'
+        default: 'beta'
+        options:
+          - beta
+          - alpha
+          - final
       version:
         required: true
-        description: Version
         type: string
+        description: 'Версия релиза в формате X.X.X'
 
 jobs:
 
   release-branch:
-    name: Формирование и создание релизной ветки
-    uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
+    - name: Формирование и создание релизной ветки
+      uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
 
-    with:
-      repository: passport
-      main-branch: master
-      tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
+      with:
+        repository: passport
+        main-branch: ${{ github.head_ref }}
+        tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
 
-    secrets: inherit
+      secrets: inherit
 
   passport:
     name: Загрузка исходного кода, сборка и формирование Docker Image
@@ -32,8 +37,8 @@ jobs:
     uses: sorface/passport/.github/workflows/wc_passport.yaml@master
 
     with:
-      branch: ${{ github.event.inputs.branch }}
-      version: ${{ github.event.inputs.version }}
+      branch: ${{ needs.release-branch.outputs.branch }}
+      version: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
       yc-image-repository-id: 'crpmbctb3d161aoorvrk'
       yc-image-package-name: 'be_passport'
 
