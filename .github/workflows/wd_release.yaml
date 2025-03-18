@@ -21,15 +21,15 @@ on:
 jobs:
 
   release-branch:
-    - name: Формирование и создание релизной ветки
-      uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
+    name: Формирование и создание релизной ветки
+    uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
 
-      with:
-        repository: passport
-        main-branch: ${{ github.head_ref }}
-        tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
+    with:
+      repository: passport
+      main-branch: ${{ github.head_ref }}
+      tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
 
-      secrets: inherit
+    secrets: inherit
 
   passport:
     name: Загрузка исходного кода, сборка и формирование Docker Image
