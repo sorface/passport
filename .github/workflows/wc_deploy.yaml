@@ -72,5 +72,5 @@ jobs:
           CR_REPO: ${{ inputs.yc-image-package-name }}
           IMAGE_TAG: ${{ inputs.version }}
         run: |
-          docker build -f docker/BE/passport/Dockerfile -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG passport/web/target/.
+          docker build -f docker/BE/passport/Dockerfile -t cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG passport/backend/target/.
           docker push cr.yandex/$CR_REGISTRY/$CR_REPO:$IMAGE_TAG
