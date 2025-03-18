@@ -34,6 +34,7 @@ jobs:
       - name: Загрузка исходного кода
         uses: actions/checkout@v4
         with:
+          repository: '${{ github.repository }}'
           token: ${{ secrets.GIT_TOKEN }}
           submodules: 'true'
 

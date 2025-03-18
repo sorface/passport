@@ -25,7 +25,7 @@ jobs:
     uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
 
     with:
-      repository: passport
+      repository: sorface/passport
       main-branch: ${{ github.head_ref }}
       tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
 
@@ -53,7 +53,7 @@ jobs:
     needs: [ release-branch, passport ]
 
     with:
-      repository: prod2-chart
+      repository: sorface/prod2-chart
       main-branch: master
       tag: ${{ format('be_passport-v{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
 
