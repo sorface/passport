@@ -34,7 +34,7 @@ jobs:
   passport:
     name: Загрузка исходного кода, сборка и формирование Docker Image
 
-    uses: sorface/passport/.github/workflows/wc_passport.yaml@master
+    uses: sorface/passport/.github/workflows/wc_deploy.yaml@master
 
     needs: [ release-branch ]
 
