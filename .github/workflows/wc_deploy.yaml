@@ -46,6 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: sorface/deploy
+          ref: master
           submodules: 'true'
           path: "docker"
           token: ${{ secrets.GIT_TOKEN }}
