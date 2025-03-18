@@ -14,6 +14,7 @@ import org.springframework.context.event.EventListener
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.thymeleaf.context.Context
+import java.util.Locale
 
 @Service
 class RegistrationEventListener(private val i18Service: I18Service, private val emailService: EmailService) {
@@ -25,18 +26,7 @@ class RegistrationEventListener(private val i18Service: I18Service, private val 
     fun created(event: AccountRegistrationEvent) {
         logger.info("Received account registration event")
 
-        val context = Context().apply { setVariable("otp", event.otpCode) }
-
-        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_OTP, locale = event.locale)!!
-        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.CONFIRMATION_REGISTRATION, locale = event.locale)!!
-
-        val mailTemplate = MailTemplate(event.email, subject, emailTemplate, context)
-
-        logger.info("preparing an email [${MaskerFields.EMAILS.mask(event.email)}] to confirm the account by OTP code [${MaskerFields.TOKEN.mask(event.otpCode)}]")
-
-        emailService.sendHtml(mailTemplate)
-
-        logger.info("the email to confirm your account has been sent to ${MaskerFields.EMAILS.mask(event.email)}")
+        sendOtpEmail(event.otpCode, event.locale, event.email)
     }
 
     @Async
@@ -65,19 +55,29 @@ class RegistrationEventListener(private val i18Service: I18Service, private val 
     @Async
     @EventListener
     fun refreshOtp(event: AccountRegistrationRefreshOtpEvent) {
-        val context = Context().apply { setVariable("otp", event) }
+        logger.info("Received account refresh OTP event")
 
-        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_OTP, locale = event.locale)!!
-        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.CONFIRMATION_REGISTRATION, locale = event.locale)!!
+        sendOtpEmail(event.otpCode, event.locale, event.email)
+    }
 
-        val mailTemplate = MailTemplate(event.email, subject, emailTemplate, context)
+    /**
+     * Отправляет электронное письмо с кодом OTP.
+     *
+     * @param otpCode Код OTP.
+     * @param locale Локаль.
+     * @param email Адрес электронной почты получателя.
+     */
+    private fun sendOtpEmail(otpCode: String, locale: Locale, email: String) {
+        val context = Context().apply { setVariable("otp", otpCode) }
 
-        logger.info("preparing an email [${MaskerFields.EMAILS.mask(event.email)}] to confirm the account by OTP code [${MaskerFields.TOKEN.mask(event.otpCode)}]")
+        val emailTemplate = i18Service.getI18Message(I18Codes.I18EmailCodes.HTML_TEMPLATE_OTP, locale = locale)!!
+        val subject = i18Service.getI18Message(I18Codes.I18EmailCodes.CONFIRMATION_REGISTRATION, locale = locale)!!
+
+        val mailTemplate = MailTemplate(email, subject, emailTemplate, context)
 
         emailService.sendHtml(mailTemplate)
 
-        logger.info("the email to confirm your account has been sent to ${MaskerFields.EMAILS.mask(event.email)}")
-
+        logger.info("the email to confirm your account has been sent to ${MaskerFields.EMAILS.mask(email)}")
     }
 
 }
