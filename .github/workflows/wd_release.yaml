@@ -1,5 +1,5 @@
-name: be_wd passport
-run-name: passport [${{ format('{0}-{1}', github.event.inputs.branch,  github.event.inputs.version) }}]
+name: Создание релиза
+run-name: sorface idp [${{ format('{0}-{1}', github.event.inputs.branch,  github.event.inputs.version) }}]
 
 on:
   workflow_dispatch:
@@ -13,12 +13,6 @@ on:
         description: Version
         type: string
 
-    secrets:
-      YC_ACCOUNT:
-        required: true
-      GIT_TOKEN:
-        required: true
-
 jobs:
 
   release-branch:
@@ -26,7 +20,7 @@ jobs:
     uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
 
     with:
-      repository: frontend.web.passport
+      repository: passport
       main-branch: master
       tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
 
@@ -43,4 +37,36 @@ jobs:
       yc-image-repository-id: 'crpmbctb3d161aoorvrk'
       yc-image-package-name: 'be_passport'
 
+    secrets: inherit
+
+  chart-release-branch:
+    name: Создание релизной ветки для Helm Chart
+    uses: sorface/passport/.github/workflows/sys_wc_release-branch.yaml@master
+
+    needs: [ release-branch, passport ]
+
+    with:
+      repository: prod2-chart
+      main-branch: master
+      tag: ${{ format('be_passport-v{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
+
+    secrets: inherit
+
+  update-deployment-helm-chart:
+    name: Обновление Helm Chart
+    uses: sorface/passport/.github/workflows/sys_wc_helm-chart.yaml@master
+
+    needs:
+      - chart-release-branch
+
+    with:
+      branch: ${{ needs.chart-release-branch.outputs.branch }}
+      chart-repository: sorface/prod2-chart
+      chart-image-name: be_passport
+      chart-image-tag: ${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}
+      json: |
+        {
+          "be_passport.imageName": "be_passport",
+          "be_passport.imageTag": "${{ format('{0}-{1}', github.event.inputs.version,  github.event.inputs.release-type) }}"
+        }
     secrets: inherit

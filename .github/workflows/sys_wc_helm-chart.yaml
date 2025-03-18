@@ -6,13 +6,19 @@ on:
       branch:
         required: true
         type: string
+        description: "Release branch. В данную веткой создастся PR в репозитории"
+      chart-repository:
+        required: true
+        type: string
       chart-image-name:
         required: true
         type: string
       chart-image-tag:
         required: true
         type: string
-
+      json:
+        required: true
+        type: string
     secrets:
       GIT_TOKEN:
         required: true
@@ -21,31 +27,27 @@ jobs:
   push:
     runs-on: ubuntu-latest
     steps:
-      - name: Загрузка исходного кода chart
+      - name: Загрузка исходного кода Helm Chart
         uses: actions/checkout@v4
         with:
-          repository: sorface/prod2-chart
+          repository: ${{ inputs.chart-repository }}
           token: ${{ secrets.GIT_TOKEN }}
 
-      - name: Отображение values.yaml
+      - name: echo values.yaml
         run: |
           cat sorface/values.yaml
 
-      - name: Обновление версии Image и создание PR
+      - name: Обновление версии сервиса в values Helm Chart
         uses: fjogeleit/yaml-update-action@main
         with:
           token: ${{ secrets.GIT_TOKEN }}
           valueFile: 'sorface/values.yaml'
           format: 'YAML'
           commitChange: true
-          title: ${{format('Update deployment for {0}', inputs.branch)}}
+          title: ${{format('release deployment for {0} - {1}', inputs.chart-image-name, inputs.branch)}}
           message: ${{format('release deployment for {0} - {1}', inputs.chart-image-name, inputs.branch)}}
-          repository: sorface/prod-chart
+          repository: ${{ inputs.chart-repository }}
           branch: ${{format('deployment/{0}', inputs.branch)}}
           targetBranch: ${{ inputs.branch }}
           createPR: true
-          changes: |
-            {
-              "${{inputs.chart-image-name}}.imageName": "${{inputs.chart-image-name}}",
-              "${{inputs.chart-image-name}}.imageTag": "${{ inputs.chart-image-tag }}",
-            }
+          changes: ${{ inputs.json }}
