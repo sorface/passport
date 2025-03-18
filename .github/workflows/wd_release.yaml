@@ -1,5 +1,5 @@
 name: Создание релиза
-run-name: sorface idp [${{ format('{0}-{1}', github.event.inputs.branch,  github.event.inputs.version) }}]
+run-name: sorface idp [${{ format('release/{0}-{1}', github.event.inputs.release-type,  github.event.inputs.version) }}]
 
 on:
   workflow_dispatch:
