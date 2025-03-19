@@ -59,7 +59,7 @@ jobs:
           cache: maven
 
       - name: Сборка maven
-        run: mvn clean package --file passport/pom.xml -P production
+        run: mvn clean package --file passport/pom.xml -P production,frontend
 
       - name: Yandex Cloud CR "Login" Action for GitHub Actions
         uses: yc-actions/yc-cr-login@v2
