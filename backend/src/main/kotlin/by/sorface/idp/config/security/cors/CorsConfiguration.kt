@@ -22,6 +22,7 @@ class CorsConfiguration {
         configuration.allowedOrigins = corsConfigProperties.allowedOrigins
         configuration.allowedMethods = listOf("*")
         configuration.allowedHeaders = listOf("*")
+        configuration.allowCredentials = corsConfigProperties.allowCredentials
 
         logger.info("CorsConfiguration source: {}", Json.stringify(configuration))
 

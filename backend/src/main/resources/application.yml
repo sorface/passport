@@ -119,6 +119,7 @@ idp:
       - 'https://passport.sorface.ru'
       - 'https://api.gateway.sorface.ru'
       - 'https://interview.sorface.ru'
+    allowCredentials: true
 
   cookie:
     session:
@@ -205,44 +206,6 @@ spring:
 
 --- # spring development envs
 
-idp:
-  cors:
-    allowed-origins:
-      - 'http://localhost:9020'
-      - 'http://localhost:9030'
-
-  cookie:
-    session:
-      domainpattern: '^.+?\.(\w+\.[a-z]+)$'
-      path: '/'
-      name: 'pspt_sid'
-      httponly: true
-      same-site: lax
-      secure: false
-
-    csrf:
-      name: 'x_csrf_token'
-      domain: 'localhost'
-      path: '/'
-      httponly: false
-      secure: false
-
-    registration:
-      name: 'registrationId'
-      domain: 'localhost'
-      path: '/'
-      httponly: true
-      secure: false
-      maxage: 600
-
-    otpexpat:
-      name: 'localhost'
-      domain: 'sorface.com'
-      path: '/'
-      httponly: false
-      secure: false
-      maxage: 120
-
 spring:
   config:
     activate:
@@ -276,6 +239,45 @@ spring:
       - development
     change-log: migration/master.yaml
     enabled: true
+
+idp:
+  cors:
+    allowed-origins:
+      - 'http://localhost:9020'
+      - 'http://localhost:9030'
+    allowCredentials: true
+
+  cookie:
+    session:
+      domainpattern: '^.+?\.(\w+\.[a-z]+)$'
+      path: '/'
+      name: 'pspt_sid'
+      httponly: true
+      same-site: lax
+      secure: false
+
+    csrf:
+      name: 'x_csrf_token'
+      domain: 'localhost'
+      path: '/'
+      httponly: false
+      secure: false
+
+    registration:
+      name: 'registrationId'
+      domain: 'localhost'
+      path: '/'
+      httponly: true
+      secure: false
+      maxage: 600
+
+    otpexpat:
+      name: 'localhost'
+      domain: 'sorface.com'
+      path: '/'
+      httponly: false
+      secure: false
+      maxage: 120
 
 logging:
   level:

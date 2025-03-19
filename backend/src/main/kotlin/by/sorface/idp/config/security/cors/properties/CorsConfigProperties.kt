@@ -7,4 +7,5 @@ class CorsConfigProperties {
 
     var allowedOrigins = listOf("*")
 
+    var allowCredentials: Boolean = true;
 }
