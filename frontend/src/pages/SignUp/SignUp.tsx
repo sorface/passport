@@ -9,7 +9,6 @@ import {accountsApiDeclaration, SignUpBody, SignUpResponse} from '../../apiDecla
 import {convertFormDataToObject} from '../../utils/convertFormDataToObject';
 
 import './SignUp.css';
-import {useApiMethod} from "../../hooks/useApiMethod";
 
 const fields: Field[] = [
     {
@@ -46,12 +45,6 @@ export const SignUp: FunctionComponent = () => {
     const navigate = useNavigate();
     const {apiMethodState, fetchData} = useApiMethodCsrf<SignUpResponse, SignUpBody>(accountsApiDeclaration.signup);
 
-    const {
-        apiMethodState: registrationDataMethodState,
-        fetchData: registrationGetFetch
-    } = useApiMethod<SignUpBody, undefined>(accountsApiDeclaration.registrationData);
-
-    const {process: {}, data: registrationData} = registrationDataMethodState;
     const {process: {error}, data} = apiMethodState;
 
     if (data) {
