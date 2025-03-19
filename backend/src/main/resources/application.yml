@@ -13,6 +13,7 @@ management:
 spring:
   application:
     name: sorface-passport-backend
+    version: 1.0.0
 
   data.redis:
     client-type: jedis
