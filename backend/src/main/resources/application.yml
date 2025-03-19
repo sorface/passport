@@ -33,6 +33,7 @@ spring:
     driver-class-name: org.postgresql.Driver
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: none
     properties:
@@ -163,7 +164,9 @@ idp:
 
 logging:
   level:
-    root: warn
+    root: info
+    by.sorface.idp: info
+
   pattern:
     console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] %magenta([%file:%line]) : %msg%n'
 
