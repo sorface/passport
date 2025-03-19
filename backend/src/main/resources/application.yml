@@ -114,6 +114,12 @@ spring:
             user-name-attribute: data
 
 idp:
+  cors:
+    allowed-origins:
+      - 'https://passport.sorface.ru'
+      - 'https://api.gateway.sorface.ru'
+      - 'https://interview.sorface.ru'
+
   cookie:
     session:
       domainpattern: '^.+?\.(\w+\.[a-z]+)$'
@@ -200,6 +206,11 @@ spring:
 --- # spring development envs
 
 idp:
+  cors:
+    allowed-origins:
+      - 'http://localhost:9020'
+      - 'http://localhost:9030'
+
   cookie:
     session:
       domainpattern: '^.+?\.(\w+\.[a-z]+)$'

@@ -32,6 +32,10 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.session.web.http.CookieSerializer
 import org.springframework.session.web.http.DefaultCookieSerializer
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
+import java.util.*
 
 @EnableMethodSecurity
 @Configuration(proxyBeanMethods = false)
@@ -69,6 +73,9 @@ class SecurityProductionConfig {
 
     @Autowired
     private lateinit var csrfCookieProperties: CsrfCookieProperties
+
+    @Autowired
+    private lateinit var corsConfigurationSource: CorsConfigurationSource
 
     @Autowired
     private lateinit var sessionRedirectSuccessHandler: SessionRedirectSuccessHandler
@@ -119,7 +126,7 @@ class SecurityProductionConfig {
             }
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA
-            .cors { cors -> cors.disable() }
+            .cors { cors -> cors.configurationSource(corsConfigurationSource) }
             .jsonLogin { jsonLoginSpec ->
                 jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
                 jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)

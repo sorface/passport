@@ -9,10 +9,13 @@ import org.springframework.scheduling.annotation.EnableAsync
 
 @EnableAsync
 @EnableJpaAuditing
-@ConfigurationPropertiesScan(basePackages = [
-    "by.sorface.idp.config.security.oauth2.properties",
-    "by.sorface.idp.config.web.properties"
-])
+@ConfigurationPropertiesScan(
+    basePackages = [
+        "by.sorface.idp.config.security.oauth2.properties",
+        "by.sorface.idp.config.web.properties",
+        "by.sorface.idp.config.security.cors.properties"
+    ]
+)
 @EnableConfigurationProperties
 @SpringBootApplication
 class IdpApplication
