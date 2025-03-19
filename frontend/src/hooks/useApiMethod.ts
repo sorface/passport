@@ -1,7 +1,6 @@
 import {useCallback, useReducer} from 'react';
 import {REACT_APP_BACKEND_URL} from '../config';
 import {ApiContract} from '../types/apiContracts';
-import {HttpCodes} from '../constants';
 
 export interface ApiMethodState<ResponseData = any> {
     process: {

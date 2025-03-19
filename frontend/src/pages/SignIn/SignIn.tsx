@@ -36,7 +36,7 @@ const emailFields: Field[] = [
 export const SignIn: FunctionComponent = () => {
     const [withEmail, setWithEmail] = useState(false);
     const {queryFromErrors} = useQueryFromErrors();
-    const {apiMethodState: {process: {loading, error, code}, data}, fetchData} = useApiMethodCsrf<unknown, SignInBody>(accountsApiDeclaration.signin);
+    const {fetchData} = useApiMethodCsrf<unknown, SignInBody>(accountsApiDeclaration.signin);
 
     const signinItems = [
         {

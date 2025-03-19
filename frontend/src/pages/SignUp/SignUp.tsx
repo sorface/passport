@@ -1,4 +1,4 @@
-import {FunctionComponent, useEffect} from 'react';
+import {FunctionComponent} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Captions, otpExpiredTimeLocalStorageKey, pathnames} from '../../constants';
 import {Field, Form} from '../../components/Form/Form';
@@ -51,7 +51,7 @@ export const SignUp: FunctionComponent = () => {
         fetchData: registrationGetFetch
     } = useApiMethod<SignUpBody, undefined>(accountsApiDeclaration.registrationData);
 
-    const {process: {}, data: registrationData } = registrationDataMethodState;
+    const {process: {}, data: registrationData} = registrationDataMethodState;
     const {process: {error}, data} = apiMethodState;
 
     if (data) {
