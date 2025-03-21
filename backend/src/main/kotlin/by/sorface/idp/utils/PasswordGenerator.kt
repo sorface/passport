@@ -2,32 +2,24 @@
 
 package by.sorface.idp.utils
 
-import org.apache.commons.lang3.RandomStringUtils
-import java.util.stream.Collectors
+import java.util.*
 
 
 object PasswordGenerator {
 
+    private const val SYMBOLS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$-*"
+
     fun generateCommonLangPassword(): String {
-        val upperCaseLetters = RandomStringUtils.random(2, 65, 90, true, true)
 
-        val lowerCaseLetters = RandomStringUtils.random(2, 97, 122, true, true)
+        val rnd = Random()
 
-        val numbers = RandomStringUtils.secure().nextNumeric(2)
+        val password: StringBuilder = StringBuilder(SYMBOLS.length)
 
-        val specialChar = RandomStringUtils.random(2, 33, 47, false, false)
+        for (i in SYMBOLS.indices) {
+            password.append(SYMBOLS[rnd.nextInt(SYMBOLS.length)])
+        }
 
-        val totalChars = RandomStringUtils.secure().nextAscii(2)
-
-        val combinedChars = upperCaseLetters + lowerCaseLetters + numbers + specialChar + totalChars
-
-        val pwdChars = combinedChars.chars()
-            .mapToObj { c: Int -> c.toChar() }
-            .collect(Collectors.toList())
-
-        pwdChars.shuffle()
-
-        return pwdChars.joinToString(separator = "")
+        return password.toString()
     }
 
 }

@@ -2,8 +2,12 @@ package by.sorface.idp.web.rest.controller
 
 import by.sorface.idp.web.rest.facade.AccountFacade
 import by.sorface.idp.web.rest.model.accounts.*
+import io.micrometer.observation.annotation.Observed
+import io.micrometer.tracing.annotation.NewSpan
+import io.micrometer.tracing.annotation.SpanTag
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotNull
+import org.slf4j.LoggerFactory
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -12,8 +16,12 @@ import java.util.*
 @RequestMapping("/api/accounts")
 class AccountController(private val accountFacade: AccountFacade) {
 
+    private val logger = LoggerFactory.getLogger(AccountController::class.java)
+
     @GetMapping(value = ["/authenticated"])
-    fun isAuthorizedUser(): AccountAuthenticated = accountFacade.isAuthenticated()
+    fun isAuthorizedUser(): AccountAuthenticated {
+        return accountFacade.isAuthenticated()
+    }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = ["/current"])

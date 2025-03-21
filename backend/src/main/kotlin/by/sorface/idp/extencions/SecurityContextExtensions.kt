@@ -20,6 +20,8 @@ fun <T : RuntimeException> SecurityContext.getPrincipalOrThrow(throwable: T): So
 
 fun SecurityContext.getPrincipalIdOrNull(): UUID? = this.getPrincipal()?.id
 
+fun SecurityContext.isAuthenticated() : Boolean = this.getPrincipal()?.id != null
+
 fun <T : RuntimeException> SecurityContext.getPrincipalIdOrThrow(throwable: T): UUID = this.getPrincipalIdOrNull() ?: throw throwable
 
 fun SecurityContext.getPrincipalUsername(): String? {

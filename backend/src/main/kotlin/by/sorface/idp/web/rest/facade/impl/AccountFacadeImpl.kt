@@ -3,11 +3,13 @@ package by.sorface.idp.web.rest.facade.impl
 import by.sorface.idp.dao.sql.repository.user.UserRepository
 import by.sorface.idp.extencions.getPrincipal
 import by.sorface.idp.extencions.getPrincipalIdOrThrow
+import by.sorface.idp.extencions.isAuthenticated
 import by.sorface.idp.records.I18Codes
 import by.sorface.idp.web.rest.exceptions.I18RestException
 import by.sorface.idp.web.rest.facade.AccountFacade
 import by.sorface.idp.web.rest.mapper.UserConverter
 import by.sorface.idp.web.rest.model.accounts.*
+import io.micrometer.tracing.annotation.NewSpan
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
@@ -25,14 +27,15 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
     @Autowired
     private lateinit var userConverter: UserConverter
 
+    @NewSpan("account-is-authenticated")
     override fun isAuthenticated(): AccountAuthenticated {
         logger.info("get current authorized user from security context")
 
-        val principal = SecurityContextHolder.getContext().getPrincipal()
+        val authenticated = SecurityContextHolder.getContext().isAuthenticated()
 
-        logger.info("user authenticated status in system is ${principal != null}")
+        logger.info("user authenticated status in system is $authenticated")
 
-        return AccountAuthenticated(principal != null)
+        return AccountAuthenticated(SecurityContextHolder.getContext().isAuthenticated())
     }
 
     @Transactional(readOnly = true)
