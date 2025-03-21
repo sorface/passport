@@ -173,6 +173,9 @@ logging:
   level:
     root: info
     by.sorface.idp: info
+  pattern:
+    console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:},%X{traceId:-}, %X{spanId:-}]%magenta([%file:%line]) : %msg%n'
+  include-application-name: false
 
 --- # spring development envs
 
@@ -291,6 +294,3 @@ logging:
     by.sorface.idp: debug
     root: info
     by.sorface.idp.config.web.autostart: debug
-  pattern:
-    console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:}, %X{traceId:-}, %X{spanId:-}] %magenta([%file:%line]) : %msg%n'
-  include-application-name: false
