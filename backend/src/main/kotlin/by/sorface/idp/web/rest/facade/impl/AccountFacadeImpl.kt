@@ -35,7 +35,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
 
         logger.info("user authenticated status in system is $authenticated")
 
-        return AccountAuthenticated(SecurityContextHolder.getContext().isAuthenticated())
+        return AccountAuthenticated(authenticated)
     }
 
     @Transactional(readOnly = true)
