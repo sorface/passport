@@ -3,6 +3,7 @@ package by.sorface.idp.dao.sql.repository.client
 import by.sorface.idp.dao.sql.model.client.ClientSettingModel
 import by.sorface.idp.dao.sql.model.client.ClientTokenSettingModel
 import by.sorface.idp.dao.sql.model.client.RegisteredClientModel
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
@@ -17,6 +18,8 @@ import java.util.*
 
 @Service
 class JpaRegisteredClientRepository : RegisteredClientRepository {
+
+    private val logger = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     private lateinit var clientAuthenticationGrantTypeRepository: ClientAuthenticationGrantTypeRepository
@@ -94,13 +97,33 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
     }
 
     override fun findById(id: String): RegisteredClient? {
-        return jdbcRegisteredClientRepository.findById(UUID.fromString(id)).map { map(it) }.orElse(null)
+        logger.info("searching for client by id: {}", id)
+
+        val registeredClient = jdbcRegisteredClientRepository.findById(UUID.fromString(id)).map {
+            logger.info("client found by id: {}", id)
+
+            map(it)
+        }.orElseGet {
+            logger.info("client not fount by id: {}", id)
+
+            null
+        }
+
+        return registeredClient
     }
 
     override fun findByClientId(clientId: String): RegisteredClient? {
+        logger.info("searching for clientId with id: {}", clientId)
+
         val registeredClient = jdbcRegisteredClientRepository.findByClientId(clientId)
 
-        registeredClient ?: return null
+        if (registeredClient== null)  {
+            logger.info("no client with clientId: {}", clientId)
+
+            return null
+        }
+
+        logger.info("found client with clientId: {}", registeredClient)
 
         return map(registeredClient)
     }
