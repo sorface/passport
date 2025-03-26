@@ -46,6 +46,19 @@ class RegisteredClientModel : BaseModel() {
     var redirectUris: Set<ClientRedirectUrlModel> = setOf()
 
     /**
+     * URI перенаправления клиента.
+     * Это поле представляет отношение "один ко многим" с ClientRedirectUrlModel.
+     * Загрузка связанных данных выполняется немедленно.
+     */
+    @OneToMany(
+        mappedBy = "registeredClient",
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.EAGER,
+        targetEntity = PostLogoutRedirectUrlModel::class
+    )
+    var postLogoutRedirectUrls: Set<PostLogoutRedirectUrlModel> = setOf()
+
+    /**
      * Методы аутентификации клиента.
      * Это поле представляет отношение "многие ко многим" с ClientAuthenticationMethodModel.
      * Загрузка связанных данных выполняется немедленно.

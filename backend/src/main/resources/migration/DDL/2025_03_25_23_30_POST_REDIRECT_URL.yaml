@@ -1,0 +1,25 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 5ecac1b4-c34b-4669-914c-fd1b29987a63
+      author: Павел Талайко
+
+      comment: Добавление колонки C_TYPE в T_CLIENTREDIRECTURLSTORE
+
+      context: "development, production"
+
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - columnExists:
+                tableName: 'T_CLIENTREDIRECTURLSTORE'
+                columnName: 'C_TYPE'
+
+      changes:
+        - addColumn:
+            tableName: 'T_CLIENTREDIRECTURLSTORE'
+            columns:
+              - column:
+                  name: 'C_TYPE'
+                  type: varchar(50)
+                  defaultValue: 'REDIRECT_URL'

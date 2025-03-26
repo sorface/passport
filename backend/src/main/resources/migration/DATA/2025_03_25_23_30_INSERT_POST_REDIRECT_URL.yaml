@@ -1,0 +1,38 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 83a4dc53-701a-453b-af52-f8cb9a8d21bb
+      author: Павел Талайко
+
+      comment: Установка POST_LOGOUT_URL в T_CLIENTREDIRECTURLSTORE
+
+      context: "development, production"
+
+      changes:
+        - insert:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 20c6ac85-56c7-4315-992b-e2c32de8e8c8
+              - column:
+                  name: C_URL
+                  value: "http://localhost:8080"
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_TYPE
+                  value: 'POST_LOGOUT_REDIRECT_URL'
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150

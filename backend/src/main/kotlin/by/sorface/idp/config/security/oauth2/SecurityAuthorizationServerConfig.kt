@@ -3,7 +3,11 @@ package by.sorface.idp.config.security.oauth2
 import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.security.jose.Jwks
+import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
+import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
+import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
+import by.sorface.passport.web.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -24,6 +28,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoder
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcConfigurer
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcLogoutEndpointConfigurer
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcUserInfoEndpointConfigurer
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationContext
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationToken
@@ -31,6 +36,7 @@ import org.springframework.security.oauth2.server.authorization.settings.Authori
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
 import java.util.function.Function
 
 /**
@@ -44,6 +50,12 @@ class SecurityAuthorizationServerConfig {
 
     @Autowired
     private lateinit var idpEndpointProperties: IdpEndpointProperties
+
+    @Autowired
+    private lateinit var oidcWebSessionLogoutHandler: OidcWebSessionLogoutHandler
+
+    @Autowired
+    private lateinit var sessionCookieProperties: SessionCookieProperties
 
     /**
      * Настройка цепочки фильтров безопасности сервера авторизации.
@@ -70,6 +82,15 @@ class SecurityAuthorizationServerConfig {
                         userInfo.userInfoMapper(
                             userInfoMapper
                         )
+                    }
+                    oidc.logoutEndpoint { logoutEndpointConfigurer: OidcLogoutEndpointConfigurer ->
+                        val delegateLogoutSuccessHandler = DelegateLogoutSuccessHandler(
+                            CookieClearingLogoutHandler(sessionCookieProperties.name),
+                            oidcWebSessionLogoutHandler,
+                            OidcPostRedirectLocationLogoutHandler()
+                        )
+
+                        logoutEndpointConfigurer.logoutResponseHandler(delegateLogoutSuccessHandler)
                     }
                 }
             }

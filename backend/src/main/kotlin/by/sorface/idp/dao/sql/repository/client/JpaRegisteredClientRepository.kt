@@ -2,6 +2,7 @@ package by.sorface.idp.dao.sql.repository.client
 
 import by.sorface.idp.dao.sql.model.client.ClientSettingModel
 import by.sorface.idp.dao.sql.model.client.ClientTokenSettingModel
+import by.sorface.idp.dao.sql.model.client.PostLogoutRedirectUrlModel
 import by.sorface.idp.dao.sql.model.client.RegisteredClientModel
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -43,6 +44,10 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
 
             redirectUris = registeredClient.redirectUris
                 .mapNotNull { redirectUrl -> by.sorface.idp.dao.sql.model.client.ClientRedirectUrlModel().apply { this.url = redirectUrl } }
+                .toMutableSet()
+
+            postLogoutRedirectUrls = registeredClient.postLogoutRedirectUris
+                .mapNotNull { redirectUrl -> PostLogoutRedirectUrlModel().apply { this.url = redirectUrl } }
                 .toMutableSet()
 
             methods = registeredClient.clientAuthenticationMethods
@@ -117,7 +122,7 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
 
         val registeredClient = jdbcRegisteredClientRepository.findByClientId(clientId)
 
-        if (registeredClient== null)  {
+        if (registeredClient == null) {
             logger.info("no client with clientId: {}", clientId)
 
             return null
@@ -146,6 +151,10 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
             val redirectUrls = registeredClientModel.redirectUris.mapNotNull { model -> model.url }.toMutableSet()
 
             redirectUris { it.addAll(redirectUrls) }
+
+            val postLogoutRedirectUrls = registeredClientModel.postLogoutRedirectUrls.mapNotNull { model -> model.url }.toMutableSet()
+
+            postLogoutRedirectUris { it.addAll(postLogoutRedirectUrls) }
 
             val scopes = registeredClientModel.scopes.map { it.scope }.toMutableSet()
 
