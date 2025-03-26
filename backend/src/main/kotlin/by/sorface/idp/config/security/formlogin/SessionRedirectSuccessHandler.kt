@@ -1,6 +1,8 @@
 package by.sorface.idp.config.security.formlogin
 
 import by.sorface.idp.config.security.constants.SessionAttributes
+import by.sorface.idp.config.web.properties.IdpEndpointProperties
+import by.sorface.idp.config.web.properties.IdpFrontendEndpointProperties
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -21,7 +23,8 @@ import java.util.*
  * Обработчик успешной аутентификации, который перенаправляет пользователя на сохраненный URL.
  */
 @Component
-class SessionRedirectSuccessHandler : AbstractAuthenticationTargetUrlRequestHandler(), AuthenticationSuccessHandler {
+class SessionRedirectSuccessHandler(endpointFrontendProperties: IdpFrontendEndpointProperties)
+    : AbstractAuthenticationTargetUrlRequestHandler(), AuthenticationSuccessHandler {
 
     companion object {
         private val LOGGER = LoggerFactory.getLogger(SessionRedirectSuccessHandler::class.java)
@@ -29,6 +32,7 @@ class SessionRedirectSuccessHandler : AbstractAuthenticationTargetUrlRequestHand
 
     init {
         targetUrlParameter = "targetUrl"
+        defaultTargetUrl = endpointFrontendProperties.accountPage
     }
 
     /**
