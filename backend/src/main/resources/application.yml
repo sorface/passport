@@ -256,6 +256,8 @@ idp:
     allowed-origins:
       - 'http://localhost:9020'
       - 'http://localhost:9030'
+      - 'http://localhost:9000'
+      - 'http://localhost:3000'
     allowCredentials: true
 
   cookie:

@@ -10,4 +10,6 @@ object JwtClaims {
      */
     const val USER_ROLES_CLAIM_NAME = "roles"
 
+    const val PRINCIPAL_ID = "principalId"
+
 }
