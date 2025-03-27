@@ -1,7 +1,9 @@
 package by.sorface.idp.config
 
+import by.sorface.idp.config.security.constants.JwtClaims.PRINCIPAL_ID
 import by.sorface.idp.config.security.constants.JwtClaims.USER_ROLES_CLAIM_NAME
 import by.sorface.idp.config.security.oauth2.customizers.IdTokenCustomizerConfig
+import by.sorface.idp.records.SorfacePrincipal
 import io.mockk.*
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.Assertions.*
@@ -13,7 +15,9 @@ import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.jwt.JwtClaimsSet.Builder
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext
+import java.util.*
 import java.util.function.Consumer
+import kotlin.collections.HashSet
 
 @ExtendWith(MockKExtension::class)
 class IdTokenCustomizerConfigTest {
@@ -28,6 +32,7 @@ class IdTokenCustomizerConfigTest {
         val oAuth2TokenType = mockk<OAuth2TokenType>()
         val jwtClaims = mockk<Builder>()
         val authentication = mockk<Authentication>()
+        val sorfacePrincipal = SorfacePrincipal(UUID.randomUUID(), "TEST", authorities = setOf("ROLE_USER", "ROLE_ADMIN"));
 
         every { oAuth2TokenType.value } returns OidcParameterNames.ID_TOKEN
 
@@ -35,6 +40,7 @@ class IdTokenCustomizerConfigTest {
         every { jwtEncodingContext.claims } returns jwtClaims
         every { jwtEncodingContext.getPrincipal<Authentication>() } returns authentication
         every { authentication.authorities } returns roles
+        every { authentication.principal } returns sorfacePrincipal
         every { jwtClaims.claims(any()) } returns jwtClaims
 
         config.tokenCustomizer().customize(jwtEncodingContext)
@@ -59,5 +65,7 @@ class IdTokenCustomizerConfigTest {
 
         assertTrue(actualRoles.contains("ROLE_USER"))
         assertTrue(actualRoles.contains("ROLE_ADMIN"))
+
+        assertEquals(sorfacePrincipal.id, claimsMap[PRINCIPAL_ID])
     }
 }
