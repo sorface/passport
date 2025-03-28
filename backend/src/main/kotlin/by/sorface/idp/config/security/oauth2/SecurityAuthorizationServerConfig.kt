@@ -7,12 +7,14 @@ import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
 import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
 import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
-import by.sorface.passport.web.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.idp.utils.json.mask.MaskerFields
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -35,6 +37,7 @@ import org.springframework.security.oauth2.server.authorization.oidc.authenticat
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
 import java.util.function.Function
@@ -44,6 +47,8 @@ import java.util.function.Function
  */
 @Configuration(proxyBeanMethods = true)
 class SecurityAuthorizationServerConfig {
+
+    private val logger = LoggerFactory.getLogger(SecurityAuthorizationServerConfig::class.java)
 
     @Autowired
     private lateinit var defaultOidcUserInfoService: DefaultOidcUserInfoService
@@ -91,6 +96,15 @@ class SecurityAuthorizationServerConfig {
                         )
 
                         logoutEndpointConfigurer.logoutResponseHandler(delegateLogoutSuccessHandler)
+
+                        logoutEndpointConfigurer.errorResponseHandler { request, response, exception ->
+                            val parameter = request.getParameter("post_logout_redirect_uri")
+                            val tokenHint = request.getParameter("id_token_hint")
+
+                            logger.error("logout error $parameter ${exception.message} ${MaskerFields.TOKEN.mask(tokenHint)}", exception)
+
+                            response.sendRedirect(parameter.toString())
+                        }
                     }
                 }
             }

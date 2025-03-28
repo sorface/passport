@@ -38,6 +38,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
         return AccountAuthenticated(authenticated)
     }
 
+    @NewSpan("get-current-authorized")
     @Transactional(readOnly = true)
     override fun getCurrentAuthorized(): Account {
         logger.info("get current authorized user from security context")
@@ -65,6 +66,7 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
         return userConverter.convert(userModel)
     }
 
+    @NewSpan("user-update")
     @Transactional
     override fun update(id: UUID, request: AccountPatchUpdate): Account {
         logger.info("get user by id: $id")
@@ -97,7 +99,11 @@ class AccountFacadeImpl(private val userRepository: UserRepository) : AccountFac
         }
     }
 
-    override fun isExistsByUsername(username: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsername(username))
+    @NewSpan("is-exists-by-username")
+    override fun isExistsByUsername(username: String): AccountExistsResponse {
+        logger.info("check user by username: $username")
+        return AccountExistsResponse(userRepository.existsByUsername(username))
+    }
 
     override fun isExistsByUsernameOrEmail(login: String): AccountExistsResponse = AccountExistsResponse(userRepository.existsByUsernameOrEmail(login, login))
 

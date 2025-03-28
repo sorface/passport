@@ -10,6 +10,7 @@ import org.springframework.lang.Nullable
 import org.springframework.security.oauth2.core.OAuth2Token
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames
 import org.springframework.security.oauth2.core.oidc.OidcIdToken
+import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.OAuth2Authorization
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationCode
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService
@@ -62,33 +63,58 @@ class RedisOAuth2AuthorizationService(
     override fun findByToken(token: String, @Nullable tokenType: OAuth2TokenType?): OAuth2Authorization? {
         Assert.hasText(token, "token cannot be empty")
 
+        logger.info("find authorization by token type $tokenType")
+
         tokenType ?: return redisOAuth2AuthorizationInitRepository.findFirstByCode(token)?.authorization
             ?: redisOAuth2AuthorizationInitRepository.findFirstByState(token)?.authorization
             ?: redisOAuth2AuthorizationCompleteRepository.findFirstByAccessToken(token)?.authorization
             ?: redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
             ?: redisOAuth2AuthorizationCompleteRepository.findFirstByOidcToken(token)?.authorization
 
-        return when (tokenType.value) {
+        val oAuth2Authorization = when (tokenType.value) {
             OAuth2ParameterNames.CODE -> {
+                logger.info("use search strategy [OAuth2ParameterNames.CODE] for authorization by token type ${tokenType.value}")
                 redisOAuth2AuthorizationInitRepository.findFirstByCode(token)?.authorization
             }
 
             OAuth2ParameterNames.STATE -> {
+                logger.info("use search strategy [OAuth2ParameterNames.STATE] for authorization by token type ${tokenType.value}")
+
                 redisOAuth2AuthorizationInitRepository.findFirstByState(token)?.authorization
             }
 
             OAuth2ParameterNames.ACCESS_TOKEN -> {
+                logger.info("use search strategy [OAuth2ParameterNames.ACCESS_TOKEN] for authorization by token type ${tokenType.value}")
+
                 redisOAuth2AuthorizationCompleteRepository.findFirstByAccessToken(token)?.authorization
             }
 
             OAuth2ParameterNames.REFRESH_TOKEN -> {
+                logger.info("use search strategy [OAuth2ParameterNames.REFRESH_TOKEN] for authorization by token type ${tokenType.value}")
+
+                redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
+            }
+
+            OidcParameterNames.ID_TOKEN -> {
+                logger.info("use search strategy [OAuth2ParameterNames.REFRESH_TOKEN] for authorization by token type ${tokenType.value}")
+
                 redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
             }
 
             else -> {
+                logger.info("use search strategy [OAuth2ParameterNames.OIDC_TOKEN] for authorization by token type ${tokenType.value}")
+
                 redisOAuth2AuthorizationCompleteRepository.findFirstByOidcToken(token)?.authorization
             }
         }
+
+        if (oAuth2Authorization != null) {
+            logger.info("found authorization object with id ${oAuth2Authorization.id}")
+        } else {
+            logger.info("not found authorization object by token type ${tokenType.value}")
+        }
+
+        return oAuth2Authorization
     }
 
     private fun OAuth2Authorization.isComplete(): Boolean = this.accessToken != null

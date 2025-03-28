@@ -35,6 +35,8 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
     private lateinit var jdbcRegisteredClientRepository: JdbcRegisteredClientRepository
 
     override fun save(registeredClient: RegisteredClient) {
+        logger.info("save new client with id {}", registeredClient.id)
+
         val registeredClientModel = RegisteredClientModel().apply {
             id = UUID.fromString(registeredClient.id)
 
@@ -99,17 +101,19 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
         }
 
         jdbcRegisteredClientRepository.save(registeredClientModel)
+
+        logger.info("client [id {}] saved success", registeredClient.id)
     }
 
     override fun findById(id: String): RegisteredClient? {
-        logger.info("searching for client by id: {}", id)
+        logger.info("searching for client by id [{}]", id)
 
         val registeredClient = jdbcRegisteredClientRepository.findById(UUID.fromString(id)).map {
-            logger.info("client found by id: {}", id)
+            logger.info("client found by id [{}]", id)
 
             map(it)
         }.orElseGet {
-            logger.info("client not fount by id: {}", id)
+            logger.info("client not fount by id [{}]", id)
 
             null
         }
@@ -118,17 +122,17 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
     }
 
     override fun findByClientId(clientId: String): RegisteredClient? {
-        logger.info("searching for clientId with id: {}", clientId)
+        logger.info("searching for application clientId [{}]", clientId)
 
         val registeredClient = jdbcRegisteredClientRepository.findByClientId(clientId)
 
         if (registeredClient == null) {
-            logger.info("no client with clientId: {}", clientId)
+            logger.info("no client with application clientId [{}]", clientId)
 
             return null
         }
 
-        logger.info("found client with clientId: {}", registeredClient)
+        logger.info("found client with clientId [{}]", registeredClient.clientId)
 
         return map(registeredClient)
     }

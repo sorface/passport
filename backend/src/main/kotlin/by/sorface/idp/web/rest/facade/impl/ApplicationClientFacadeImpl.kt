@@ -14,6 +14,7 @@ import by.sorface.idp.web.rest.model.apps.ApplicationClient
 import by.sorface.idp.web.rest.model.apps.ApplicationPartialUpdate
 import by.sorface.idp.web.rest.model.apps.ApplicationRefreshSecret
 import by.sorface.idp.web.rest.model.apps.ApplicationRegistry
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.core.AuthorizationGrantType
@@ -43,8 +44,12 @@ class ApplicationClientFacadeImpl(
     private val clientTokenSettingRepository: ClientTokenSettingRepository
 ) : ApplicationClientFacade {
 
+    private val logger = LoggerFactory.getLogger(ApplicationClientFacade::class.java)
+
     @Transactional(readOnly = true)
     override fun findAllByUserId(userId: UUID): List<ApplicationClient> {
+        logger.info("find all client by user [id -> $userId]")
+
         return applicationClientRepository.findByCreatedUser(userId)
             .map {
                 applicationConverter.convert(it)
@@ -75,7 +80,7 @@ class ApplicationClientFacadeImpl(
             .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
             .idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
             .accessTokenTimeToLive(Duration.ofSeconds(360))
-            .refreshTokenTimeToLive(Duration.ofSeconds(720))
+            .refreshTokenTimeToLive(Duration.ofSeconds(432_000))
             .reuseRefreshTokens(true)
             .build()
 

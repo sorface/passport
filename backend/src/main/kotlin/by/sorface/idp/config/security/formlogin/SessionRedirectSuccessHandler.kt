@@ -48,16 +48,20 @@ class SessionRedirectSuccessHandler(endpointFrontendProperties: IdpFrontendEndpo
     override fun onAuthenticationSuccess(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
         val requestAttributes = RequestContextHolder.currentRequestAttributes()
 
+        logger.info("authentication success for user ${authentication.name} with session ${requestAttributes.sessionId}")
+
         request.getHeader(HttpHeaders.USER_AGENT)?.let { userAgent ->
             LOGGER.debug("user-agent [value -> {}] for session [id -> {}]", request.requestedSessionId, userAgent)
 
             requestAttributes.setAttribute(SessionAttributes.USER_AGENT, userAgent, RequestAttributes.SCOPE_SESSION)
         }
 
+        logger.info("get current  for user ${authentication.name} with session ${requestAttributes.sessionId}")
+
         val savedRequest = requestAttributes.getAttribute(SessionAttributes.SAVED_REQUEST, RequestAttributes.SCOPE_SESSION) as SavedRequest?
 
         if (savedRequest == null) {
-            LOGGER.info("saved request is NULL for session [id -> {}]", request.requestedSessionId)
+            LOGGER.info("request [SessionAttributes.SAVED_REQUEST] is NULL for session [id -> {}]", request.requestedSessionId)
 
             super.handle(request, response, authentication)
 

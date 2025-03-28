@@ -8,7 +8,7 @@ management:
       probability: 1.0
   endpoint:
     env:
-      show-values: ALWAYS
+      show-values: never
   endpoints:
     web:
       exposure:
@@ -172,10 +172,12 @@ idp:
 
 logging:
   level:
-    root: info
+    root: warn
     by.sorface.idp: info
+    org.springframework.security.oauth2.server.authorization.web.OAuth2TokenEndpointFilter: trace
+    org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider: trace
   pattern:
-    console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:},%X{traceId:-}, %X{spanId:-}]%magenta([%file:%line]) : %msg%n'
+    console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %magenta([%file:%line]) : %msg%n'
   include-application-name: false
 
 --- # spring development envs
@@ -242,8 +244,8 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        show_sql: true
-        format_sql: true
+        show_sql: false
+        format_sql: false
 
   liquibase:
     contexts:
@@ -292,8 +294,3 @@ idp:
       secure: false
       maxage: 120
 
-logging:
-  level:
-    by.sorface.idp: debug
-    root: info
-    by.sorface.idp.config.web.autostart: debug
