@@ -23,11 +23,16 @@ abstract class AbstractSocialOAuth2UserService<T : ExternalOAuth2User> protected
 
     @Transactional
     override fun findOrCreate(oAuth2user: T): UserModel {
-        val user = userRepository.findByProviderTypeAndExternalId(providerType, oAuth2user.id)
+        var user = userRepository.findByProviderTypeAndExternalId(providerType, oAuth2user.id)
+            ?: userRepository.findFirstByEmailIgnoreCase(oAuth2user.email)
 
         if (user != null) {
             return user
         }
+
+        user = userRepository.findFirstByEmailIgnoreCase(oAuth2user.email)
+
+
 
         val newUser = this.createNewUser(oAuth2user).apply {
             val defaultRole = roleRepository.findFirstByValueIgnoreCase(DEFAULT_ROLE_USER)

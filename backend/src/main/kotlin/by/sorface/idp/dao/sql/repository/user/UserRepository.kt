@@ -83,6 +83,6 @@ interface UserRepository : BaseRepository<UserModel> {
      * @param username Имя пользователя, по которому будет производиться поиск.
      * @return UserModel? Объект UserModel, если пользователь найден, или null, если пользователь не найден.
      */
-    fun findFirstByUsername(username: String): UserModel?
+    fun findFirstByUsername(username: String?): UserModel?
 
 }
