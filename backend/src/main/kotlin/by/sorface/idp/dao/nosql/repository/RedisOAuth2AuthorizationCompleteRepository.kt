@@ -12,6 +12,13 @@ interface RedisOAuth2AuthorizationCompleteRepository : CrudRepository<OAuth2Auth
     QueryByExampleExecutor<OAuth2AuthorizationComplete> {
 
     /**
+     * Метод findAllByPrincipalName находит все объекты OAuth2AuthorizationComplete по заданному имени субъекта.
+     * @param principalName имя субъекта, по которому производится поиск.
+     * @return список объектов OAuth2AuthorizationComplete.
+     */
+    fun findAllByPrincipalName(principalName: String): List<OAuth2AuthorizationComplete>
+
+    /**
      * Метод findFirstByAccessToken находит первый объект OAuth2AuthorizationComplete по заданному токену доступа.
      * @param accessToken токен доступа, по которому производится поиск.
      * @return объект OAuth2AuthorizationComplete или null, если объект не найден.

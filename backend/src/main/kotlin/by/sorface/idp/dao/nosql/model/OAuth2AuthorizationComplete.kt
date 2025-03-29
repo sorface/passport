@@ -29,6 +29,12 @@ class OAuth2AuthorizationComplete : BasicRedisEntity() {
     var accessToken: String? = null
 
     /**
+     * Имя пользователя
+     */
+    @Indexed
+    var principalName: String? = null
+
+    /**
      * Объект авторизации OAuth2.
      */
     var authorization: OAuth2Authorization? = null

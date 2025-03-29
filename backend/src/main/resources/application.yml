@@ -21,7 +21,6 @@ spring:
   application:
     name: sorface-passport-backend
     version: 1.0.0
-
   data.redis:
     client-type: jedis
     database: 5
@@ -120,6 +119,8 @@ spring:
             userInfoUri: https://api.twitch.tv/helix/users/
             user-info-authentication-method: GET
             user-name-attribute: data
+  main:
+    allow-circular-references: true
 
 idp:
   cors:

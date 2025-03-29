@@ -15,6 +15,20 @@ enum class MaskerFields(val fieldNames: Set<String>) : Masker {
         }
     },
 
+    USERNAME(setOf("username", "user", "login")) {
+        override fun mask(value: String?): String? {
+            if (value.isNullOrEmpty()) {
+                return value
+            }
+
+            return if (value.length <= 4) {
+                "*".repeat(value.length)
+            } else {
+                value.replaceRange(2, value.length - 2, "*".repeat(value.length - 4))
+            }
+        }
+    },
+
     EMAILS(setOf("email", "mail", "to")) {
         override fun mask(value: String?): String? {
             if (Objects.isNull(value)) {

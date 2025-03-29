@@ -8,6 +8,7 @@ import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
 import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
 import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.idp.config.security.oauth2.slo.SpecificLogoutAuthenticationFailureHandler
 import by.sorface.idp.utils.json.mask.MaskerFields
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
@@ -48,8 +49,6 @@ import java.util.function.Function
 @Configuration(proxyBeanMethods = true)
 class SecurityAuthorizationServerConfig {
 
-    private val logger = LoggerFactory.getLogger(SecurityAuthorizationServerConfig::class.java)
-
     @Autowired
     private lateinit var defaultOidcUserInfoService: DefaultOidcUserInfoService
 
@@ -61,6 +60,9 @@ class SecurityAuthorizationServerConfig {
 
     @Autowired
     private lateinit var sessionCookieProperties: SessionCookieProperties
+
+    @Autowired
+    private lateinit var specificLogoutAuthenticationFailureHandler: SpecificLogoutAuthenticationFailureHandler
 
     /**
      * Настройка цепочки фильтров безопасности сервера авторизации.
@@ -96,15 +98,7 @@ class SecurityAuthorizationServerConfig {
                         )
 
                         logoutEndpointConfigurer.logoutResponseHandler(delegateLogoutSuccessHandler)
-
-                        logoutEndpointConfigurer.errorResponseHandler { request, response, exception ->
-                            val parameter = request.getParameter("post_logout_redirect_uri")
-                            val tokenHint = request.getParameter("id_token_hint")
-
-                            logger.error("logout error $parameter ${exception.message} ${MaskerFields.TOKEN.mask(tokenHint)}", exception)
-
-                            response.sendRedirect(parameter.toString())
-                        }
+                        logoutEndpointConfigurer.errorResponseHandler(specificLogoutAuthenticationFailureHandler)
                     }
                 }
             }

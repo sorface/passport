@@ -96,9 +96,9 @@ class RedisOAuth2AuthorizationService(
             }
 
             OidcParameterNames.ID_TOKEN -> {
-                logger.info("use search strategy [OAuth2ParameterNames.REFRESH_TOKEN] for authorization by token type ${tokenType.value}")
+                logger.info("use search strategy [OidcParameterNames.ID_TOKEN] for authorization by token type ${tokenType.value}")
 
-                redisOAuth2AuthorizationCompleteRepository.findFirstByRefreshToken(token)?.authorization
+                redisOAuth2AuthorizationCompleteRepository.findFirstByOidcToken(token)?.authorization
             }
 
             else -> {
@@ -122,6 +122,7 @@ class RedisOAuth2AuthorizationService(
     private fun OAuth2Authorization.toComplete(): OAuth2AuthorizationComplete = OAuth2AuthorizationComplete()
         .also {
             it.id = this.id
+            it.principalName = this.principalName
             it.accessToken = this.accessToken.getTokenValueOrNull()
             it.refreshToken = this.refreshToken.getTokenValueOrNull()
             it.oidcToken = this.getToken(OidcIdToken::class.java).getTokenValueOrNull()
