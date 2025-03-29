@@ -170,6 +170,7 @@ class SecurityProductionConfig {
                 serializer.setDomainNamePattern(this.domainPattern)
                 serializer.setUseHttpOnlyCookie(this.httpOnly)
                 serializer.setSameSite(sessionCookieProperties.sameSite.name)
+                serializer.setCookieMaxAge(sessionMaxAge.toSeconds().toInt())
 
                 serializer
             }

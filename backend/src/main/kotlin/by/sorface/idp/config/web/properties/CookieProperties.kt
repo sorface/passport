@@ -2,6 +2,7 @@ package by.sorface.idp.config.web.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.web.server.Cookie.SameSite
+import kotlin.time.Duration
 
 open class IdpCookie(
     var domain: String? = null,
@@ -14,7 +15,8 @@ open class IdpCookie(
 
 open class IdpSessionCookie(
     var domainPattern: String? = null,
-    var sameSite: SameSite = SameSite.NONE
+    var sameSite: SameSite = SameSite.NONE,
+    var sessionMaxAge: java.time.Duration = java.time.Duration.ofDays(365)
 ) : IdpCookie()
 
 @ConfigurationProperties(prefix = "idp.cookie.registration")
