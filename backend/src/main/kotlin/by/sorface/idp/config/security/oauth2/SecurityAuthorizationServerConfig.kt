@@ -1,26 +1,25 @@
 package by.sorface.idp.config.security.oauth2
 
-import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
-import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.security.jose.Jwks
+import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
+import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
 import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
+import by.sorface.idp.config.security.oauth2.slo.SpecificLogoutAuthenticationFailureHandler
+import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
 import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
-import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
-import by.sorface.idp.config.security.oauth2.slo.SpecificLogoutAuthenticationFailureHandler
-import by.sorface.idp.utils.json.mask.MaskerFields
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
+import org.springframework.core.env.PropertyResolver
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer
@@ -38,7 +37,6 @@ import org.springframework.security.oauth2.server.authorization.oidc.authenticat
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
 import java.util.function.Function
@@ -72,7 +70,7 @@ class SecurityAuthorizationServerConfig {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    fun authorizationServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun authorizationServerSecurityFilterChain(http: HttpSecurity, propertyResolver: PropertyResolver): SecurityFilterChain {
         val authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer()
 
         val userInfoMapper = Function<OidcUserInfoAuthenticationContext, OidcUserInfo> { context: OidcUserInfoAuthenticationContext ->
@@ -83,13 +81,9 @@ class SecurityAuthorizationServerConfig {
         }
 
         return http
-            .with(authorizationServerConfigurer) {
-                it.oidc { oidc: OidcConfigurer ->
-                    oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer ->
-                        userInfo.userInfoMapper(
-                            userInfoMapper
-                        )
-                    }
+            .with(authorizationServerConfigurer) { authorizationServerSpec ->
+                authorizationServerSpec.oidc { oidc: OidcConfigurer ->
+                    oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer -> userInfo.userInfoMapper(userInfoMapper) }
                     oidc.logoutEndpoint { logoutEndpointConfigurer: OidcLogoutEndpointConfigurer ->
                         val delegateLogoutSuccessHandler = DelegateLogoutSuccessHandler(
                             CookieClearingLogoutHandler(sessionCookieProperties.name),
@@ -99,6 +93,12 @@ class SecurityAuthorizationServerConfig {
 
                         logoutEndpointConfigurer.logoutResponseHandler(delegateLogoutSuccessHandler)
                         logoutEndpointConfigurer.errorResponseHandler(specificLogoutAuthenticationFailureHandler)
+                    }
+                    oidc.providerConfigurationEndpoint { providerSpec ->
+                        providerSpec.providerConfigurationCustomizer { providerConfiguration ->
+                            providerConfiguration.claim("backchannel_logout_supported", true)
+                            providerConfiguration.claim("backchannel_logout_session_supported", true)
+                        }
                     }
                 }
             }

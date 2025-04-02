@@ -44,8 +44,8 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        show_sql: false
-        format_sql: false
+        show_sql: true
+        format_sql: true
 
   session:
     timeout: 5d
@@ -174,10 +174,12 @@ idp:
 
 logging:
   level:
-    root: warn
+    root: debug
     by.sorface.idp: info
     org.springframework.security.oauth2.server.authorization.web.OAuth2TokenEndpointFilter: trace
     org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider: trace
+    org.springframework.security.oauth2.server.authorization.oidc.web.authentication: trace
+    by.sorface.idp.dao.sql.repository.client: debug
   pattern:
     console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %magenta([%file:%line]) : %msg%n'
   include-application-name: false

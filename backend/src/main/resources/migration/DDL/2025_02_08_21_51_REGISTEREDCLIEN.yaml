@@ -595,3 +595,100 @@ databaseChangeLog:
             referencedColumnNames: C_ID
             constraintName: C_FK_CLIENTTOKENSETTINGSTORE_C_ID
 
+  - changeSet:
+      id: 81a1442f-78b0-4f6a-b5da-a9070788b3f4
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_REGISTEREDCLIENT
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_REGISTEREDCLIENT
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_REGISTEREDCLIENT
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: 36f6f51d-72fe-415e-acd8-877463b9a273
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONGRANTTYPESTORE
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: 8963b9a5-717d-43e3-af84-5a19c54988e5
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTAUTHENTICATIONMETHODSTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONMETHODSTORE
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: 5c69e69d-fe61-4035-a4cc-e069ac9d07c8
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTREDIRECTURLSTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: 1cd899d1-2036-4125-81f7-5cf2ffbc3625
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTAUTHENTICATIONSCOPESTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTAUTHENTICATIONSCOPESTORE
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: c3421b6c-ef63-432d-8014-2caae852e258
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTSETTINGSTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTSETTINGSTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTSETTINGSTORE
+            columnName: C_MODIFIEDBY
+
+  - changeSet:
+      id: 36a874eb-a199-4b3f-9a31-0a2620143388
+      author: Павел Талайко
+
+      comment: Удаление constraints.nullable.false для колонок C_CREATEDBY и C_MODIFIEDBY в таблице T_CLIENTTOKENSETTINGSTORE
+
+      changes:
+        - dropNotNullConstraint:
+            tableName: T_CLIENTTOKENSETTINGSTORE
+            columnName: C_CREATEDBY
+        - dropNotNullConstraint:
+            tableName: T_CLIENTTOKENSETTINGSTORE
+            columnName: C_MODIFIEDBY

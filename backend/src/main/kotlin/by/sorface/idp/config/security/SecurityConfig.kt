@@ -5,6 +5,7 @@ import by.sorface.idp.config.security.csrf.SpaCsrfTokenRequestHandler
 import by.sorface.idp.config.security.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
 import by.sorface.idp.config.security.formlogin.JsonFormLoginFailureHandler
 import by.sorface.idp.config.security.formlogin.SessionRedirectSuccessHandler
+import by.sorface.idp.config.security.oauth2.CustomLogoutHandler
 import by.sorface.idp.config.web.properties.CsrfCookieProperties
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.SessionCookieProperties
@@ -22,6 +23,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
+import org.springframework.security.config.annotation.web.configurers.oauth2.client.OidcBackChannelLogoutHandler
+import org.springframework.security.oauth2.client.oidc.authentication.logout.OidcLogoutToken
+import org.springframework.security.oauth2.client.oidc.session.InMemoryOidcSessionRegistry
+import org.springframework.security.oauth2.client.oidc.session.OidcSessionRegistry
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -86,6 +91,9 @@ class SecurityProductionConfig {
     @Autowired
     private lateinit var oAuth2UserDatabaseStrategy: OAuth2UserDatabaseStrategy
 
+    @Autowired
+    private lateinit var customLogoutHandler: CustomLogoutHandler
+
     /**
      * Создает цепочку фильтров безопасности по умолчанию
      *
@@ -105,7 +113,10 @@ class SecurityProductionConfig {
             }
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()
+                    .requestMatchers("/h2-console/**", "**.css", "**.js", "**,jsp", "/graphiql/**", "/graphql/**")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/csrf")
+                    .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.PUT, "/api/registrations/otp").anonymous()
@@ -121,6 +132,9 @@ class SecurityProductionConfig {
 
                 httpSessionRequestCache.setRequestMatcher(AntPathRequestMatcher("/oauth2/**"))
                 httpSecurityRequestCacheConfigurer.requestCache(httpSessionRequestCache)
+            }
+            .logout { logoutSpec ->
+                logoutSpec.addLogoutHandler(customLogoutHandler)
             }
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA

@@ -43,7 +43,7 @@ class RegisteredClientModel : BaseModel() {
         fetch = FetchType.EAGER,
         targetEntity = ClientRedirectUrlModel::class
     )
-    var redirectUris: Set<ClientRedirectUrlModel> = setOf()
+    var redirectUris: Set<ClientRedirectUrlModel> = mutableSetOf()
 
     /**
      * URI перенаправления клиента.
@@ -56,7 +56,7 @@ class RegisteredClientModel : BaseModel() {
         fetch = FetchType.EAGER,
         targetEntity = PostLogoutRedirectUrlModel::class
     )
-    var postLogoutRedirectUrls: Set<PostLogoutRedirectUrlModel> = setOf()
+    var postLogoutRedirectUrls: Set<PostLogoutRedirectUrlModel> = mutableSetOf()
 
     /**
      * Методы аутентификации клиента.
@@ -71,7 +71,7 @@ class RegisteredClientModel : BaseModel() {
             JoinColumn(name = "C_FK_CLIENTAUTHENTICATIONMETHOD")
         ]
     )
-    var methods: Set<ClientAuthenticationMethodModel> = setOf()
+    var methods: Set<ClientAuthenticationMethodModel> = mutableSetOf()
 
     /**
      * Типы аутентификации клиента.
@@ -86,7 +86,7 @@ class RegisteredClientModel : BaseModel() {
             JoinColumn(name = "C_FK_CLIENTAUTHENTICATIONGRANTTYPE")
         ]
     )
-    var grantTypes: Set<ClientAuthenticationGrantTypeModel> = setOf()
+    var grantTypes: Set<ClientAuthenticationGrantTypeModel> = mutableSetOf()
 
     /**
      * Области видимости клиента.
@@ -101,15 +101,15 @@ class RegisteredClientModel : BaseModel() {
             JoinColumn(name = "C_FK_CLIENTCLIENTSCOPE")
         ]
     )
-    var scopes: Set<ClientScopeModel> = setOf()
+    var scopes: Set<ClientScopeModel> = mutableSetOf()
 
     /**
      * Настройки клиента.
      * Это поле представляет отношение "один к одному" с ClientSettingModel.
      * Загрузка связанных данных выполняется немедленно.
      */
-    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    @JoinColumn(name = "C_ID", referencedColumnName = "C_ID")
+    @OneToOne(mappedBy = "registeredClient", cascade = [CascadeType.ALL])
+    @PrimaryKeyJoinColumn
     var clientSetting: ClientSettingModel? = null
 
     /**
@@ -117,8 +117,8 @@ class RegisteredClientModel : BaseModel() {
      * Это поле представляет отношение "один к одному" с ClientTokenSettingModel.
      * Загрузка связанных данных выполняется немедленно.
      */
-    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.EAGER)
-    @JoinColumn(name = "C_ID", referencedColumnName = "C_ID")
+    @OneToOne(mappedBy = "registeredClient", cascade = [CascadeType.ALL])
+    @PrimaryKeyJoinColumn
     var tokenSetting: ClientTokenSettingModel? = null
 
     /**

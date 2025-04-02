@@ -13,6 +13,10 @@ fun SecurityContext.getPrincipal(): SorfacePrincipal? {
         return null
     }
 
+    if (auth.principal !is SorfacePrincipal) {
+        return null
+    }
+
     return auth.principal as SorfacePrincipal?
 }
 

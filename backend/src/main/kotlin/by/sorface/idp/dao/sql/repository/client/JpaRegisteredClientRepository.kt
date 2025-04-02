@@ -8,13 +8,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.oauth2.core.AuthorizationGrantType
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Duration
+import java.time.Instant
 import java.util.*
 
 @Service
@@ -34,73 +37,93 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
     @Autowired
     private lateinit var jdbcRegisteredClientRepository: JdbcRegisteredClientRepository
 
+    @Transactional
     override fun save(registeredClient: RegisteredClient) {
         logger.info("save new client with id {}", registeredClient.id)
 
-        val registeredClientModel = RegisteredClientModel().apply {
-            id = UUID.fromString(registeredClient.id)
-
+        val basicRegisteredClientModel = RegisteredClientModel().apply {
             clientId = registeredClient.clientId
             clientSecret = registeredClient.clientSecret
             clientName = registeredClient.clientName
-
-            redirectUris = registeredClient.redirectUris
-                .mapNotNull { redirectUrl -> by.sorface.idp.dao.sql.model.client.ClientRedirectUrlModel().apply { this.url = redirectUrl } }
-                .toMutableSet()
-
-            postLogoutRedirectUrls = registeredClient.postLogoutRedirectUris
-                .mapNotNull { redirectUrl -> PostLogoutRedirectUrlModel().apply { this.url = redirectUrl } }
-                .toMutableSet()
-
-            methods = registeredClient.clientAuthenticationMethods
-                .mapNotNull { method ->
-                    val clientAuthenticationMethodModel = clientAuthenticationMethodRepository.findFirstByMethodEndingWithIgnoreCase(method.value)
-
-                    clientAuthenticationMethodModel ?: RuntimeException("Method [$method] not registered")
-
-                    return@mapNotNull clientAuthenticationMethodModel
-                }
-                .toMutableSet()
-
-            grantTypes = registeredClient.authorizationGrantTypes
-                .mapNotNull { grantType ->
-                    val clientAuthenticationGrantTypeModel = clientAuthenticationGrantTypeRepository.findFirstByGrantTypeEndingWithIgnoreCase(grantType.value)
-
-                    clientAuthenticationGrantTypeModel ?: RuntimeException("Grant type [$grantType] not registered")
-
-                    return@mapNotNull clientAuthenticationGrantTypeModel
-                }
-                .toMutableSet()
-
-            scopes = registeredClient.scopes
-                .mapNotNull { scope ->
-                    val clientScopeModel = clientScopeRepository.findFirstByScope(scope)
-
-                    clientScopeModel ?: RuntimeException("Scope [$scope] not registered")
-
-                    return@mapNotNull clientScopeModel
-                }
-                .toMutableSet()
-
-            clientSetting = ClientSettingModel().apply {
-                val clientSettings = registeredClient.clientSettings
-
-                requireConcept = clientSettings.isRequireAuthorizationConsent
-                requireProofKey = clientSettings.isRequireProofKey
-            }
-
-            tokenSetting = ClientTokenSettingModel().apply {
-                val tokenSettings = registeredClient.tokenSettings
-
-                accessTokenFormat = tokenSettings.accessTokenFormat.value
-                idTokenSignatureAlgorithm = tokenSettings.idTokenSignatureAlgorithm
-                accessTokenTimeToLive = tokenSettings.accessTokenTimeToLive.toSeconds()
-                refreshTokenTimeToLive = tokenSettings.refreshTokenTimeToLive.toSeconds()
-                reuseRefreshTokens = tokenSettings.isReuseRefreshTokens
-            }
+            clientIdIssueAt = Instant.now()
         }
 
-        jdbcRegisteredClientRepository.save(registeredClientModel)
+        try {
+            val registeredClientModel = jdbcRegisteredClientRepository.save(basicRegisteredClientModel)
+
+            registeredClientModel.redirectUris.plus(
+                registeredClient.redirectUris
+                    .mapNotNull { redirectUrl -> by.sorface.idp.dao.sql.model.client.ClientRedirectUrlModel().apply { this.url = redirectUrl } }
+                    .toMutableSet()
+            )
+
+            registeredClientModel.postLogoutRedirectUrls.plus(
+                registeredClient.postLogoutRedirectUris
+                    .mapNotNull { redirectUrl -> PostLogoutRedirectUrlModel().apply { this.url = redirectUrl } }
+                    .toMutableSet()
+            )
+
+            registeredClientModel.methods.plus(
+                registeredClient.clientAuthenticationMethods
+                    .mapNotNull { method ->
+                        val clientAuthenticationMethodModel = clientAuthenticationMethodRepository.findFirstByMethodEndingWithIgnoreCase(method.value)
+
+                        clientAuthenticationMethodModel ?: RuntimeException("method [$method] not registered")
+
+                        return@mapNotNull clientAuthenticationMethodModel
+                    }
+                    .toMutableSet()
+            )
+
+            registeredClientModel.grantTypes.plus(
+                registeredClient.authorizationGrantTypes
+                    .mapNotNull { grantType ->
+                        val clientAuthenticationGrantTypeModel = clientAuthenticationGrantTypeRepository.findFirstByGrantTypeEndingWithIgnoreCase(grantType.value)
+
+                        clientAuthenticationGrantTypeModel ?: RuntimeException("grant type [$grantType] not registered")
+
+                        return@mapNotNull clientAuthenticationGrantTypeModel
+                    }
+                    .toMutableSet()
+            )
+
+            registeredClientModel.scopes.plus(
+                registeredClient.scopes
+                    .mapNotNull { scope ->
+                        val clientScopeModel = clientScopeRepository.findFirstByScope(scope)
+
+                        clientScopeModel ?: RuntimeException("scope [$scope] not registered")
+
+                        return@mapNotNull clientScopeModel
+                    }
+                    .toMutableSet()
+            )
+
+            val clientSetting = ClientSettingModel().apply {
+                requireConcept = false
+                requireProofKey = false
+            }
+
+            val tokenSetting = ClientTokenSettingModel().apply {
+                accessTokenFormat = OAuth2TokenFormat.SELF_CONTAINED.value
+                idTokenSignatureAlgorithm = SignatureAlgorithm.RS256
+                accessTokenTimeToLive = Duration.ofSeconds(360).toSeconds()
+                refreshTokenTimeToLive = Duration.ofSeconds(10_000).toSeconds()
+                reuseRefreshTokens = false
+            }
+
+            registeredClientModel.clientSetting = clientSetting
+            registeredClientModel.tokenSetting = tokenSetting
+
+            tokenSetting.registeredClient = registeredClientModel
+            clientSetting.registeredClient = registeredClientModel
+
+            jdbcRegisteredClientRepository.save(registeredClientModel)
+        } catch (e: Exception) {
+            logger.error("error save client [$registeredClient]", e)
+
+            throw e
+        }
 
         logger.info("client [id {}] saved success", registeredClient.id)
     }
