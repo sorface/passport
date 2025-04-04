@@ -30,7 +30,6 @@ class DefaultOidcUserInfoService(private val userRepository: UserRepository) : O
                     .preferredUsername(name)
                     .picture(user.avatarUrl)
                     .birthdate("${user.birthday}")
-                    .updatedAt(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE))
             }
 
             scopes.contains(OidcScopes.EMAIL) -> {

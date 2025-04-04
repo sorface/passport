@@ -131,15 +131,16 @@ class JpaRegisteredClientRepository : RegisteredClientRepository {
     override fun findById(id: String): RegisteredClient? {
         logger.info("searching for client by id [{}]", id)
 
-        val registeredClient = jdbcRegisteredClientRepository.findById(UUID.fromString(id)).map {
-            logger.info("client found by id [{}]", id)
+        val registeredClient = jdbcRegisteredClientRepository.findById(UUID.fromString(id))
+            .map {
+                logger.info("client found by id [{}]", id)
 
-            map(it)
-        }.orElseGet {
-            logger.info("client not fount by id [{}]", id)
+                map(it)
+            }.orElseGet {
+                logger.info("client not fount by id [{}]", id)
 
-            null
-        }
+                null
+            }
 
         return registeredClient
     }
