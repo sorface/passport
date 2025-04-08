@@ -22,7 +22,7 @@ class AccountCookieManagerImpl(
         return Cookie(registrationCookieProperties.name, registrationId).apply {
             domain = registrationCookieProperties.domain
             path = registrationCookieProperties.path
-            maxAge = registrationCookieProperties.maxAge
+            maxAge = registrationCookieProperties.maxAge.toSeconds().toInt()
             isHttpOnly = registrationCookieProperties.httpOnly
             secure = registrationCookieProperties.secure
         }
@@ -34,7 +34,7 @@ class AccountCookieManagerImpl(
         return Cookie(otpExpAtCookieProperties.name, timestamp.toEpochMilli().toString()).apply {
             domain = otpExpAtCookieProperties.domain
             path = otpExpAtCookieProperties.path
-            maxAge = otpExpAtCookieProperties.maxAge
+            maxAge = otpExpAtCookieProperties.maxAge.toSeconds().toInt()
             isHttpOnly = true
             secure = otpExpAtCookieProperties.secure
         }

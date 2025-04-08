@@ -48,7 +48,7 @@ spring:
         format_sql: true
 
   session:
-    timeout: 5d
+    timeout: 40d
     redis:
       flush-mode: on_save
       namespace: "passport"
@@ -139,7 +139,7 @@ idp:
       httponly: true
       same-site: lax
       secure: true
-      session-max-age: 365d
+      max-age: 365d
 
     csrf:
       name: 'x_csrf_token'
@@ -274,6 +274,7 @@ idp:
       httponly: true
       same-site: lax
       secure: false
+      max-age: 365d
 
     csrf:
       name: 'x_csrf_token'
@@ -281,6 +282,7 @@ idp:
       path: '/'
       httponly: false
       secure: false
+      same-site: lax
 
     registration:
       name: 'registrationId'

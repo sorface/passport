@@ -6,10 +6,12 @@ import org.slf4j.LoggerFactory
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcLogoutAuthenticationToken
 import org.springframework.security.web.authentication.logout.LogoutHandler
+import org.springframework.stereotype.Component
 
+@Component
 class OidcPostRedirectLocationLogoutHandler : LogoutHandler {
 
-    private val logger = LoggerFactory.getLogger(OidcPostRedirectLocationLogoutHandler::class.java)
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun logout(request: HttpServletRequest, response: HttpServletResponse, authentication: Authentication) {
         logger.info("post redirect user ${authentication.name} after logout")

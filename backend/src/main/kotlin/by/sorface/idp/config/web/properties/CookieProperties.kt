@@ -8,15 +8,14 @@ open class IdpCookie(
     var domain: String? = null,
     var path: String? = null,
     var name: String? = null,
-    var maxAge: Int = 3600,
+    var maxAge: java.time.Duration = java.time.Duration.ofSeconds(3600),
     var httpOnly: Boolean = false,
-    var secure: Boolean = true
+    var secure: Boolean = true,
+    var sameSite: SameSite = SameSite.LAX,
 )
 
 open class IdpSessionCookie(
-    var domainPattern: String? = null,
-    var sameSite: SameSite = SameSite.NONE,
-    var sessionMaxAge: java.time.Duration = java.time.Duration.ofDays(365)
+    var domainPattern: String? = null
 ) : IdpCookie()
 
 @ConfigurationProperties(prefix = "idp.cookie.registration")

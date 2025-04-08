@@ -5,7 +5,6 @@ import by.sorface.idp.config.security.csrf.SpaCsrfTokenRequestHandler
 import by.sorface.idp.config.security.entrypoints.JsonUnauthorizedAuthenticationEntryPoint
 import by.sorface.idp.config.security.formlogin.JsonFormLoginFailureHandler
 import by.sorface.idp.config.security.formlogin.SessionRedirectSuccessHandler
-import by.sorface.idp.config.security.oauth2.CustomLogoutHandler
 import by.sorface.idp.config.web.properties.CsrfCookieProperties
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.SessionCookieProperties
@@ -23,6 +22,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
+import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -87,9 +87,6 @@ class SecurityProductionConfig {
     @Autowired
     private lateinit var oAuth2UserDatabaseStrategy: OAuth2UserDatabaseStrategy
 
-    @Autowired
-    private lateinit var customLogoutHandler: CustomLogoutHandler
-
     /**
      * Создает цепочку фильтров безопасности по умолчанию
      *
@@ -111,14 +108,14 @@ class SecurityProductionConfig {
                 authorizeRequests
                     .requestMatchers("/h2-console/**", "**.css", "**.js", "**,jsp", "/graphiql/**", "/graphql/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/csrf")
+                    .requestMatchers(HttpMethod.GET,
+                        "/api/csrf", "/api/accounts/login/{login}/exists", "/api/accounts/authenticated"
+                        )
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.PUT, "/api/registrations/otp").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations/confirm").anonymous()
-                    .requestMatchers(HttpMethod.GET, "/api/accounts/login/{login}/exists").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/accounts/authenticated").permitAll()
                     .requestMatchers(HttpMethod.POST, idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
@@ -128,9 +125,6 @@ class SecurityProductionConfig {
 
                 httpSessionRequestCache.setRequestMatcher(AntPathRequestMatcher("/oauth2/**"))
                 httpSecurityRequestCacheConfigurer.requestCache(httpSessionRequestCache)
-            }
-            .logout { logoutSpec ->
-                logoutSpec.addLogoutHandler(customLogoutHandler)
             }
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA
@@ -161,7 +155,8 @@ class SecurityProductionConfig {
         csrfConfigurer
             .ignoringRequestMatchers(
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET),
-                AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS)
+                AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS),
+                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/logout")
             )
             .csrfTokenRepository(cookieCsrfTokenRepository)
             .csrfTokenRequestHandler(spaCsrfTokenRequestHandler)
@@ -180,7 +175,7 @@ class SecurityProductionConfig {
                 serializer.setDomainNamePattern(this.domainPattern)
                 serializer.setUseHttpOnlyCookie(this.httpOnly)
                 serializer.setSameSite(sessionCookieProperties.sameSite.name)
-                serializer.setCookieMaxAge(sessionMaxAge.toSeconds().toInt())
+                serializer.setCookieMaxAge(this.maxAge.toSeconds().toInt())
 
                 serializer
             }

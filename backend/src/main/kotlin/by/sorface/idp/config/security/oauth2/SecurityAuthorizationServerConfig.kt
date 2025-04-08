@@ -3,12 +3,15 @@ package by.sorface.idp.config.security.oauth2
 import by.sorface.idp.config.security.jose.Jwks
 import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
 import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
-import by.sorface.idp.config.security.oauth2.slo.SpecificLogoutAuthenticationFailureHandler
 import by.sorface.idp.config.security.backchannel.dispatcher.BackchannelEventDispatcher
 import by.sorface.idp.config.security.backchannel.dispatcher.RestBackchannelEventDispatcher
+import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
+import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.idp.config.security.session.SessionManager
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
+import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
@@ -38,9 +41,15 @@ import org.springframework.security.oauth2.server.authorization.oidc.authenticat
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
 import org.springframework.web.client.RestTemplate
 import java.util.function.Function
+
+private const val BACKCHANNEL_LOGOUT_SUPPORTED = "backchannel_logout_supported"
+
+private const val BACKCHANNEL_LOGOUT_SESSION_SUPPORTED = "backchannel_logout_session_supported"
 
 /**
  * Конфигурация безопасности сервера авторизации.
@@ -55,13 +64,7 @@ class SecurityAuthorizationServerConfig {
     private lateinit var idpEndpointProperties: IdpEndpointProperties
 
     @Autowired
-    private lateinit var oidcWebSessionLogoutHandler: OidcWebSessionLogoutHandler
-
-    @Autowired
-    private lateinit var sessionCookieProperties: SessionCookieProperties
-
-    @Autowired
-    private lateinit var specificLogoutAuthenticationFailureHandler: SpecificLogoutAuthenticationFailureHandler
+    private lateinit var oidcLogoutHandler: OidcLogoutHandler
 
     /**
      * Настройка цепочки фильтров безопасности сервера авторизации.
@@ -86,18 +89,20 @@ class SecurityAuthorizationServerConfig {
             .with(authorizationServerConfigurer) { authorizationServerSpec ->
                 authorizationServerSpec.oidc { oidc: OidcConfigurer ->
                     oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer -> userInfo.userInfoMapper(userInfoMapper) }
-                    oidc.logoutEndpoint {}
+                    oidc.logoutEndpoint { logoutSpec ->
+                        logoutSpec.logoutResponseHandler(oidcLogoutHandler)
+                    }
                     oidc.providerConfigurationEndpoint { providerConfigurationEndpointSpec ->
                         providerConfigurationEndpointSpec.providerConfigurationCustomizer { providerConfiguration ->
-                            providerConfiguration.claim("backchannel_logout_supported", true)
-                            providerConfiguration.claim("backchannel_logout_session_supported", true)
+                            providerConfiguration.claim(BACKCHANNEL_LOGOUT_SUPPORTED, true)
+                            providerConfiguration.claim(BACKCHANNEL_LOGOUT_SESSION_SUPPORTED, true)
                         }
                     }
                 }
             }
             .authorizeHttpRequests { authorizeRequests -> authorizeRequests.anyRequest().authenticated() }
             .csrf { csrf: CsrfConfigurer<HttpSecurity?> -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.endpointsMatcher) }
-            .oauth2ResourceServer { it.jwt {} }
+            .oauth2ResourceServer { it.jwt {}.authenticationEntryPoint(Http403ForbiddenEntryPoint()) }
             .exceptionHandling { exceptions: ExceptionHandlingConfigurer<HttpSecurity?> ->
                 exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint(idpEndpointProperties.loginPage))
             }
