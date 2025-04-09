@@ -17,6 +17,8 @@ import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
+import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -57,6 +59,8 @@ private const val BACKCHANNEL_LOGOUT_SESSION_SUPPORTED = "backchannel_logout_ses
 @Configuration(proxyBeanMethods = true)
 class SecurityAuthorizationServerConfig {
 
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Autowired
     private lateinit var defaultOidcUserInfoService: DefaultOidcUserInfoService
 
@@ -91,6 +95,9 @@ class SecurityAuthorizationServerConfig {
                     oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer -> userInfo.userInfoMapper(userInfoMapper) }
                     oidc.logoutEndpoint { logoutSpec ->
                         logoutSpec.logoutResponseHandler(oidcLogoutHandler)
+                        logoutSpec.errorResponseHandler { request, response, exception ->
+                            log.error(exception.message, exception)
+                        }
                     }
                     oidc.providerConfigurationEndpoint { providerConfigurationEndpointSpec ->
                         providerConfigurationEndpointSpec.providerConfigurationCustomizer { providerConfiguration ->
