@@ -30,7 +30,7 @@ class DefaultSessionManager(
     private val redisOAuth2AuthorizationCompleteRepository: RedisOAuth2AuthorizationCompleteRepository,
     private val backchannelEventDispatcher: BackchannelEventDispatcher,
     private val jwtLogoutGenerator: JwtLogoutGenerator,
-    private val registeredClientRepository: RegisteredClientRepository
+    private val registeredClientRepository: RegisteredClientRepository,
 ) : SessionManager {
 
     /**
@@ -41,7 +41,7 @@ class DefaultSessionManager(
      */
     override fun resetWithNotify(sessionId: String, principalName: String) {
         reset(sessionId, principalName) { authorization, argSessionId, argPrincipalName ->
-            this.dispatchLogoutEvent(authorization, argSessionId, argPrincipalName)
+            this.dispatchLogoutEvent(authorization, argPrincipalName, argSessionId)
         }
     }
 
@@ -58,10 +58,10 @@ class DefaultSessionManager(
             redisOAuth2AuthorizationCompleteRepository.deleteAllById(oauth2Sessions)
         }
 
-        findByIndexNameSessionRepository.findByPrincipalName(principalName)
-            .forEach { redisSession ->
-                redisIndexedSessionRepository.deleteById(redisSession.key)
-            }
+        for (redisSession in findByIndexNameSessionRepository.findByPrincipalName(principalName)) {
+            redisIndexedSessionRepository.deleteById(redisSession.key)
+            findByIndexNameSessionRepository.deleteById(redisSession.key)
+        }
     }
 
     /**
@@ -73,9 +73,11 @@ class DefaultSessionManager(
      * @return Идентификатор авторизации.
      */
     private fun dispatchLogoutEvent(authorization: OAuth2AuthorizationComplete, principalName: String, sessionId: String): String {
-        val oidcToken = authorization.oidcToken ?: return authorization.id
+        val oidcToken = authorization.oidcToken
+            ?: return authorization.id
 
-        val oAuth2Authorization = authorization.authorization ?: return authorization.id
+        val oAuth2Authorization = authorization.authorization
+            ?: return authorization.id
 
         val registeredClient = registeredClientRepository.findById(oAuth2Authorization.registeredClientId)
             ?: return authorization.id
