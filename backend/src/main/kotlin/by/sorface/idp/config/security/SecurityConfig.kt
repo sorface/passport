@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
+import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -105,13 +106,16 @@ class SecurityProductionConfig {
             }
             .authorizeHttpRequests { authorizeRequests ->
                 authorizeRequests
-                    .requestMatchers(HttpMethod.GET, "/api/csrf").permitAll()
+                    .requestMatchers("/h2-console/**", "**.css", "**.js", "**,jsp", "/graphiql/**", "/graphql/**")
+                    .permitAll()
+                    .requestMatchers(HttpMethod.GET,
+                        "/api/csrf", "/api/accounts/login/{login}/exists", "/api/accounts/authenticated"
+                        )
+                    .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.PUT, "/api/registrations/otp").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations/confirm").anonymous()
-                    .requestMatchers(HttpMethod.GET, "/api/accounts/login/{login}/exists").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/accounts/authenticated").permitAll()
                     .requestMatchers(HttpMethod.POST, idpEndpointProperties.loginPath).anonymous()
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
@@ -151,7 +155,8 @@ class SecurityProductionConfig {
         csrfConfigurer
             .ignoringRequestMatchers(
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET),
-                AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS)
+                AntPathRequestMatcher.antMatcher(HttpMethod.OPTIONS),
+                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/logout")
             )
             .csrfTokenRepository(cookieCsrfTokenRepository)
             .csrfTokenRequestHandler(spaCsrfTokenRequestHandler)
@@ -170,7 +175,7 @@ class SecurityProductionConfig {
                 serializer.setDomainNamePattern(this.domainPattern)
                 serializer.setUseHttpOnlyCookie(this.httpOnly)
                 serializer.setSameSite(sessionCookieProperties.sameSite.name)
-                serializer.setCookieMaxAge(sessionMaxAge.toSeconds().toInt())
+                serializer.setCookieMaxAge(this.maxAge.toSeconds().toInt())
 
                 serializer
             }

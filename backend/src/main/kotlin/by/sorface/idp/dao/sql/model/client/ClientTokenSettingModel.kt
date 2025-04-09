@@ -54,4 +54,12 @@ class ClientTokenSettingModel : BaseModel() {
     @Column(name = "C_REUSEREFRESHTOKENS", nullable = false)
     var reuseRefreshTokens: Boolean = true
 
+    /**
+     * Приложение клиент
+     **/
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "C_ID")
+    var registeredClient: RegisteredClientModel? = null
+
 }

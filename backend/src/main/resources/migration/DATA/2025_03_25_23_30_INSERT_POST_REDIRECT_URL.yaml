@@ -36,3 +36,40 @@ databaseChangeLog:
               - column:
                   name: C_MODIFIEDBY
                   value: c764ae76-7aef-41c1-afdc-c093f9db0150
+
+  - changeSet:
+      id: bb094240-e72c-4844-b93f-d624c26d3319
+      author: Павел Талайко
+
+      comment: Установка BACKCHANNEL_LOGOUT_URL в T_CLIENTREDIRECTURLSTORE
+
+      context: "development, production"
+
+      changes:
+        - insert:
+            tableName: T_CLIENTREDIRECTURLSTORE
+            columns:
+              - column:
+                  name: C_ID
+                  value: 91a3722f-4cd2-4d6d-9713-3293bcf05d52
+              - column:
+                  name: C_URL
+                  value: "http://localhost:9000/logout/connect/back-channel/passport"
+              - column:
+                  name: C_FK_REGISTEREDCLIENT
+                  value: dc28c45c-4d6b-4a6d-9577-1329dc06b697
+              - column:
+                  name: C_TYPE
+                  value: 'REDIRECT_URL'
+              - column:
+                  name: C_CREATEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_MODIFIEDDATE
+                  value: "2022-01-01 00:00:00"
+              - column:
+                  name: C_CREATEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150
+              - column:
+                  name: C_MODIFIEDBY
+                  value: c764ae76-7aef-41c1-afdc-c093f9db0150

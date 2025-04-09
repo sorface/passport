@@ -1,9 +1,7 @@
 package by.sorface.idp.dao.sql.model.client
 
 import by.sorface.idp.dao.sql.model.BaseModel
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 /**
  * Класс модели настроек клиента.
@@ -26,5 +24,13 @@ class ClientSettingModel : BaseModel() {
      */
     @Column(name = "C_REQUIREPROOFKEY")
     var requireProofKey: Boolean = false
+
+    /**
+     * Приложение клиент
+     **/
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "C_ID")
+    var registeredClient: RegisteredClientModel? = null
 
 }

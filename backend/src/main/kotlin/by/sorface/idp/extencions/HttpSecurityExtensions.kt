@@ -8,3 +8,8 @@ fun HttpSecurity.jsonLogin(jsonLoginCustomizer: Customizer<JsonFormLoginConfigur
     this.with(JsonFormLoginConfigurer(), jsonLoginCustomizer)
     return this
 }
+
+fun HttpSecurity.serverBackchannelLogout(jsonLoginCustomizer: Customizer<JsonFormLoginConfigurer<HttpSecurity>>): HttpSecurity {
+    this.with(JsonFormLoginConfigurer(), jsonLoginCustomizer)
+    return this
+}

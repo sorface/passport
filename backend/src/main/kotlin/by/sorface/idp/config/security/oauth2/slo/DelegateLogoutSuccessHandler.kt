@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.logout.LogoutHandler
 
-class DelegateLogoutSuccessHandler(vararg delegates: LogoutHandler) : AuthenticationSuccessHandler {
+open class DelegateLogoutSuccessHandler(vararg delegates: LogoutHandler) : AuthenticationSuccessHandler {
 
     private val delegates: MutableList<LogoutHandler> = ArrayList()
 

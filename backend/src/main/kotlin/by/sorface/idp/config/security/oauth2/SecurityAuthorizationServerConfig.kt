@@ -1,26 +1,28 @@
 package by.sorface.idp.config.security.oauth2
 
-import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
-import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.security.jose.Jwks
+import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
 import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
+import by.sorface.idp.config.security.backchannel.dispatcher.BackchannelEventDispatcher
+import by.sorface.idp.config.security.backchannel.dispatcher.RestBackchannelEventDispatcher
+import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
+import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
+import by.sorface.idp.config.security.session.SessionManager
+import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
 import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
-import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
-import by.sorface.idp.config.security.oauth2.slo.SpecificLogoutAuthenticationFailureHandler
-import by.sorface.idp.utils.json.mask.MaskerFields
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
 import org.springframework.core.annotation.Order
+import org.springframework.core.env.PropertyResolver
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.ExceptionHandlingConfigurer
@@ -28,20 +30,26 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo
 import org.springframework.security.oauth2.jwt.JwtDecoder
+import org.springframework.security.oauth2.jwt.JwtEncoder
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcConfigurer
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcLogoutEndpointConfigurer
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OidcUserInfoEndpointConfigurer
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationContext
 import org.springframework.security.oauth2.server.authorization.oidc.authentication.OidcUserInfoAuthenticationToken
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.authentication.AuthenticationFailureHandler
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
+import org.springframework.web.client.RestTemplate
 import java.util.function.Function
+
+private const val BACKCHANNEL_LOGOUT_SUPPORTED = "backchannel_logout_supported"
+
+private const val BACKCHANNEL_LOGOUT_SESSION_SUPPORTED = "backchannel_logout_session_supported"
 
 /**
  * Конфигурация безопасности сервера авторизации.
@@ -56,13 +64,7 @@ class SecurityAuthorizationServerConfig {
     private lateinit var idpEndpointProperties: IdpEndpointProperties
 
     @Autowired
-    private lateinit var oidcWebSessionLogoutHandler: OidcWebSessionLogoutHandler
-
-    @Autowired
-    private lateinit var sessionCookieProperties: SessionCookieProperties
-
-    @Autowired
-    private lateinit var specificLogoutAuthenticationFailureHandler: SpecificLogoutAuthenticationFailureHandler
+    private lateinit var oidcLogoutHandler: OidcLogoutHandler
 
     /**
      * Настройка цепочки фильтров безопасности сервера авторизации.
@@ -72,7 +74,7 @@ class SecurityAuthorizationServerConfig {
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    fun authorizationServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun authorizationServerSecurityFilterChain(http: HttpSecurity, propertyResolver: PropertyResolver): SecurityFilterChain {
         val authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer()
 
         val userInfoMapper = Function<OidcUserInfoAuthenticationContext, OidcUserInfo> { context: OidcUserInfoAuthenticationContext ->
@@ -83,29 +85,24 @@ class SecurityAuthorizationServerConfig {
         }
 
         return http
-            .with(authorizationServerConfigurer) {
-                it.oidc { oidc: OidcConfigurer ->
-                    oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer ->
-                        userInfo.userInfoMapper(
-                            userInfoMapper
-                        )
+            .securityMatcher(authorizationServerConfigurer.endpointsMatcher)
+            .with(authorizationServerConfigurer) { authorizationServerSpec ->
+                authorizationServerSpec.oidc { oidc: OidcConfigurer ->
+                    oidc.userInfoEndpoint { userInfo: OidcUserInfoEndpointConfigurer -> userInfo.userInfoMapper(userInfoMapper) }
+                    oidc.logoutEndpoint { logoutSpec ->
+                        logoutSpec.logoutResponseHandler(oidcLogoutHandler)
                     }
-                    oidc.logoutEndpoint { logoutEndpointConfigurer: OidcLogoutEndpointConfigurer ->
-                        val delegateLogoutSuccessHandler = DelegateLogoutSuccessHandler(
-                            CookieClearingLogoutHandler(sessionCookieProperties.name),
-                            oidcWebSessionLogoutHandler,
-                            OidcPostRedirectLocationLogoutHandler()
-                        )
-
-                        logoutEndpointConfigurer.logoutResponseHandler(delegateLogoutSuccessHandler)
-                        logoutEndpointConfigurer.errorResponseHandler(specificLogoutAuthenticationFailureHandler)
+                    oidc.providerConfigurationEndpoint { providerConfigurationEndpointSpec ->
+                        providerConfigurationEndpointSpec.providerConfigurationCustomizer { providerConfiguration ->
+                            providerConfiguration.claim(BACKCHANNEL_LOGOUT_SUPPORTED, true)
+                            providerConfiguration.claim(BACKCHANNEL_LOGOUT_SESSION_SUPPORTED, true)
+                        }
                     }
                 }
             }
-            .securityMatcher(authorizationServerConfigurer.endpointsMatcher)
             .authorizeHttpRequests { authorizeRequests -> authorizeRequests.anyRequest().authenticated() }
             .csrf { csrf: CsrfConfigurer<HttpSecurity?> -> csrf.ignoringRequestMatchers(authorizationServerConfigurer.endpointsMatcher) }
-            .oauth2ResourceServer { it.jwt {} }
+            .oauth2ResourceServer { it.jwt {}.authenticationEntryPoint(Http403ForbiddenEntryPoint()) }
             .exceptionHandling { exceptions: ExceptionHandlingConfigurer<HttpSecurity?> ->
                 exceptions.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint(idpEndpointProperties.loginPage))
             }
@@ -146,6 +143,9 @@ class SecurityAuthorizationServerConfig {
      */
     @Bean
     fun jwtDecoder(jwkSource: JWKSource<SecurityContext?>): JwtDecoder = OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
+
+    @Bean
+    fun jwtEncoder(jwkSource: JWKSource<SecurityContext?>): JwtEncoder = NimbusJwtEncoder(jwkSource)
 
     /**
      * Настройка кодировщика паролей.
