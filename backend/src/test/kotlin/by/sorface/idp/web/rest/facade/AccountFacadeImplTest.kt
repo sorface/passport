@@ -65,7 +65,7 @@ class AccountFacadeImplTest {
 
         val accountAuthenticated = accountFacade.isAuthenticated()
 
-        verify(exactly = 1) { authentication.principal }
+        verify(exactly = 2) { authentication.principal }
         verify(exactly = 1) { authentication.isAuthenticated }
 
         Assertions.assertTrue(accountAuthenticated.access)
@@ -97,7 +97,7 @@ class AccountFacadeImplTest {
         val i18RestException = assertThrows<I18RestException> { accountFacade.getCurrentAuthorized() }
 
         verify(exactly = 1) { authentication.isAuthenticated }
-        verify(exactly = 1) { authentication.principal }
+        verify(exactly = 2) { authentication.principal }
         verify(exactly = 1) { sorfacePrincipal.id }
         verify(exactly = 1) { userRepository.findByIdOrNull(stubPrincipalId) }
 
@@ -124,7 +124,7 @@ class AccountFacadeImplTest {
         val currentAuthorizedUser = accountFacade.getCurrentAuthorized()
 
         verify(exactly = 1) { authentication.isAuthenticated }
-        verify(exactly = 1) { authentication.principal }
+        verify(exactly = 2) { authentication.principal }
         verify(exactly = 1) { sorfacePrincipal.id }
         verify(exactly = 1) { userRepository.findByIdOrNull(stubPrincipalId) }
         verify(exactly = 1) { userConverter.convert(userModelMock) }
