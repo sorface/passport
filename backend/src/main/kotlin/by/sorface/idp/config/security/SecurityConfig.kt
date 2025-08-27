@@ -13,6 +13,7 @@ import by.sorface.idp.service.oauth.OAuth2UserDatabaseStrategy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
 import org.springframework.context.annotation.Profile
 import org.springframework.http.HttpMethod
 import org.springframework.http.ResponseCookie.ResponseCookieBuilder
@@ -22,7 +23,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
-import org.springframework.security.web.DefaultRedirectStrategy
+import org.springframework.security.core.session.SessionRegistry
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -31,6 +33,8 @@ import org.springframework.security.web.csrf.CsrfTokenRequestHandler
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.session.data.redis.RedisIndexedSessionRepository
+import org.springframework.session.security.SpringSessionBackedSessionRegistry
 import org.springframework.session.web.http.CookieSerializer
 import org.springframework.session.web.http.DefaultCookieSerializer
 import org.springframework.web.cors.CorsConfigurationSource
@@ -108,9 +112,10 @@ class SecurityProductionConfig {
                 authorizeRequests
                     .requestMatchers("/h2-console/**", "**.css", "**.js", "**,jsp", "/graphiql/**", "/graphql/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.GET,
+                    .requestMatchers(
+                        HttpMethod.GET,
                         "/api/csrf", "/api/accounts/login/{login}/exists", "/api/accounts/authenticated"
-                        )
+                    )
                     .permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/registrations").anonymous()
                     .requestMatchers(HttpMethod.POST, "/api/registrations").anonymous()
@@ -129,17 +134,30 @@ class SecurityProductionConfig {
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA
             .cors { cors -> cors.configurationSource(corsConfigurationSource) }
-            .jsonLogin { jsonLoginSpec ->
-                jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
-                jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)
-                jsonLoginSpec.successHandler(sessionRedirectSuccessHandler)
-                jsonLoginSpec.failureHandler(jsonFormLoginFailureHandler)
+            .formLogin { formLoginSpec ->
+                formLoginSpec
+                    .loginPage(idpEndpointProperties.loginPage)
+                    .loginProcessingUrl(idpEndpointProperties.loginPath)
+                    .successHandler(sessionRedirectSuccessHandler)
+                    .failureHandler(jsonFormLoginFailureHandler)
             }
+//            .jsonLogin { jsonLoginSpec ->
+//                jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
+//                jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)
+//                jsonLoginSpec.successHandler(sessionRedirectSuccessHandler)
+//                jsonLoginSpec.failureHandler(jsonFormLoginFailureHandler)
+//            }
             .exceptionHandling { exceptionHandling ->
                 exceptionHandling.authenticationEntryPoint(jsonUnauthorizedAuthenticationEntryPoint)
             }
 
         return http.build()
+    }
+
+    @Bean
+    @Primary
+    fun sessionRegistry(sessionRepository: RedisIndexedSessionRepository) : SessionRegistry {
+        return SpringSessionBackedSessionRegistry(sessionRepository);
     }
 
     /**
@@ -169,6 +187,8 @@ class SecurityProductionConfig {
         fun sessionCookieSerializer(sessionCookieProperties: SessionCookieProperties): CookieSerializer {
             return sessionCookieProperties.run {
                 val serializer = DefaultCookieSerializer()
+                serializer.setPartitioned(false)
+                serializer.setUseBase64Encoding(false)
 
                 serializer.setCookieName(this.name)
                 serializer.setCookiePath(this.path)

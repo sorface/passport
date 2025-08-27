@@ -6,9 +6,9 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 
 /**
  * Класс OAuth2AuthorizationInit представляет собой модель для хранения информации об авторизации OAuth2 в Redis.
- * Экземпляры этого класса хранятся в Redis с временем жизни 300 секунд.
+ * Экземпляры этого класса хранятся в Redis
  */
-@RedisHash(value = "passport.authorization:init", timeToLive = 300)
+@RedisHash(value = "passport.authorization:init", timeToLive = 86400)
 class OAuth2AuthorizationInit : BasicRedisEntity() {
 
     /**

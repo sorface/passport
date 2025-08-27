@@ -24,11 +24,11 @@ class ClientTokenSettingModel : BaseModel() {
     /**
      * Алгоритм подписи токена идентификации.
      * Это поле указывает алгоритм подписи, который должен быть использован для токена идентификации.
-     * Значение по умолчанию - ES256.
+     * Значение по умолчанию - RS256.
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "C_IDTOKENSIGNATUREALGORITHM", nullable = false)
-    var idTokenSignatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.ES256
+    var idTokenSignatureAlgorithm: SignatureAlgorithm = SignatureAlgorithm.RS256
 
     /**
      * Время жизни токена доступа.

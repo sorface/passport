@@ -8,7 +8,8 @@ import org.springframework.data.repository.query.QueryByExampleExecutor
  * Интерфейс RedisOAuth2AuthorizationInitRepository представляет собой репозиторий для работы с объектами OAuth2AuthorizationInit в Redis.
  * Он расширяет интерфейсы CrudRepository и QueryByExampleExecutor для предоставления базовых CRUD-операций и поиска по примеру.
  */
-interface RedisOAuth2AuthorizationInitRepository : CrudRepository<OAuth2AuthorizationInit?, String?>, QueryByExampleExecutor<OAuth2AuthorizationInit?> {
+interface RedisOAuth2AuthorizationInitRepository : CrudRepository<OAuth2AuthorizationInit, String>,
+    QueryByExampleExecutor<OAuth2AuthorizationInit?> {
 
     /**
      * Метод findFirstByCode находит первый объект OAuth2AuthorizationInit по заданному коду авторизации.

@@ -2,22 +2,14 @@ package by.sorface.idp.config.security.oauth2
 
 import by.sorface.idp.config.security.jose.Jwks
 import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
-import by.sorface.idp.config.security.oauth2.slo.OidcWebSessionLogoutHandler
-import by.sorface.idp.config.security.backchannel.dispatcher.BackchannelEventDispatcher
-import by.sorface.idp.config.security.backchannel.dispatcher.RestBackchannelEventDispatcher
 import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
-import by.sorface.idp.config.security.oauth2.slo.OidcPostRedirectLocationLogoutHandler
-import by.sorface.idp.config.security.session.SessionManager
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
-import by.sorface.idp.config.web.properties.SessionCookieProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
-import by.sorface.passport.web.security.oauth2.slo.DelegateLogoutSuccessHandler
 import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
-import jakarta.servlet.http.HttpServletRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -45,8 +37,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
-import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler
-import org.springframework.web.client.RestTemplate
 import java.util.function.Function
 
 private const val BACKCHANNEL_LOGOUT_SUPPORTED = "backchannel_logout_supported"
