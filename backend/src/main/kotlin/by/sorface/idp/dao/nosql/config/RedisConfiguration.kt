@@ -14,7 +14,10 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @Configuration
 @EnableRedisRepositories(
     enableKeyspaceEvents = RedisKeyValueAdapter.EnableKeyspaceEvents.ON_STARTUP,
-    basePackages = ["by.sorface.idp.dao.nosql.repository"]
+    basePackages = [
+        "by.sorface.idp.dao.nosql.repository",
+        "by.sorface.idp.dao.nosql.listeners"
+    ]
 )
 class RedisConfiguration {
 

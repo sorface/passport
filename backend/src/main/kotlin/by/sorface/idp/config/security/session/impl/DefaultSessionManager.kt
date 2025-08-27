@@ -59,8 +59,7 @@ class DefaultSessionManager(
         }
 
         for (redisSession in findByIndexNameSessionRepository.findByPrincipalName(principalName)) {
-            redisIndexedSessionRepository.deleteById(redisSession.key)
-            findByIndexNameSessionRepository.deleteById(redisSession.key)
+            redisIndexedSessionRepository.deleteById(redisSession.value?.id)
         }
     }
 
