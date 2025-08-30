@@ -1,13 +1,16 @@
 package by.sorface.idp.config.security.formlogin
 
 import by.sorface.idp.config.security.constants.SessionAttributes
+import by.sorface.idp.config.security.formlogin.records.AccountSuccessAuthentication
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.config.web.properties.IdpFrontendEndpointProperties
+import by.sorface.idp.extencions.useJsonStream
 import jakarta.servlet.ServletException
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
@@ -86,7 +89,8 @@ class SessionRedirectSuccessHandler(endpointFrontendProperties: IdpFrontendEndpo
 
         LOGGER.info("oauth2 redirect to target url -> {}. session [id -> {}]", targetUrl, request.requestedSessionId)
 
-        redirectStrategy.sendRedirect(request, response, targetUrl)
+        response.useJsonStream(HttpStatus.OK, AccountSuccessAuthentication(targetUrl))
+        // redirectStrategy.sendRedirect(request, response, targetUrl)
     }
 
     /**

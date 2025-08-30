@@ -159,17 +159,26 @@ export const useApiMethod = <ResponseData, RequestData = AnyObject>(apiContractC
 
             console.log('response useApiMethod', response)
 
-            if (response.redirected) {
-                console.log('response location useApiMethod', response)
-                window.location.href = response.url || '';
-            }
-
             dispatch({
                 name: 'setCode',
                 payload: response.status,
             });
 
             const responseData = await getResponseContent(response);
+
+            const includeRedirect = Object.keys(responseData).includes(("redirectUrl"));
+
+            if (includeRedirect) {
+                const accountSuccess = responseData as AccountSuccess;
+
+                window.location.href = accountSuccess.redirectUrl;
+            }
+
+            if (response.redirected) {
+                console.log('response location useApiMethod', response)
+                window.location.href = response.url || '';
+            }
+
             if (!response.ok) {
                 const errorMessage = getResponseError(response, responseData, apiContract);
                 throw new Error(errorMessage);
@@ -188,3 +197,7 @@ export const useApiMethod = <ResponseData, RequestData = AnyObject>(apiContractC
         fetchData,
     };
 };
+
+interface AccountSuccess {
+    redirectUrl: string
+}

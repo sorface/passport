@@ -24,7 +24,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer
 import org.springframework.security.core.session.SessionRegistry
-import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
@@ -100,12 +99,50 @@ class SecurityProductionConfig {
     @Bean
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+
+            /**
+             * Настраивает OAuth2-аутентификацию в Spring Security.
+             *
+             * Эта конфигурация определяет параметры входа через OAuth2, такие как:
+             * - URL страницы входа.
+             * - Обработчик получения информации о пользователе (user info).
+             * - Обработчики успешной и неудачной аутентификации.
+             */
             .oauth2Login { oauth2LoginSpec ->
+
+                /**
+                 * Настраивает эндпоинт для получения информации о пользователе после OAuth2-аутентификации.
+                 *
+                 * Используется для настройки пользовательского сервиса, который будет обрабатывать получение данных пользователя.
+                 *
+                 * @param userInfoEndpointSpec спецификация эндпоинта получения информации о пользователе
+                 */
                 oauth2LoginSpec.userInfoEndpoint { userInfoEndpointSpec ->
+
+                    /**
+                     * Устанавливает пользовательский сервис для получения информации о пользователе.
+                     *
+                     * @param oAuth2UserDatabaseStrategy сервис, реализующий логику получения данных пользователя из базы данных
+                     */
                     userInfoEndpointSpec.userService(oAuth2UserDatabaseStrategy)
                 }
+
+                /**
+                 * Устанавливает URL страницы входа для OAuth2.
+                 * Эта страница отображается, если требуется авторизация перед выполнением защищённого действия.
+                 */
                 oauth2LoginSpec.loginPage(idpEndpointProperties.loginPage)
+
+                /**
+                 * Устанавливает обработчик успешной OAuth2-аутентификации.
+                 * После успешного входа пользователь перенаправляется или получает ответ согласно логике этого обработчика.
+                 */
                 oauth2LoginSpec.successHandler(sessionRedirectSuccessHandler)
+
+                /**
+                 * Устанавливает обработчик неудачной OAuth2-аутентификации.
+                 * Используется для обработки ошибок, таких как неправильные данные или проблемы с сервером.
+                 */
                 oauth2LoginSpec.failureHandler(jsonFormLoginFailureHandler)
             }
             .authorizeHttpRequests { authorizeRequests ->
@@ -125,7 +162,19 @@ class SecurityProductionConfig {
                     .requestMatchers("/api/**").authenticated()
                     .anyRequest().permitAll()
             }
+
+            /**
+             * Настраивает кэширование запросов в Spring Security.
+             *
+             * Эта конфигурация используется для сохранения исходного запроса пользователя перед перенаправлением
+             * на страницу входа или авторизации. После успешной аутентификации пользователь будет перенаправлен
+             * обратно на этот запрос.
+             */
             .requestCache { httpSecurityRequestCacheConfigurer: RequestCacheConfigurer<HttpSecurity?> ->
+
+                /**
+                 * Создаёт и настраивает объект [HttpSessionRequestCache], который хранит запросы в HTTP-сессии.
+                 */
                 val httpSessionRequestCache = HttpSessionRequestCache()
 
                 httpSessionRequestCache.setRequestMatcher(AntPathRequestMatcher("/oauth2/**"))
@@ -134,19 +183,41 @@ class SecurityProductionConfig {
             .csrf { csrfSpec -> csrfConfigurer(csrfSpec) }
             .addFilterAfter(CsrfCookieFilter(), BasicAuthenticationFilter::class.java) // csrf filter for SPA
             .cors { cors -> cors.configurationSource(corsConfigurationSource) }
-            .formLogin { formLoginSpec ->
-                formLoginSpec
-                    .loginPage(idpEndpointProperties.loginPage)
-                    .loginProcessingUrl(idpEndpointProperties.loginPath)
-                    .successHandler(sessionRedirectSuccessHandler)
-                    .failureHandler(jsonFormLoginFailureHandler)
+            /**
+             * Настраивает JSON-аутентификацию через форму входа в Spring Security.
+             *
+             * Этот блок конфигурации определяет параметры аутентификации, такие как:
+             * - URL страницы входа.
+             * - URL обработки запроса аутентификации.
+             * - Обработчики успешной и неудачной аутентификации.
+             *
+             * Используется для интеграции с формой входа, где данные отправляются в формате JSON.
+             */
+            .jsonLogin { jsonLoginSpec ->
+                /**
+                 * Устанавливает URL страницы входа.
+                 * Эта страница отображается пользователю для ввода логина и пароля.
+                 */
+                jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
+
+                /**
+                 * Устанавливает URL, по которому будет происходить обработка запроса аутентификации.
+                 * Это адрес, на который отправляется POST-запрос с данными формы.
+                 */
+                jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)
+
+                /**
+                 * Устанавливает обработчик успешной аутентификации.
+                 * После успешного входа пользователь перенаправляется или получает ответ согласно логике этого обработчика.
+                 */
+                jsonLoginSpec.successHandler(sessionRedirectSuccessHandler)
+
+                /**
+                 * Устанавливает обработчик неудачной аутентификации.
+                 * Используется для обработки ошибок, таких как неверный логин или пароль.
+                 */
+                jsonLoginSpec.failureHandler(jsonFormLoginFailureHandler)
             }
-//            .jsonLogin { jsonLoginSpec ->
-//                jsonLoginSpec.loginPage(idpEndpointProperties.loginPage)
-//                jsonLoginSpec.loginProcessingUrl(idpEndpointProperties.loginPath)
-//                jsonLoginSpec.successHandler(sessionRedirectSuccessHandler)
-//                jsonLoginSpec.failureHandler(jsonFormLoginFailureHandler)
-//            }
             .exceptionHandling { exceptionHandling ->
                 exceptionHandling.authenticationEntryPoint(jsonUnauthorizedAuthenticationEntryPoint)
             }
@@ -156,7 +227,7 @@ class SecurityProductionConfig {
 
     @Bean
     @Primary
-    fun sessionRegistry(sessionRepository: RedisIndexedSessionRepository) : SessionRegistry {
+    fun sessionRegistry(sessionRepository: RedisIndexedSessionRepository): SessionRegistry {
         return SpringSessionBackedSessionRegistry(sessionRepository);
     }
 
