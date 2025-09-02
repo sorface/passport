@@ -16,7 +16,8 @@ object Jwks {
 
         return RSAKey.Builder(publicKey)
             .privateKey(privateKey)
-            .keyID(UUID.randomUUID().toString())
+            .keyID("fb93ddae-7203-474e-8b04-89d2afe2bedf")
             .build()
     }
+
 }
