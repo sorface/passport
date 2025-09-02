@@ -5,9 +5,9 @@ import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationPropert
 import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
-import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
 import org.slf4j.LoggerFactory
@@ -129,7 +129,7 @@ class SecurityAuthorizationServerConfig {
         val rsaKey: RSAKey = Jwks.generateRsa()
         val jwkSet = JWKSet(rsaKey)
 
-        return JWKSource { jwkSelector: JWKSelector, _: SecurityContext? -> jwkSelector.select(jwkSet) }
+        return ImmutableJWKSet(jwkSet)
     }
 
     /**
@@ -139,7 +139,8 @@ class SecurityAuthorizationServerConfig {
      * @return декодер JWT
      */
     @Bean
-    fun jwtDecoder(jwkSource: JWKSource<SecurityContext?>): JwtDecoder = OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
+    fun jwtDecoder(jwkSource: JWKSource<SecurityContext?>): JwtDecoder =
+        OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource)
 
     @Bean
     fun jwtEncoder(jwkSource: JWKSource<SecurityContext?>): JwtEncoder = NimbusJwtEncoder(jwkSource)

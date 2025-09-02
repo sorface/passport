@@ -5,9 +5,10 @@ import java.security.KeyPairGenerator
 
 object KeyGeneratorUtils {
 
-    fun generateRsaKey(): KeyPair = KeyPairGenerator.getInstance("RSA").run {
-        initialize(2048)
-        generateKeyPair()
-    }
+    fun generateRsaKey(): KeyPair = KeyPairGenerator.getInstance("RSA")
+        .run {
+            initialize(2048)
+            generateKeyPair()
+        }
 
 }
