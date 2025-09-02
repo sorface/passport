@@ -52,10 +52,14 @@ class DefaultSessionManager(
     private fun reset(sessionId: String, principalName: String,
                       doAuthorization: (authorization: OAuth2AuthorizationComplete, sessionId: String, principalName: String) -> String) {
         val oauth2Sessions = redisOAuth2AuthorizationCompleteRepository.findAllByPrincipalName(principalName)
-            .map { authorization -> doAuthorization(authorization, sessionId, principalName) }
+            .map { authorization ->
+                doAuthorization(authorization, sessionId, principalName)
+
+                authorization
+            }
 
         if (oauth2Sessions.isNotEmpty()) {
-            redisOAuth2AuthorizationCompleteRepository.deleteAllById(oauth2Sessions)
+            redisOAuth2AuthorizationCompleteRepository.deleteAll(oauth2Sessions)
         }
 
         for (redisSession in findByIndexNameSessionRepository.findByPrincipalName(principalName)) {

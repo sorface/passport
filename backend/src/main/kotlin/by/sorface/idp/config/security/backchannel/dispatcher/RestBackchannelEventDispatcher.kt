@@ -49,7 +49,7 @@ class RestBackchannelEventDispatcher(private val restOperations: RestOperations)
         }
 
         val headers: HttpHeaders = HttpHeaders().apply {
-            contentType = MediaType.APPLICATION_FORM_URLENCODED;
+            contentType = MediaType.APPLICATION_FORM_URLENCODED
         }
 
         val request = HttpEntity(webForm, headers)
@@ -59,7 +59,7 @@ class RestBackchannelEventDispatcher(private val restOperations: RestOperations)
         }
 
         if (result.isSuccess) {
-            logger.debug("backchannel event dispatched to $backchannelEndpoint success")
+            logger.info("backchannel event dispatched to [url -> $backchannelEndpoint] success")
 
             return
         }
