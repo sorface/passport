@@ -1,12 +1,11 @@
 package by.sorface.idp.config.security.oauth2
 
-import by.sorface.idp.config.security.jose.Jwks
+import by.sorface.idp.config.security.jose.JwksService
 import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationProperties
 import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
 import com.nimbusds.jose.jwk.JWKSet
-import com.nimbusds.jose.jwk.RSAKey
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
 import com.nimbusds.jose.proc.SecurityContext
@@ -125,8 +124,8 @@ class SecurityAuthorizationServerConfig {
      * @return источник JWK
      */
     @Bean
-    fun jwkSource(): JWKSource<SecurityContext> {
-        val rsaKey: RSAKey = Jwks.generateRsa()
+    fun jwkSource(jwksService: JwksService): JWKSource<SecurityContext> {
+        val rsaKey = jwksService.getRsaKey()
         val jwkSet = JWKSet(rsaKey)
 
         return ImmutableJWKSet(jwkSet)

@@ -300,3 +300,21 @@ idp:
       secure: false
       maxage: 120
 
+# development jwks keystore
+
+security:
+  jwks:
+    keystore: |
+      {
+        "p": "t9HEGrHBpFlukaAEHqAuOji6DtT-zgBNP-jb8R1PJ0E3Xr2Tcty70Ty7gJVlGPnBN9GX1RTnTLiy2TkrtKOFAmrDeMu8WOjdGfiE8LmhXeQnuMkwOEUI6lmcPFZWhbrQFk65my5pMK9qLJBbCI8BQCXqgSLEEh4A18iUtj26jj8",
+        "kty": "RSA",
+        "q": "2Myt9o9gSGrDXZdzu4Ixgz4nF2cDhtY8MrllbPUjwQayoNjDh_JjgtUXdhHTMgHD9u-E0yCX8BoR3vs2KRP6laaGrX5hpL3TkcZmUTM9lFMluU8fpVG9MOjq6MCojp3VwjOyM1r3LZ9yAUYG7RjooCDhxi9XvSW6oXF-zfn5Oek",
+        "d": "DGe3IMPh0PA00yjbUns5mjlrSqvI9y5TyNHZFc9qVNKEIp7dErwB2kxhD1PeMqx9rRhKk0xYiZokvYHspYdPF4qFhVrJFU3_-O8AeC_JnK0hdqnYKaLIwmlA4JHqvjlFEJWClU5M4OZ7p0SyxrsCvvent9ALyP8En_nBuf4p4vhpPpOzsF32jjwqw266qhCnBpI84Nct93HPRGTGIA-o-f_-S-li7ByGOZ3MdAJuN-hXafLlhhoX0Rl3qK0lOdFThGdbFLYVnFZiFPgF8RswCjSiGWUDf82Ahu3QO047QcsxLE-sJ6fbh7Dumz1z5diu41LdzxYR0I_comrtq8yyOQ",
+        "e": "AQAB",
+        "kid": "sorface-passport-key",
+        "qi": "j4ZsQQLsoDY9sf2ctN8aGARwbIDcIlgZpBK2FdqTutJvBBf53gZ8C7MHbq-BlUnUQY8SGdMbN0cGrq_VimCxNQEm5inehh6XMpXNuNw7Bp1pPipM1UPAWk5m9_lei-9uTK4-fiTRhZHTjW4GlI0qFGpUOBLdHPjS3GLl8s6hkgA",
+        "dp": "D3LtzGCMKcfqZwrPzdMgj3wdBwoXsDCOTYTAl28jK-VrRecg8VJj5p34FEJ6ELNM7egLnrj3B5euUFthtPjZQO7AJvLYjZBkpL4iTikLytxWCk2-Y7xJl4iYfOm0s-CThIxxRP2Nka3senpXbEy4ii-lmdzWJb-nynrtJLPjbfk",
+        "alg": "RS256",
+        "dq": "rorjB91YvBTQYxpa_7yK1koEuO-jxDvYzVG72aPm_DHDQIIjseCwwxWCRPmG2fzX44fknQHhsVmbx7TiXuIJ3c_rH-TfAf4eRn-_wmIJks_6UB3msXeEZMswzODHE8L45NgwAO6ckCuNYn8ZdmuWZczzWFanQc4NWosAdx5oy3k",
+        "n": "m6v1iJdM0_U0S92DtIm_Hw3sDccrZ4RsF-cxH9y2p7wCT4Ia5DwgK9WEtCPbwLOfHmob-DPBcxrONFXjZTJlqEliTQX6K9Om1O-S8VTdr2aUE0eIwti7HSRpFl3vY7qnGPREqoe94jbhCFNulSdDRuzXwQxoEZaK0hBPAX1b_XjDq9l8PbVrEpyAPkgKA_LsUAuMS40FMFQA2NCsqljhWkUjfSDtskv59Ki8wLQy4cOM1dyvtXEEqEh-kNJofKEp6MtDlNqt8WTu3p1cyznVfGDY9kYnmSB2zIH071BhSEXqIb-tEq2nyhdVrGzyUBN623WlBIGRSXOfLlbfWr5-Vw"
+      }
