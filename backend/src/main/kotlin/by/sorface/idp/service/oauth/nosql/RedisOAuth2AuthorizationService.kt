@@ -183,13 +183,16 @@ class RedisOAuth2AuthorizationService(
      */
     private fun OAuth2Authorization.toComplete(): OAuth2AuthorizationComplete = OAuth2AuthorizationComplete()
         .also { completeAuthorization ->
-            logger.info("convert authorization object to complete. save authorization object with id ${this.id} [expTime]")
+            val oidcToken = this.getToken(OidcIdToken::class.java)
+            val oidcTokenValue = oidcToken.getTokenValueOrNull()
+
+            logger.info("convert authorization object to complete. save authorization [id -> ${this.id}, claims oidc token ->  ${oidcToken?.claims}]")
 
             completeAuthorization.id = this.id
             completeAuthorization.principalName = this.principalName
             completeAuthorization.accessToken = this.accessToken.getTokenValueOrNull()
             completeAuthorization.refreshToken = this.refreshToken.getTokenValueOrNull()
-            completeAuthorization.oidcToken = this.getToken(OidcIdToken::class.java).getTokenValueOrNull()
+            completeAuthorization.oidcToken = oidcTokenValue
             completeAuthorization.authorization = this
         }
 
