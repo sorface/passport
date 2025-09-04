@@ -5,6 +5,7 @@ import by.sorface.idp.config.security.oauth2.properties.OidcAuthorizationPropert
 import by.sorface.idp.config.security.oauth2.slo.OidcLogoutHandler
 import by.sorface.idp.config.web.properties.IdpEndpointProperties
 import by.sorface.idp.service.oauth.jdbc.DefaultOidcUserInfoService
+import com.nimbusds.jose.jwk.JWKSelector
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet
 import com.nimbusds.jose.jwk.source.JWKSource
@@ -128,7 +129,7 @@ class SecurityAuthorizationServerConfig {
         val rsaKey = jwksService.getRsaKey()
         val jwkSet = JWKSet(rsaKey)
 
-        return ImmutableJWKSet(jwkSet)
+        return JWKSource { jwkSelector: JWKSelector, _: SecurityContext? -> jwkSelector.select(jwkSet) }
     }
 
     /**
