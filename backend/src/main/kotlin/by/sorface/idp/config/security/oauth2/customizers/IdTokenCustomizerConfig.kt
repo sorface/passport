@@ -2,17 +2,16 @@ package by.sorface.idp.config.security.oauth2.customizers
 
 import by.sorface.idp.config.security.constants.JwtClaims.PRINCIPAL_ID
 import by.sorface.idp.config.security.constants.JwtClaims.USER_ROLES_CLAIM_NAME
-import by.sorface.idp.records.SorfacePrincipal
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 
 /**
  * Класс IdTokenCustomizerConfig, который настраивает дополнительную информацию токенов OAuth2.

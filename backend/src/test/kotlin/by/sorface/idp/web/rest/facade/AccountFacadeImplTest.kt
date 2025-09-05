@@ -3,7 +3,6 @@ package by.sorface.idp.web.rest.facade
 import by.sorface.idp.dao.sql.model.UserModel
 import by.sorface.idp.dao.sql.repository.user.UserRepository
 import by.sorface.idp.records.I18Codes
-import by.sorface.idp.records.SorfacePrincipal
 import by.sorface.idp.web.rest.exceptions.I18RestException
 import by.sorface.idp.web.rest.facade.impl.AccountFacadeImpl
 import by.sorface.idp.web.rest.mapper.UserConverter
@@ -23,6 +22,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 import java.util.*
 
 @ExtendWith(MockKExtension::class)

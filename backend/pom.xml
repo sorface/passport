@@ -30,6 +30,11 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ru.sorface.boot</groupId>
+            <artifactId>sorface-security-core</artifactId>
+            <version>1.0.1</version>
+        </dependency>
         <!--SPRING STARTER DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

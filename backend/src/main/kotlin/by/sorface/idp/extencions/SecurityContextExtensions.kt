@@ -1,9 +1,9 @@
 package by.sorface.idp.extencions
 
-import by.sorface.idp.records.SorfacePrincipal
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContext
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 import java.util.*
 
 fun SecurityContext.getPrincipal(): SorfacePrincipal? {

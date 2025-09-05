@@ -1,6 +1,5 @@
 package by.sorface.idp.web.rest.controller
 
-import by.sorface.idp.records.SorfacePrincipal
 import by.sorface.idp.web.rest.facade.ApplicationClientFacade
 import by.sorface.idp.web.rest.model.apps.ApplicationClient
 import by.sorface.idp.web.rest.model.apps.ApplicationPartialUpdate
@@ -10,6 +9,7 @@ import jakarta.validation.Valid
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 import java.util.*
 
 @RestController

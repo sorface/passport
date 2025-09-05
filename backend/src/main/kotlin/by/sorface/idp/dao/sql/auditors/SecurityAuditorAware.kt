@@ -3,7 +3,6 @@ package by.sorface.idp.dao.sql.auditors
 import by.sorface.idp.dao.sql.model.UserModel
 import by.sorface.idp.dao.sql.repository.user.UserRepository
 import by.sorface.idp.extencions.getPrincipalIdOrNull
-import by.sorface.idp.records.SorfacePrincipal
 import org.springframework.data.domain.AuditorAware
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component

@@ -2,8 +2,8 @@ package by.sorface.idp.service.oauth.converters
 
 import by.sorface.idp.dao.sql.model.RoleModel
 import by.sorface.idp.dao.sql.model.UserModel
-import by.sorface.idp.records.SorfacePrincipal
 import org.springframework.stereotype.Component
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 
 @Component
 class DefaultPrincipalConverter : PrincipalConverter {

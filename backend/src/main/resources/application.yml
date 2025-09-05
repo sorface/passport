@@ -48,7 +48,7 @@ spring:
         format_sql: true
 
   session:
-    timeout: 40d
+    timeout: 5d
     redis:
       flush-mode: on_save
       namespace: "passport"
@@ -90,11 +90,11 @@ spring:
 
           yandex:
             client-name: yandex
-            client-id: '************'
-            client-secret: '************'
+            client-id: ee1bdcc325294d8a915db0ede6911b85
+            client-secret: 0598eae2d4b1495f9b0b7d5923b11913
             authorization-grant-type: authorization_code
             provider: yandex
-            redirect-uri: '************'
+            redirect-uri: http://localhost:8080/login/oauth2/code/yandex
 
           twitch:
             client-name: twitch
@@ -171,18 +171,19 @@ idp:
     login-path: '/api/login'
     frontend:
       account-page: 'http://localhost:9030/account'
+    login-page: 'http://localhost:9020'
 
 logging:
   level:
-    root: debug
-    by.sorface.idp: info
-    org.springframework.security.oauth2.server.authorization.web.OAuth2TokenEndpointFilter: trace
-    org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider: trace
-    org.springframework.security.oauth2.server.authorization.oidc.web.authentication: trace
-    by.sorface.idp.dao.sql.repository.client: debug
+    root: info
+    by.sorface.idp: INFO
+#    org.springframework.security.oauth2.server.authorization.web.OAuth2TokenEndpointFilter: trace
+#    org.springframework.security.oauth2.server.authorization.authentication.OAuth2RefreshTokenAuthenticationProvider: trace
+#    org.springframework.security.oauth2.server.authorization.oidc.web.authentication: trace
+#    by.sorface.idp.dao.sql.repository.client: debug
   pattern:
     console: '%d{dd.MM.yyyy HH:mm:ss.SSS} %highlight(%-5level) [%thread] [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %magenta([%file:%line]) : %msg%n'
-  include-application-name: false
+  include-application-name: true
 
 --- # spring development envs
 
@@ -237,7 +238,7 @@ spring:
       enabled: true
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/idp
+    url: jdbc:postgresql://localhost:5444/passport
     username: user
     password: user
     driver-class-name: org.postgresql.Driver
@@ -256,6 +257,9 @@ spring:
       - development
     change-log: migration/master.yaml
     enabled: true
+
+  data.redis:
+    port: 6380
 
 idp:
   cors:

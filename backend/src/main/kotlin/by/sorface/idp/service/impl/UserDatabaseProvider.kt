@@ -1,13 +1,13 @@
 package by.sorface.idp.service.impl
 
 import by.sorface.idp.dao.sql.repository.user.UserRepository
-import by.sorface.idp.records.SorfacePrincipal
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.sorface.boot.security.core.principal.SorfacePrincipal
 
 @Service
 class UserDatabaseProvider(private val userRepository: UserRepository) : UserDetailsService {
